@@ -264,4 +264,15 @@ public class CommonTool {
     }
     return false;
   }
+
+  /**
+   * 当前时间转格式化字符串
+   *
+   * @param format
+   *            字符串格式
+   * @return 日期字符串
+   */
+  public static String parseCurrDateToString(String format) {
+    return new SimpleDateFormat(format).format(new Date());
+  }
 }

@@ -22,4 +22,5 @@ android {
 dependencies {
     compile fileTree(dir: 'libs', include: ['*.jar'])
     compile 'com.alibaba:fastjson:1.1.34.android'
+    compile project(':library_pullToRefresh')
 }

@@ -16,4 +16,5 @@
     <string name="input_password">请输入密码</string>
     <string name="remember_username">记住用户名</string>
     <string name="login">登陆</string>
+    <string name="detail">详情</string>
 </resources>

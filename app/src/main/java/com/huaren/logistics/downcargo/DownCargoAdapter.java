@@ -35,10 +35,12 @@ public class DownCargoAdapter extends BaseAdapter{
   @Override public View getView(int position, View convertView, ViewGroup parent) {
     convertView = LayoutInflater.from(context).inflate(R.layout.item_list_down, null);
     TextView customerIdView = (TextView)convertView.findViewById(R.id.customer_id);
-    TextView unloadSizeView = (TextView)convertView.findViewById(R.id.unload_size);
-    TextView loadSizeView = (TextView)convertView.findViewById(R.id.load_size);
+    TextView customerNameView = (TextView)convertView.findViewById(R.id.customer_name);
+    TextView unloadSizeView = (TextView)convertView.findViewById(R.id.unload_tv);
+    TextView loadSizeView = (TextView)convertView.findViewById(R.id.load_tv);
     Customer customer = customerList.get(position);
-    customerIdView.setText(customer.getName());
+    customerIdView.setText(customer.getCode());
+    customerNameView.setText(customer.getName());
     if (customer.getUnloadedGoodsList() != null) {
       unloadSizeView.setText(customer.getUnloadedGoodsList().size()+ "");
     } else {
@@ -50,5 +52,9 @@ public class DownCargoAdapter extends BaseAdapter{
       loadSizeView.setText("0");
     }
     return convertView;
+  }
+
+  public void addInfo(List<Customer> customerList) {
+    this.customerList.addAll(customerList);
   }
 }
