@@ -1,0 +1,16 @@
+<resources>
+  <!-- Default screen margins, per the Android Design guidelines. -->
+  <dimen name="activity_horizontal_margin">16dp</dimen>
+  <dimen name="activity_vertical_margin">16dp</dimen>
+
+  <dimen name="common_title_bar_height">50.0dp</dimen>
+
+  <!-- 主界面 GridView的高度 -->
+  <dimen name="main_gridview_width">60.0dp</dimen>
+  <dimen name="main_gridview_height">60.0dp</dimen>
+
+  <!-- 字体的大小 -->
+  <dimen name="text_size_small">12.0sp</dimen>
+  <dimen name="text_size_middle">14.0sp</dimen>
+  <dimen name="text_size_large">18.0sp</dimen>
+</resources>
