@@ -1,5 +1,7 @@
 package com.huaren.logistics.downcargo;
 
+import android.content.res.AssetManager;
+
 public interface IDownCargoView {
   void showProgress();
 
@@ -9,11 +11,14 @@ public interface IDownCargoView {
 
   void hideUpdateView();
 
-  void showUpdateView();
+  void showUpdateView(String time, String info);
 
   boolean isFooterShown();
 
   void onRefreshComplete();
 
   void initPullToRefreshListView(DownCargoAdapter adapter);
+
+  AssetManager getAssetManager();
+
 }

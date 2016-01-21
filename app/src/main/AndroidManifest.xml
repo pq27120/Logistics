@@ -34,6 +34,10 @@
             android:name=".downcargo.DownCargoActivity"
             android:label="@string/title_activity_downcargo" >
         </activity>
+        <activity
+            android:name=".cargo.CargoActivity"
+            android:label="@string/title_activity_cargo" >
+        </activity>
     </application>
 
 </manifest>

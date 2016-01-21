@@ -22,19 +22,17 @@ import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
-import android.widget.CheckBox;
-import android.widget.CompoundButton;
-import android.widget.EditText;
 import android.widget.ProgressBar;
-
+import com.gc.materialdesign.views.CheckBox;
 import com.huaren.logistics.R;
 import com.huaren.logistics.main.MainActivity;
+import com.rengwuxian.materialedittext.MaterialEditText;
 
 public class LoginActivity extends Activity implements LoginView, View.OnClickListener {
 
   private ProgressBar progressBar;
-  private EditText username;
-  private EditText password;
+  private MaterialEditText username;
+  private MaterialEditText password;
   private LoginPresenter presenter;
   private CheckBox rememverCb;
 
@@ -42,10 +40,10 @@ public class LoginActivity extends Activity implements LoginView, View.OnClickLi
     super.onCreate(savedInstanceState);
     setContentView(R.layout.activity_login);
 
-    username = (EditText) findViewById(R.id.username);
-    password = (EditText) findViewById(R.id.password);
+    username = (MaterialEditText) findViewById(R.id.username);
+    password = (MaterialEditText) findViewById(R.id.password);
     rememverCb = (CheckBox) findViewById(R.id.remember_cb);
-    rememverCb.setOnCheckedChangeListener(new RememberChecked());
+    rememverCb.setOncheckListener(new RememberChecked());
     findViewById(R.id.btn_login).setOnClickListener(this);
     presenter = new LoginPresenter(this);
     presenter.initUsername();
@@ -89,9 +87,9 @@ public class LoginActivity extends Activity implements LoginView, View.OnClickLi
     presenter.validateCredentials(username.getText().toString(), password.getText().toString());
   }
 
-  private class RememberChecked implements CompoundButton.OnCheckedChangeListener {
-    @Override public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-      presenter.remmemberUserName(username.getText().toString(), isChecked);
+  private class RememberChecked implements CheckBox.OnCheckListener {
+    @Override public void onCheck(CheckBox view, boolean check) {
+      presenter.remmemberUserName(username.getText().toString(), check);
     }
   }
 }

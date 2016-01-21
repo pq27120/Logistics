@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Root>
+  <LoginResult>
+    <Code>1</Code>
+    <Msg>成功</Msg>
+  </LoginResult>
+  <Data>
+    <ItemHeader>
+      <DispatchNumber>
+        GRO005041624
+      </DispatchNumber>
+      <!--这里原来是汇总单号，应改为调度单号-->
+      <CooperateID>1</CooperateID>
+      <!--这是新的客户编号-->
+      <D_PDTG_DATE>2011-8-17 16:28:28</D_PDTG_DATE>
+      <L_PDTG_BATCH></L_PDTG_BATCH>
+      <!--调度批次-->
+      <CooperateName></CooperateName>
+      <!--客户名称-->
+      <L_PDTG_MERDCATEG_OldKey>1</L_PDTG_MERDCATEG_OldKey>
+      <!--冷藏标志-->
+      <PathName>线路1</PathName>
+      <!--线路名称-->
+      <ItemDetail>
+        <Item>
+          <L_ordi_sysno>12343</L_ordi_sysno>
+          <S_ordi_unit></S_ordi_unit>
+          <!--货品单位-->
+          <GoodsID>1</GoodsID>
+          <!--这是新的货品编号-->
+          <GoodsName>GOODSNAME</GoodsName>
+          <S_ordi_lotno>2</S_ordi_lotno>
+          <!--批号-->
+          <L_ordi_1qty>11</L_ordi_1qty>
+          <!--最小单位数量-->
+          <DispatchType>
+            1
+          </DispatchType>
+          <!--冷藏标志，需要在数据库中增加字段-->
+        </Item>
+      </ItemDetail>
+    </ItemHeader>
+  </Data>
+</Root>

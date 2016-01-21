@@ -5,6 +5,7 @@
   <color name="white">#ffffff</color>
 
   <color name="blue_one">#349dd0</color>
+  <color name="blue_two">#1E88E5</color>
   <color name="red">#ff0000</color>
   <color name="blue10">#3D8DF1</color>
 </resources>

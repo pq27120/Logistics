@@ -11,10 +11,13 @@
 
     <string name="test">测试</string>
     <string name="title_activity_downcargo">数据下载</string>
-    <string name="down_cargo">数据获取</string>
     <string name="input_username">请输入用户名</string>
     <string name="input_password">请输入密码</string>
     <string name="remember_username">记住用户名</string>
     <string name="login">登陆</string>
     <string name="detail">详情</string>
+    <string name="update">更新</string>
+
+    <string name="down_cargo">数据获取</string>
+    <string name="title_activity_cargo">装车点货</string>
 </resources>
