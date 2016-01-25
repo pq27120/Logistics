@@ -3,10 +3,113 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:orientation="vertical"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    android:background="@android:color/white"
+    >
+
+  <LinearLayout
+      android:layout_width="match_parent"
+      android:layout_height="match_parent"
+      android:orientation="vertical"
+      >
+    <include
+        android:id="@+id/layout_title"
+        layout="@layout/layout_common_title"
+        />
+
+    <RelativeLayout
+        android:layout_width="fill_parent"
+        android:layout_height="148dp"
+        >
+
+      <LinearLayout
+          android:layout_width="fill_parent"
+          android:layout_height="128dp"
+          android:background="@color/blue_two"
+          android:paddingBottom="20dp"
+          android:paddingLeft="10dp"
+          android:orientation="vertical"
+          >
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:layout_marginTop="10dp"
+            >
+          <TextView
+              android:layout_width="wrap_content"
+              android:layout_height="wrap_content"
+              android:text="当前承运人:"
+              android:textSize="@dimen/text_size_large"
+              android:textColor="@android:color/white"
+              />
+          <TextView
+              android:id="@+id/shipper_tv"
+              android:layout_width="wrap_content"
+              android:layout_height="wrap_content"
+              android:textSize="@dimen/text_size_large"
+              android:textColor="@android:color/white"
+              />
+        </LinearLayout>
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:layout_marginTop="10dp"
+            >
+          <TextView
+              android:layout_width="wrap_content"
+              android:layout_height="wrap_content"
+              android:text="车牌号:"
+              android:textSize="@dimen/text_size_large"
+              android:textColor="@android:color/white"
+              />
+          <TextView
+              android:id="@+id/license_plate_tv"
+              android:layout_width="wrap_content"
+              android:layout_height="wrap_content"
+              android:textSize="@dimen/text_size_large"
+              android:textColor="@android:color/white"
+              />
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:layout_marginTop="10dp"
+            >
+          <TextView
+              android:layout_width="wrap_content"
+              android:layout_height="wrap_content"
+              android:text="司机:"
+              android:textSize="@dimen/text_size_large"
+              android:textColor="@android:color/white"
+              />
+          <TextView
+              android:id="@+id/driver_tv"
+              android:layout_width="wrap_content"
+              android:layout_height="wrap_content"
+              android:textSize="@dimen/text_size_large"
+              android:textColor="@android:color/white"
+              />
+        </LinearLayout>
+      </LinearLayout>
+
+      <View
+          android:layout_width="fill_parent"
+          android:layout_height="2dp"
+          android:layout_marginTop="128dp"
+          android:background="#88CECECE"
+          />
+    </RelativeLayout>
+
     <com.dexafree.materialList.view.MaterialListView
         android:layout_width="fill_parent"
         android:layout_height="fill_parent"
         app:column_count="1"
-        android:id="@+id/material_listview"/>
+        android:id="@+id/material_listview"
+        />
+  </LinearLayout>
 </RelativeLayout>

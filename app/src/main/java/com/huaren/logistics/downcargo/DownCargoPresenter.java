@@ -7,13 +7,12 @@ import android.os.Message;
 import android.util.Xml;
 import android.widget.Toast;
 import com.huaren.logistics.LogisticsApplication;
-import com.huaren.logistics.bean.CustomerInfo;
-import com.huaren.logistics.dao.CustomerInfoDao;
-import com.huaren.logistics.entity.Customer;
-import com.huaren.logistics.entity.Goods;
+import com.huaren.logistics.bean.Customer;
+import com.huaren.logistics.bean.Goods;
+import com.huaren.logistics.dao.CustomerDao;
+import com.huaren.logistics.dao.GoodsDao;
 import com.huaren.logistics.util.CommonTool;
 import com.huaren.logistics.util.UiTool;
-import com.huaren.logistics.util.http.BaseHandler;
 import com.huaren.logistics.util.webservice.WebServiceConnect;
 import com.huaren.logistics.util.webservice.WebServiceHandler;
 import com.huaren.logistics.util.webservice.WebServiceParam;
@@ -28,25 +27,9 @@ import org.xmlpull.v1.XmlPullParserException;
 
 public class DownCargoPresenter {
 
-  private static final int REFRESH = 1;
-
   private IDownCargoView downCargoView;
 
   private List<Customer> customerList;
-
-  private DownCargoAdapter adapter;
-  /**
-   * 当前页数
-   */
-  int currPage = 1;
-  /**
-   * 总页数
-   */
-  int totalPage = 2;
-  /**
-   * 每页显示多少条
-   */
-  String length = "8";
 
   public WebServiceHandler handler;
   protected WebServiceConnect webServiceConnect = new WebServiceConnect();
@@ -84,23 +67,26 @@ public class DownCargoPresenter {
 
     List<Goods> goodsList = new ArrayList<>();
     Goods goods = new Goods();
-    goods.setName("货物1");
-    goods.setId("001");
-    goods.setBarcode("bar001");
+    goods.setGoodsName("货物1");
+    goods.setBarCode("001");
+    goods.setIsLoad(false);
+    goods.setIsRemove(false);
     goodsList.add(goods);
 
     goods = new Goods();
-    goods.setName("货物2");
-    goods.setId("002");
-    goods.setBarcode("bar002");
+    goods.setGoodsName("货物2");
+    goods.setBarCode("002");
+    goods.setIsLoad(false);
+    goods.setIsRemove(false);
     goodsList.add(goods);
 
     goods = new Goods();
-    goods.setName("货物3");
-    goods.setId("003");
-    goods.setBarcode("bar003");
+    goods.setGoodsName("货物3");
+    goods.setBarCode("003");
+    goods.setIsLoad(false);
+    goods.setIsRemove(false);
     goodsList.add(goods);
-    customer.setUnloadedGoodsList(goodsList);
+    customer.setGoods(goodsList);
     customerList.add(customer);
 
     customer = new Customer();
@@ -110,45 +96,63 @@ public class DownCargoPresenter {
 
     goodsList = new ArrayList<>();
     goods = new Goods();
-    goods.setName("货物11");
-    goods.setId("0011");
-    goods.setBarcode("bar0011");
+    goods.setGoodsName("货物11");
+    goods.setBarCode("0011");
+    goods.setIsLoad(false);
+    goods.setIsRemove(false);
     goodsList.add(goods);
 
     goods = new Goods();
-    goods.setName("货物21");
-    goods.setId("0021");
-    goods.setBarcode("bar0021");
+    goods.setGoodsName("货物21");
+    goods.setBarCode("0021");
+    goods.setIsLoad(false);
+    goods.setIsRemove(false);
     goodsList.add(goods);
 
     goods = new Goods();
-    goods.setName("货物31");
-    goods.setId("0031");
-    goods.setBarcode("bar0031");
+    goods.setGoodsName("货物31");
+    goods.setBarCode("0031");
+    goods.setIsLoad(false);
+    goods.setIsRemove(false);
     goodsList.add(goods);
-    customer.setUnloadedGoodsList(goodsList);
+    customer.setGoods(goodsList);
     customerList.add(customer);
 
-    int count = 0;
-    CustomerInfoDao customerInfoDao =
-        LogisticsApplication.getInstance().getDaoSession().getCustomerInfoDao();
-    for (int i = 0; i < customerList.size(); i++) {
-      Customer customer1 = customerList.get(i);
-      List<CustomerInfo> customerInfoList = customerInfoDao.queryBuilder()
-          .where(CustomerInfoDao.Properties.Code.eq(customer1.getCode())).list();
-      if(customerInfoList == null) {
-        CustomerInfo customerInfo = new CustomerInfo();
-        customerInfo.setCode(customer1.getCode());
-        customerInfo.setName(customer1.getName());
-        customerInfo.setAddress(customer1.getAddress());
-        customerInfoDao.insert(customerInfo);
+    int customerCount = 0;
+    int goodsCount = 0;
+    CustomerDao customerDao = LogisticsApplication.getInstance().getDaoSession().getCustomerDao();
+    GoodsDao goodsDao = LogisticsApplication.getInstance().getDaoSession().getGoodsDao();
+    if (customerList != null && !customerList.isEmpty()) {
+      for (int i = 0; i < customerList.size(); i++) {
+        Customer customer1 = customerList.get(i);
+        long customerQueryCount = customerDao.queryBuilder()
+            .where(CustomerDao.Properties.Code.eq(customer1.getCode()))
+            .buildCount().count();
+        if (customerQueryCount <= 0) {
+          customerDao.insert(customer1);
+          customerCount++;
+        }
+        List<Goods> goodsList1 = customer1.getGoods();
+        if (goodsList1 != null && !goodsList1.isEmpty()) {
+          for (int j = 0; j < goodsList1.size(); j++) {
+            Goods goods1 = goodsList1.get(j);
+            long goodsQueryCount = goodsDao.queryBuilder()
+                .where(GoodsDao.Properties.BarCode.eq(goods1.getBarCode()))
+                .buildCount().count();
+            if (goodsQueryCount == 0) {
+              goods1.setCustomerId(customer1.getId());
+              goodsDao.insert(goods1);
+              goodsCount++;
+            }
+          }
+        }
       }
     }
 
-    List<CustomerInfo> list = customerInfoDao.loadAll();
+    List<Customer> list = customerDao.loadAll();
     System.out.println(list);
     String time = CommonTool.parseCurrDateToString("yyyy-MM-dd HH:mm:ss");
-    String info = "更新了" + count + "条记录";
+    String info = "更新了" + customerCount + "条客户记录，" + goodsCount + " 条货物记录";
     downCargoView.showUpdateView(time, info);
   }
 
@@ -206,38 +210,6 @@ public class DownCargoPresenter {
     }
   }
 
-  public void initList(boolean refresh) {
-    if (CommonTool.isWifiConnected((Context) downCargoView)) {
-      if (customerList != null && !customerList.isEmpty()) {
-        if (refresh) {
-          if (downCargoView.isFooterShown() && currPage < totalPage) {
-            currPage++;
-            adapter.addInfo(customerList);
-          }
-          adapter.notifyDataSetChanged();
-          mHandler.sendEmptyMessageDelayed(REFRESH, 20);
-        } else {
-          adapter = new DownCargoAdapter((Context) downCargoView, customerList);
-          downCargoView.initPullToRefreshListView(adapter);
-        }
-      } else {
-        adapter = new DownCargoAdapter((Context) downCargoView, new ArrayList<Customer>());
-        adapter.notifyDataSetChanged();
-        mHandler.sendEmptyMessageDelayed(REFRESH, 20);
-      }
-
-      if (!refresh) {// 第一次加载
-        //if (result.getPageInfo() != null) {
-        //  int totalSize = Integer.parseInt(result.getPageInfo().getTotalSize());
-        //  int lenth = Integer.parseInt(result.getPageInfo().getLength());
-        //  totalPage = totalSize % lenth == 0 ? totalSize / lenth : totalSize / lenth + 1;
-        //}
-      }
-    } else {
-      downCargoView.hideUpdateView();
-    }
-  }
-
   public void downloadData() {
     Map params = new HashMap();
     params.put("S_PDTG_EMPLOPCODE", "admin");
@@ -253,9 +225,6 @@ public class DownCargoPresenter {
     public void handleMessage(Message msg) {
       try {
         switch (msg.what) {
-          case 1:
-            downCargoView.onRefreshComplete();
-            break;
           case 2:
             Toast.makeText((Context) downCargoView, "获取订单信息成功", Toast.LENGTH_SHORT).show();
             break;

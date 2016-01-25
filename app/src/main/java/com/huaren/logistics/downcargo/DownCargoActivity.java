@@ -3,20 +3,13 @@ package com.huaren.logistics.downcargo;
 import android.content.res.AssetManager;
 import android.os.Bundle;
 import android.view.View;
-import android.widget.Button;
-import android.widget.LinearLayout;
-import android.widget.ListView;
 import android.widget.TextView;
 import com.dexafree.materialList.card.Card;
-import com.dexafree.materialList.card.OnButtonClickListener;
 import com.dexafree.materialList.card.provider.BasicButtonsCardProvider;
 import com.dexafree.materialList.view.MaterialListView;
 import com.gc.materialdesign.views.ButtonRectangle;
-import com.handmark.pulltorefresh.library.PullToRefreshBase;
-import com.handmark.pulltorefresh.library.PullToRefreshListView;
 import com.huaren.logistics.BaseActivity;
 import com.huaren.logistics.R;
-import com.huaren.logistics.util.CommonTool;
 
 public class DownCargoActivity extends BaseActivity implements IDownCargoView {
 
@@ -64,50 +57,8 @@ public class DownCargoActivity extends BaseActivity implements IDownCargoView {
     mListView.add(card);
   }
 
-  @Override public boolean isFooterShown() {
-    //return ptrlvDateInfo.isFooterShown();
-    return false;
-  }
-
-  @Override public void onRefreshComplete() {
-    //ptrlvDateInfo.onRefreshComplete();
-  }
-
-  /**
-   * 初始化PullToRefresh
-   */
-  public void initPullToRefreshListView(DownCargoAdapter adapter) {
-    //ptrlvDateInfo.setMode(PullToRefreshBase.Mode.PULL_FROM_END);
-    //ptrlvDateInfo.setOnRefreshListener(new MyOnRefreshListener(ptrlvDateInfo));
-    //ptrlvDateInfo.setAdapter(adapter);
-  }
-
   @Override public AssetManager getAssetManager() {
     return getAssets();
-  }
-
-  class MyOnRefreshListener implements
-      PullToRefreshBase.OnRefreshListener2<ListView> {
-
-    private PullToRefreshListView mPtflv;
-
-    public MyOnRefreshListener(PullToRefreshListView ptflv) {
-      this.mPtflv = ptflv;
-    }
-
-    @Override public void onPullDownToRefresh(PullToRefreshBase<ListView> refreshView) {
-
-    }
-
-    @Override
-    public void onPullUpToRefresh(PullToRefreshBase<ListView> refreshView) {
-      // 上拉加载
-      //switch (mPtflv.getId()) {
-        //case R.id.down_cargo_list:
-        //  presenter.initList(true);
-        //  break;
-      //}
-    }
   }
 
   private class UpdateButtonClick implements View.OnClickListener {

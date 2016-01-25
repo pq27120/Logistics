@@ -37,4 +37,6 @@ public interface MainView {
     void setUserInfo(String name, String driver, String licensePlate);
 
     void enterCargo();
+
+    void enterUnCargo();
 }

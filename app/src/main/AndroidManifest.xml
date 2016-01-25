@@ -38,6 +38,18 @@
             android:name=".cargo.CargoActivity"
             android:label="@string/title_activity_cargo" >
         </activity>
+        <activity
+            android:name=".detail.CargoDetailActivity"
+            android:label="@string/title_activity_cargo_detail" >
+        </activity>
+        <activity
+            android:name=".uncargo.UnCargoActivity"
+            android:label="@string/title_activity_uncargo" >
+        </activity>
+        <activity
+            android:name=".undetail.UnCargoDetailActivity"
+            android:label="@string/title_activity_cargo_detail" >
+        </activity>
     </application>
 
 </manifest>

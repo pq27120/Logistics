@@ -1,4 +1,4 @@
-package com.huaren.logistics.cargo;
+package com.huaren.logistics.uncargo;
 
 import android.content.Context;
 import com.dexafree.materialList.card.Card;
@@ -12,19 +12,19 @@ import com.huaren.logistics.dao.GoodsDao;
 import com.huaren.logistics.util.CommonTool;
 import java.util.List;
 
-public class CargoPresenter {
+public class UnCargoPresenter {
 
-  private ICargoView cargoView;
+  private IUnCargoView unCargoView;
 
-  public CargoPresenter(ICargoView cargoView) {
-    this.cargoView = cargoView;
+  public UnCargoPresenter(IUnCargoView unCargoView) {
+    this.unCargoView = unCargoView;
   }
 
   public void initUserInfo() {
-    String name = CommonTool.getSharePreference((Context) cargoView, "name");
-    String driver = CommonTool.getSharePreference((Context) cargoView, "name");
-    String licensePlate = CommonTool.getSharePreference((Context) cargoView, "licensePlate");
-    cargoView.setUserInfo(name, driver, licensePlate);
+    String name = CommonTool.getSharePreference((Context) unCargoView, "name");
+    String driver = CommonTool.getSharePreference((Context) unCargoView, "name");
+    String licensePlate = CommonTool.getSharePreference((Context) unCargoView, "licensePlate");
+    unCargoView.setUserInfo(name, driver, licensePlate);
   }
 
   public void initCargoList() {
@@ -33,16 +33,17 @@ public class CargoPresenter {
     List<Customer> customerList = customerDao.loadAll();
     for (int i = 0; i < customerList.size(); i++) {
       Customer customer = customerList.get(i);
-      List<Goods> goodsList = goodsDao.queryBuilder().where(GoodsDao.Properties.CustomerId.eq(customer.getId()))
+      List<Goods> goodsList = goodsDao.queryBuilder().where(GoodsDao.Properties.CustomerId.eq(customer.getId())
+          , GoodsDao.Properties.IsLoad.eq(true))
           .list();
-      int loadGount = countLoadGoods(goodsList);
+      int loadGount = countRemoveLoadGoods(goodsList);
       int unLoadCount = goodsList.size() - loadGount;
-      String desc = "未装车：" + unLoadCount + "，已装车：" + loadGount;
+      String desc = "未卸车：" + unLoadCount + "，已卸车：" + loadGount;
       int drawable = R.drawable.star_do;
       if (unLoadCount == 0) {
         drawable = R.drawable.star_finish;
       }
-      Card card = new Card.Builder((Context)cargoView)
+      Card card = new Card.Builder((Context)unCargoView)
           .setTag(customer.getId())
           .withProvider(SmallImageCardProvider.class)
           .setTitle(customer.getName() + "(" + customer.getCode() +")")
@@ -50,15 +51,15 @@ public class CargoPresenter {
           .setDrawable(drawable)
           .endConfig()
           .build();
-      cargoView.addCard(card);
+      unCargoView.addCard(card);
     }
   }
 
-  private int countLoadGoods(List<Goods> goodsList) {
+  private int countRemoveLoadGoods(List<Goods> goodsList) {
     int count = 0;
     for (int i = 0; i < goodsList.size(); i++) {
       Goods goods = goodsList.get(i);
-      if (goods.getIsLoad()) {
+      if (goods.getIsRemove()) {
         count ++;
       }
     }

@@ -7,10 +7,11 @@ import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.TextView;
 import com.huaren.logistics.R;
-import com.huaren.logistics.entity.Customer;
+import com.huaren.logistics.bean.Customer;
+import com.huaren.logistics.bean.Goods;
 import java.util.List;
 
-public class DownCargoAdapter extends BaseAdapter{
+public class DownCargoAdapter extends BaseAdapter {
 
   private Context context;
   private List<Customer> customerList;
@@ -34,23 +35,27 @@ public class DownCargoAdapter extends BaseAdapter{
 
   @Override public View getView(int position, View convertView, ViewGroup parent) {
     convertView = LayoutInflater.from(context).inflate(R.layout.item_list_down, null);
-    TextView customerIdView = (TextView)convertView.findViewById(R.id.customer_id);
-    TextView customerNameView = (TextView)convertView.findViewById(R.id.customer_name);
-    TextView unloadSizeView = (TextView)convertView.findViewById(R.id.unload_tv);
-    TextView loadSizeView = (TextView)convertView.findViewById(R.id.load_tv);
+    TextView customerIdView = (TextView) convertView.findViewById(R.id.customer_id);
+    TextView customerNameView = (TextView) convertView.findViewById(R.id.customer_name);
+    TextView unloadSizeView = (TextView) convertView.findViewById(R.id.unload_tv);
+    TextView loadSizeView = (TextView) convertView.findViewById(R.id.load_tv);
     Customer customer = customerList.get(position);
     customerIdView.setText(customer.getCode());
     customerNameView.setText(customer.getName());
-    if (customer.getUnloadedGoodsList() != null) {
-      unloadSizeView.setText(customer.getUnloadedGoodsList().size()+ "");
-    } else {
-      unloadSizeView.setText("0");
+    int unload = 0;
+    int load = 0;
+    if (customer.getGoods() != null && !customer.getGoods().isEmpty()) {
+      for (int i = 0; i < customer.getGoods().size(); i++) {
+        Goods goods = customer.getGoods().get(i);
+        if (goods.getIsLoad()) {
+          load++;
+        } else {
+          unload++;
+        }
+      }
     }
-    if (customer.getLoadedGoodsList() != null) {
-      loadSizeView.setText(customer.getLoadedGoodsList().size() + "");
-    } else {
-      loadSizeView.setText("0");
-    }
+    unloadSizeView.setText(unload + "");
+    loadSizeView.setText(load + "");
     return convertView;
   }
 

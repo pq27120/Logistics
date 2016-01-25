@@ -35,7 +35,10 @@ import com.dexafree.materialList.view.MaterialListView;
 import com.huaren.logistics.BaseActivity;
 import com.huaren.logistics.R;
 import com.huaren.logistics.cargo.CargoActivity;
+import com.huaren.logistics.detail.CargoDetailActivity;
 import com.huaren.logistics.downcargo.DownCargoActivity;
+import com.huaren.logistics.uncargo.UnCargoActivity;
+import com.huaren.logistics.undetail.UnCargoDetailActivity;
 import java.util.List;
 
 public class MainActivity extends BaseActivity implements MainView, AdapterView.OnItemClickListener {
@@ -118,6 +121,10 @@ public class MainActivity extends BaseActivity implements MainView, AdapterView.
 
     @Override public void enterCargo() {
         startActivity(new Intent(this, CargoActivity.class));
+    }
+
+    @Override public void enterUnCargo() {
+        startActivity(new Intent(this, UnCargoActivity.class));
     }
 
     @Override public void onItemClick(AdapterView<?> parent, View view, int position, long id) {

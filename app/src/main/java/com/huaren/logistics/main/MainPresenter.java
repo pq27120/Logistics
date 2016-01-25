@@ -124,6 +124,7 @@ public class MainPresenter implements OnFinishedListener {
         mainView.enterCargo();
         break;
       case 3:
+        mainView.enterUnCargo();
         break;
       case 4:
         break;

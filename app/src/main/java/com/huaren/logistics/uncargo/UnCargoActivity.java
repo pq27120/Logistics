@@ -1,24 +1,22 @@
-package com.huaren.logistics.cargo;
+package com.huaren.logistics.uncargo;
 
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
-import android.view.View;
 import android.widget.TextView;
 import com.dexafree.materialList.card.Card;
-import com.dexafree.materialList.card.OnButtonClickListener;
-import com.dexafree.materialList.card.provider.BasicImageButtonsCardProvider;
 import com.dexafree.materialList.listeners.RecyclerItemClickListener;
 import com.dexafree.materialList.view.MaterialListView;
 import com.huaren.logistics.BaseActivity;
 import com.huaren.logistics.R;
+import com.huaren.logistics.cargo.CargoPresenter;
 import com.huaren.logistics.detail.CargoDetailActivity;
+import com.huaren.logistics.undetail.UnCargoDetailActivity;
 
-public class CargoActivity extends BaseActivity implements ICargoView {
-
+public class UnCargoActivity extends BaseActivity implements IUnCargoView {
   private MaterialListView mListView;
 
-  private CargoPresenter presenter;
+  private UnCargoPresenter presenter;
 
   private TextView nameTv;
   private TextView driverTv;
@@ -26,7 +24,7 @@ public class CargoActivity extends BaseActivity implements ICargoView {
 
   @Override protected void onCreate(Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
-    setContentView(R.layout.activity_cargo);
+    setContentView(R.layout.activity_uncargo);
     nameTv = (TextView) findViewById(R.id.shipper_tv);
     driverTv = (TextView) findViewById(R.id.driver_tv);
     licensePlateTv = (TextView) findViewById(R.id.license_plate_tv);
@@ -34,7 +32,7 @@ public class CargoActivity extends BaseActivity implements ICargoView {
     mListView.addOnItemTouchListener(new RecyclerItemClickListener.OnItemClickListener() {
       @Override public void onItemClick(Card card, int position) {
         Log.d("CARD_TYPE", card.getTag().toString());
-        Intent intent = new Intent(CargoActivity.this, CargoDetailActivity.class);
+        Intent intent = new Intent(UnCargoActivity.this, UnCargoDetailActivity.class);
         intent.putExtra("customerId", Long.valueOf(card.getTag().toString()));
         startActivity(intent);
       }
@@ -43,8 +41,8 @@ public class CargoActivity extends BaseActivity implements ICargoView {
         Log.d("LONG_CLICK", card.getTag().toString());
       }
     });
-    ((TextView) findViewById(R.id.tv_common_title)).setText(R.string.cargo);
-    presenter = new CargoPresenter(this);
+    ((TextView) findViewById(R.id.tv_common_title)).setText(R.string.uncargo);
+    presenter = new UnCargoPresenter(this);
     presenter.initUserInfo();
     presenter.initCargoList();
   }

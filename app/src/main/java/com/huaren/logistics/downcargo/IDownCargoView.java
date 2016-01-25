@@ -13,12 +13,6 @@ public interface IDownCargoView {
 
   void showUpdateView(String time, String info);
 
-  boolean isFooterShown();
-
-  void onRefreshComplete();
-
-  void initPullToRefreshListView(DownCargoAdapter adapter);
-
   AssetManager getAssetManager();
 
 }
