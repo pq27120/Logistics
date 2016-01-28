@@ -6,11 +6,15 @@ import com.dexafree.materialList.card.provider.SmallImageCardProvider;
 import com.huaren.logistics.LogisticsApplication;
 import com.huaren.logistics.R;
 import com.huaren.logistics.bean.Customer;
-import com.huaren.logistics.bean.Goods;
+import com.huaren.logistics.bean.LogisticsOrder;
+import com.huaren.logistics.bean.OrderDetail;
 import com.huaren.logistics.dao.CustomerDao;
-import com.huaren.logistics.dao.GoodsDao;
+import com.huaren.logistics.dao.LogisticsOrderDao;
+import com.huaren.logistics.dao.OrderDetailDao;
 import com.huaren.logistics.util.CommonTool;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 public class CargoPresenter {
 
@@ -29,23 +33,23 @@ public class CargoPresenter {
 
   public void initCargoList() {
     CustomerDao customerDao = LogisticsApplication.getInstance().getDaoSession().getCustomerDao();
-    GoodsDao goodsDao = LogisticsApplication.getInstance().getDaoSession().getGoodsDao();
     List<Customer> customerList = customerDao.loadAll();
     for (int i = 0; i < customerList.size(); i++) {
       Customer customer = customerList.get(i);
-      List<Goods> goodsList = goodsDao.queryBuilder().where(GoodsDao.Properties.CustomerId.eq(customer.getId()))
-          .list();
-      int loadGount = countLoadGoods(goodsList);
-      int unLoadCount = goodsList.size() - loadGount;
-      String desc = "未装车：" + unLoadCount + "，已装车：" + loadGount;
+      Map<String, Integer> countMap = countLoadOrder(customer);
+      String desc = "订单总数："
+          + countMap.get("total")
+          + "，未装车订单："
+          + countMap.get("unLoadCount")
+          + "，已装车订单："
+          + countMap.get("loadCount");
       int drawable = R.drawable.star_do;
-      if (unLoadCount == 0) {
+      if (countMap.get("unLoadCount") == 0) {
         drawable = R.drawable.star_finish;
       }
-      Card card = new Card.Builder((Context)cargoView)
-          .setTag(customer.getId())
+      Card card = new Card.Builder((Context) cargoView).setTag(customer.getCustomerId())
           .withProvider(SmallImageCardProvider.class)
-          .setTitle(customer.getName() + "(" + customer.getCode() +")")
+          .setTitle(customer.getName() + "(" + customer.getCustomerId() + ")")
           .setDescription(desc)
           .setDrawable(drawable)
           .endConfig()
@@ -54,14 +58,30 @@ public class CargoPresenter {
     }
   }
 
-  private int countLoadGoods(List<Goods> goodsList) {
-    int count = 0;
-    for (int i = 0; i < goodsList.size(); i++) {
-      Goods goods = goodsList.get(i);
-      if (goods.getIsLoad()) {
-        count ++;
+  /**
+   * 计算总货物、装车主订单数量、未装车主订单数量
+   */
+  private Map<String, Integer> countLoadOrder(Customer customer) {
+    LogisticsOrderDao logisticsOrderDao = LogisticsApplication.getInstance().getLogisticsOrderDao();
+    int total = 0, loadCount = 0, unLoadCount = 0;
+    List<LogisticsOrder> logisticsOrderList = logisticsOrderDao.queryBuilder()
+        .where(LogisticsOrderDao.Properties.CustomerId.eq(customer.getCustomerId()))
+        .list();
+    if (logisticsOrderList != null && !logisticsOrderList.isEmpty()) {
+      total = logisticsOrderList.size();
+      for (int i = 0; i < logisticsOrderList.size(); i++) {
+        LogisticsOrder logisticsOrder = logisticsOrderList.get(i);
+        if ("1".equals(logisticsOrder.getOrderStatus())) {
+          unLoadCount++;
+        } else if ("2".equals(logisticsOrder.getOrderStatus())) {
+          loadCount++;
+        }
       }
     }
-    return count;
+    Map<String, Integer> map = new HashMap<>();
+    map.put("total", total);
+    map.put("unLoadCount", unLoadCount);
+    map.put("loadCount", loadCount);
+    return map;
   }
 }

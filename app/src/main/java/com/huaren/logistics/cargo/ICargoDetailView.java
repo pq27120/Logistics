@@ -1,4 +1,4 @@
-package com.huaren.logistics.detail;
+package com.huaren.logistics.cargo;
 
 import com.dexafree.materialList.card.Card;
 
@@ -7,11 +7,7 @@ public interface ICargoDetailView {
 
   void addCard(Card card);
 
-  void setLoadInfo(int loadGount, int unLoadCount);
-
   void showLoadDialog(String customerId, String barCode);
 
   void reInit();
-
-  String getUnLoadCount();
 }
