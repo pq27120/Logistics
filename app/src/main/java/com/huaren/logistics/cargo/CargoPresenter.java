@@ -7,11 +7,8 @@ import com.huaren.logistics.LogisticsApplication;
 import com.huaren.logistics.R;
 import com.huaren.logistics.bean.Customer;
 import com.huaren.logistics.bean.LogisticsOrder;
-import com.huaren.logistics.bean.OrderDetail;
 import com.huaren.logistics.dao.CustomerDao;
 import com.huaren.logistics.dao.LogisticsOrderDao;
-import com.huaren.logistics.dao.OrderDetailDao;
-import com.huaren.logistics.util.CommonTool;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -22,13 +19,6 @@ public class CargoPresenter {
 
   public CargoPresenter(ICargoView cargoView) {
     this.cargoView = cargoView;
-  }
-
-  public void initUserInfo() {
-    String name = CommonTool.getSharePreference((Context) cargoView, "name");
-    String driver = CommonTool.getSharePreference((Context) cargoView, "name");
-    String licensePlate = CommonTool.getSharePreference((Context) cargoView, "licensePlate");
-    cargoView.setUserInfo(name, driver, licensePlate);
   }
 
   public void initCargoList() {

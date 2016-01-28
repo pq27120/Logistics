@@ -35,7 +35,7 @@ public class CargoActivity extends BaseActivity implements ICargoView {
     });
     ((TextView) findViewById(R.id.tv_common_title)).setText(R.string.cargo);
     presenter = new CargoPresenter(this);
-    presenter.initUserInfo();
+    initUserInfo();
     presenter.initCargoList();
   }
 
