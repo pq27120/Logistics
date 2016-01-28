@@ -34,11 +34,11 @@ public interface MainView {
 
     void enterDownCargo();
 
-    void setUserInfo(String name, String driver, String licensePlate);
-
     void enterCargo();
 
     void enterUnCargo();
 
     void enterEvaluaton();
+
+    void enterInfo();
 }

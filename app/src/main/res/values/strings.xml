@@ -33,4 +33,7 @@
     <string name="title_activity_evalutaion">客户评价</string>
     <string name="title_activity_evalutaion_detail">评价详情</string>
     <string name="evaluation_btn">评价</string>
+    <string name="quit">退出</string>
+    <string name="info">我的</string>
+    <string name="title_activity_info">我的</string>
 </resources>

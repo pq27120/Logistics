@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:orientation="vertical"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/white"
+    >
+
+  <include
+      android:id="@+id/layout_title"
+      layout="@layout/layout_common_title"
+      />
+
+  <include layout="@layout/layout_comm_user"/>
+
+  <com.gc.materialdesign.views.ButtonRectangle
+      android:id="@+id/btn_quit"
+      android:layout_width="300dp"
+      android:layout_height="wrap_content"
+      android:background="@color/blue_two"
+      android:text="@string/quit"
+      android:layout_gravity="center_horizontal"
+      android:textSize="@dimen/text_size_middle"
+      android:padding="0dp"
+      />
+</LinearLayout>

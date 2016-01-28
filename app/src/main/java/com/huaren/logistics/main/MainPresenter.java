@@ -104,7 +104,7 @@ public class MainPresenter implements OnFinishedListener {
     mainMenuItemList.add(mainMenuItem);
 
     mainMenuItem = new MainMenuItem();
-    mainMenuItem.setId(7);
+    mainMenuItem.setId(8);
     mainMenuItem.setImageId("mypage");
     mainMenuItem.setName("我的");
     mainMenuItemList.add(mainMenuItem);
@@ -135,15 +135,11 @@ public class MainPresenter implements OnFinishedListener {
         break;
       case 7:
         break;
+      case 8:
+        mainView.enterInfo();
+        break;
       default:
         break;
     }
-  }
-
-  public void initUserInfo() {
-    String name = CommonTool.getSharePreference((Context) mainView, "name");
-    String driver = CommonTool.getSharePreference((Context) mainView, "name");
-    String licensePlate = CommonTool.getSharePreference((Context) mainView, "licensePlate");
-    mainView.setUserInfo(name, driver, licensePlate);
   }
 }

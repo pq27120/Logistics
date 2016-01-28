@@ -32,6 +32,7 @@ import com.huaren.logistics.R;
 import com.huaren.logistics.cargo.CargoActivity;
 import com.huaren.logistics.downcargo.DownCargoActivity;
 import com.huaren.logistics.evaluation.EvaluationActivity;
+import com.huaren.logistics.info.InfoActivity;
 import com.huaren.logistics.uncargo.UnCargoActivity;
 import java.util.List;
 
@@ -39,9 +40,6 @@ public class MainActivity extends BaseActivity implements MainView, AdapterView.
 
     private GridView gridView;
     private MainPresenter presenter;
-    private TextView nameTv;
-    private TextView driverTv;
-    private TextView licensePlateTv;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -49,14 +47,11 @@ public class MainActivity extends BaseActivity implements MainView, AdapterView.
         setContentView(R.layout.activity_main);
         gridView = (GridView) findViewById(R.id.main_gridview);
         gridView.setStretchMode(GridView.STRETCH_COLUMN_WIDTH);
-        nameTv = (TextView)findViewById(R.id.shipper_tv);
-        driverTv = (TextView)findViewById(R.id.driver_tv);
-        licensePlateTv = (TextView)findViewById(R.id.license_plate_tv);
+        initUserInfo();
         (findViewById(R.id.common_back_btn)).setVisibility(View.GONE);
         ((TextView)findViewById(R.id.tv_common_title)).setText(R.string.app_name);
         presenter = new MainPresenter(this);
         presenter.initGridView();
-        presenter.initUserInfo();
         gridView.setOnItemClickListener(new GridViewItemClick());
     }
 
@@ -107,12 +102,6 @@ public class MainActivity extends BaseActivity implements MainView, AdapterView.
         startActivity(new Intent(this, DownCargoActivity.class));
     }
 
-    @Override public void setUserInfo(String name, String driver, String licensePlate) {
-        nameTv.setText(name);
-        driverTv.setText(driver);
-        licensePlateTv.setText(licensePlate);
-    }
-
     @Override public void enterCargo() {
         startActivity(new Intent(this, CargoActivity.class));
     }
@@ -123,6 +112,10 @@ public class MainActivity extends BaseActivity implements MainView, AdapterView.
 
     @Override public void enterEvaluaton() {
         startActivity(new Intent(this, EvaluationActivity.class));
+    }
+
+    @Override public void enterInfo() {
+        startActivity(new Intent(this, InfoActivity.class));
     }
 
     @Override public void onItemClick(AdapterView<?> parent, View view, int position, long id) {

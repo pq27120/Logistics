@@ -70,6 +70,10 @@
             android:name=".evaluation.EvaluationDetailActivity"
             android:label="@string/title_activity_evalutaion_detail" >
         </activity>
+        <activity
+            android:name=".info.InfoActivity"
+            android:label="@string/title_activity_info" >
+        </activity>
     </application>
 
 </manifest>

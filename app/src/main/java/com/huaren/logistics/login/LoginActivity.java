@@ -30,7 +30,6 @@ import com.rengwuxian.materialedittext.MaterialEditText;
 
 public class LoginActivity extends Activity implements LoginView, View.OnClickListener {
 
-  private ProgressBar progressBar;
   private MaterialEditText username;
   private MaterialEditText password;
   private LoginPresenter presenter;
