@@ -1,4 +1,4 @@
-package com.huaren.logistics.cargo;
+package com.huaren.logistics.uncargo;
 
 import android.content.Context;
 import com.dexafree.materialList.card.Card;
@@ -9,11 +9,12 @@ import com.huaren.logistics.bean.OrderDetail;
 import com.huaren.logistics.dao.OrderDetailDao;
 import java.util.List;
 
-public class CargoDetailPresenter {
-  private ICargoDetailView cargoDetailView;
+public class UnCargoDetailPresenter{
 
-  public CargoDetailPresenter(ICargoDetailView cargoDetailView) {
-    this.cargoDetailView = cargoDetailView;
+  private IUnCargoDetailView unCargoDetailView;
+
+  public UnCargoDetailPresenter(IUnCargoDetailView unCargoDetailView) {
+    this.unCargoDetailView = unCargoDetailView;
   }
 
   public void initCargoDetail(String orderId) {
@@ -25,21 +26,21 @@ public class CargoDetailPresenter {
       OrderDetail orderDetail = orderDetailList.get(i);
       int drawable;
       String desc;
-      if ("1".equals(orderDetail.getDetailStatus())) {
+      if ("2".equals(orderDetail.getDetailStatus())) {
         drawable = R.drawable.star_do;
-        desc = "未装车";
+        desc = "未卸车";
       } else {
         drawable = R.drawable.star_finish;
-        desc = "已装车";
+        desc = "已卸车";
       }
-      Card card = new Card.Builder((Context) cargoDetailView).setTag(orderDetail.getDetailId())
+      Card card = new Card.Builder((Context) unCargoDetailView).setTag(orderDetail.getDetailId())
           .withProvider(SmallImageCardProvider.class)
           .setTitle(orderDetail.getDetailName() + "(" + orderDetail.getDetailId() + ")")
           .setDescription(desc)
           .setDrawable(drawable)
           .endConfig()
           .build();
-      cargoDetailView.addCard(card);
+      unCargoDetailView.addCard(card);
     }
   }
 }

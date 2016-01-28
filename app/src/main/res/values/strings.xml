@@ -21,10 +21,16 @@
     <string name="down_cargo">数据获取</string>
     <string name="title_activity_cargo">装车点货</string>
     <string name="cargo">装车点货</string>
-    <string name="title_activity_cargo_detail">详情</string>
     <string name="load">装车</string>
     <string name="bar_code_show">条码</string>
     <string name="title_activity_uncargo">卸车点货</string>
     <string name="remove">卸车</string>
     <string name="uncargo">卸车点货</string>
+    <string name="evaluation">客户评价</string>
+    <string name="satisfaction">满意</string>
+    <string name="general">一般</string>
+    <string name="poor">较差</string>
+    <string name="title_activity_evalutaion">客户评价</string>
+    <string name="title_activity_evalutaion_detail">评价详情</string>
+    <string name="evaluation_btn">评价</string>
 </resources>

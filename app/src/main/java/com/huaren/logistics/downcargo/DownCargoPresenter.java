@@ -8,9 +8,11 @@ import android.util.Xml;
 import android.widget.Toast;
 import com.huaren.logistics.LogisticsApplication;
 import com.huaren.logistics.bean.Customer;
-import com.huaren.logistics.bean.Goods;
+import com.huaren.logistics.bean.LogisticsOrder;
+import com.huaren.logistics.bean.OrderDetail;
 import com.huaren.logistics.dao.CustomerDao;
-import com.huaren.logistics.dao.GoodsDao;
+import com.huaren.logistics.dao.LogisticsOrderDao;
+import com.huaren.logistics.dao.OrderDetailDao;
 import com.huaren.logistics.util.CommonTool;
 import com.huaren.logistics.util.UiTool;
 import com.huaren.logistics.util.webservice.WebServiceConnect;
@@ -60,89 +62,80 @@ public class DownCargoPresenter {
 
   private void insertCustomer() {
     List<Customer> customerList = new ArrayList<>();
-    Customer customer = new Customer();
-    customer.setName("客户名称1");
-    customer.setAddress("地址名称1");
-    customer.setCode("code1");
+    for (int custIndex = 1; custIndex < 10; custIndex++) {
+      Customer customer = new Customer();
+      customer.setName("客户名称" + custIndex);
+      customer.setAddress("地址名称" + custIndex);
+      customer.setCustomerId("code" + custIndex);
+      customer.setPassword("123456");
+      List<LogisticsOrder> orderList = new ArrayList<>();
+      for (int orderIndex = 1; orderIndex < 11; orderIndex++) {
+        LogisticsOrder order = new LogisticsOrder();
+        order.setCustomerId(customer.getCustomerId());
+        order.setOrderName("客户" + custIndex + "订单" + orderIndex);
+        order.setOrderId("code" + custIndex + "00" + orderIndex);
+        order.setOrderStatus("1");
 
-    List<Goods> goodsList = new ArrayList<>();
-    Goods goods = new Goods();
-    goods.setGoodsName("货物1");
-    goods.setBarCode("001");
-    goods.setIsLoad(false);
-    goods.setIsRemove(false);
-    goodsList.add(goods);
+        List<OrderDetail> orderDetailList = new ArrayList<>();
+        for (int detailIndex = 1; detailIndex < 11; detailIndex++) {
+          OrderDetail orderDetail = new OrderDetail();
+          orderDetail.setOrderId(order.getOrderId());
+          orderDetail.setDetailId("code" + custIndex + "00" + orderIndex + "00" + detailIndex);
+          orderDetail.setDetailName("客户" + custIndex + "订单" + orderIndex + "货物" + detailIndex);
+          orderDetail.setDetailStatus("1");
+          orderDetailList.add(orderDetail);
+        }
+        order.setOrderDetails(orderDetailList);
+        orderList.add(order);
+      }
+      customer.setOrders(orderList);
+      customerList.add(customer);
+    }
 
-    goods = new Goods();
-    goods.setGoodsName("货物2");
-    goods.setBarCode("002");
-    goods.setIsLoad(false);
-    goods.setIsRemove(false);
-    goodsList.add(goods);
-
-    goods = new Goods();
-    goods.setGoodsName("货物3");
-    goods.setBarCode("003");
-    goods.setIsLoad(false);
-    goods.setIsRemove(false);
-    goodsList.add(goods);
-    customer.setGoods(goodsList);
-    customerList.add(customer);
-
-    customer = new Customer();
-    customer.setName("客户名称2");
-    customer.setAddress("地址名称2");
-    customer.setCode("code2");
-
-    goodsList = new ArrayList<>();
-    goods = new Goods();
-    goods.setGoodsName("货物11");
-    goods.setBarCode("0011");
-    goods.setIsLoad(false);
-    goods.setIsRemove(false);
-    goodsList.add(goods);
-
-    goods = new Goods();
-    goods.setGoodsName("货物21");
-    goods.setBarCode("0021");
-    goods.setIsLoad(false);
-    goods.setIsRemove(false);
-    goodsList.add(goods);
-
-    goods = new Goods();
-    goods.setGoodsName("货物31");
-    goods.setBarCode("0031");
-    goods.setIsLoad(false);
-    goods.setIsRemove(false);
-    goodsList.add(goods);
-    customer.setGoods(goodsList);
-    customerList.add(customer);
+    CommonTool.showLog(customerList.toString());
 
     int customerCount = 0;
-    int goodsCount = 0;
+    int orderCount = 0;
+    int orderDetailCount = 0;
     CustomerDao customerDao = LogisticsApplication.getInstance().getDaoSession().getCustomerDao();
-    GoodsDao goodsDao = LogisticsApplication.getInstance().getDaoSession().getGoodsDao();
+    LogisticsOrderDao logisticsOrderDao = LogisticsApplication.getInstance().getDaoSession().getLogisticsOrderDao();
+    OrderDetailDao orderDetailDao = LogisticsApplication.getInstance().getDaoSession().getOrderDetailDao();
     if (customerList != null && !customerList.isEmpty()) {
       for (int i = 0; i < customerList.size(); i++) {
         Customer customer1 = customerList.get(i);
         long customerQueryCount = customerDao.queryBuilder()
-            .where(CustomerDao.Properties.Code.eq(customer1.getCode()))
-            .buildCount().count();
+            .where(CustomerDao.Properties.CustomerId.eq(customer1.getCustomerId()))
+            .buildCount()
+            .count();
         if (customerQueryCount <= 0) {
           customerDao.insert(customer1);
           customerCount++;
         }
-        List<Goods> goodsList1 = customer1.getGoods();
-        if (goodsList1 != null && !goodsList1.isEmpty()) {
-          for (int j = 0; j < goodsList1.size(); j++) {
-            Goods goods1 = goodsList1.get(j);
-            long goodsQueryCount = goodsDao.queryBuilder()
-                .where(GoodsDao.Properties.BarCode.eq(goods1.getBarCode()))
-                .buildCount().count();
-            if (goodsQueryCount == 0) {
-              goods1.setCustomerId(customer1.getId());
-              goodsDao.insert(goods1);
-              goodsCount++;
+        List<LogisticsOrder> orderList = customer1.getOrders();
+        if (orderList != null && !orderList.isEmpty()) {
+          for (int j = 0; j < orderList.size(); j++) {
+            LogisticsOrder order1 = orderList.get(j);
+            CommonTool.showLog(order1.toString());
+            long orderQueryCount = logisticsOrderDao.queryBuilder()
+                .where(LogisticsOrderDao.Properties.OrderId.eq(order1.getOrderId()))
+                .buildCount()
+                .count();
+            if (orderQueryCount == 0) {
+              logisticsOrderDao.insert(order1);
+              orderCount++;
+            }
+
+            List<OrderDetail> orderDetailList1 = order1.getOrderDetails();
+            for (int k = 0; k < orderDetailList1.size(); k++) {
+              OrderDetail orderDetail = orderDetailList1.get(k);
+              long orderDetailQueryCount = orderDetailDao.queryBuilder()
+                  .where(OrderDetailDao.Properties.DetailId.eq(orderDetail.getDetailId()))
+                  .buildCount()
+                  .count();
+              if (orderDetailQueryCount == 0) {
+                orderDetailDao.insert(orderDetail);
+                orderDetailCount++;
+              }
             }
           }
         }
@@ -152,7 +145,7 @@ public class DownCargoPresenter {
     List<Customer> list = customerDao.loadAll();
     System.out.println(list);
     String time = CommonTool.parseCurrDateToString("yyyy-MM-dd HH:mm:ss");
-    String info = "更新了" + customerCount + "条客户记录，" + goodsCount + " 条货物记录";
+    String info = "更新了" + customerCount + "条客户记录，" + orderCount + " 条订单主单记录，" + orderDetailCount + "条订单详单记录";
     downCargoView.showUpdateView(time, info);
   }
 
@@ -180,7 +173,7 @@ public class DownCargoPresenter {
             if ("CooperateID".equals(name)) {
               customer = new Customer();
               // 获得当前节点名的第一个属性的值
-              customer.setCode(parser.nextText());
+              customer.setCustomerId(parser.nextText());
             }
             if (customer != null) {
               if ("CooperateName".equals(name)) {

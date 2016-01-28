@@ -19,7 +19,6 @@
 package com.huaren.logistics.main;
 
 import android.content.Intent;
-import android.graphics.Color;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -28,17 +27,12 @@ import android.widget.AdapterView;
 import android.widget.GridView;
 import android.widget.TextView;
 import android.widget.Toast;
-import com.dexafree.materialList.card.Card;
-import com.dexafree.materialList.card.OnButtonClickListener;
-import com.dexafree.materialList.card.provider.WelcomeCardProvider;
-import com.dexafree.materialList.view.MaterialListView;
 import com.huaren.logistics.BaseActivity;
 import com.huaren.logistics.R;
 import com.huaren.logistics.cargo.CargoActivity;
-import com.huaren.logistics.detail.CargoDetailActivity;
 import com.huaren.logistics.downcargo.DownCargoActivity;
+import com.huaren.logistics.evaluation.EvaluationActivity;
 import com.huaren.logistics.uncargo.UnCargoActivity;
-import com.huaren.logistics.undetail.UnCargoDetailActivity;
 import java.util.List;
 
 public class MainActivity extends BaseActivity implements MainView, AdapterView.OnItemClickListener {
@@ -125,6 +119,10 @@ public class MainActivity extends BaseActivity implements MainView, AdapterView.
 
     @Override public void enterUnCargo() {
         startActivity(new Intent(this, UnCargoActivity.class));
+    }
+
+    @Override public void enterEvaluaton() {
+        startActivity(new Intent(this, EvaluationActivity.class));
     }
 
     @Override public void onItemClick(AdapterView<?> parent, View view, int position, long id) {

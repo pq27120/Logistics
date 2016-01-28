@@ -1,0 +1,11 @@
+package com.huaren.logistics.uncargo;
+
+import com.dexafree.materialList.card.Card;
+
+public interface IUnCargoOrderView {
+  void addCard(Card card);
+
+  void showLoadDialog(String title, String message);
+
+  void reInit();
+}

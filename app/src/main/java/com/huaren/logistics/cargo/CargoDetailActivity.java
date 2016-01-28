@@ -58,7 +58,7 @@ public class CargoDetailActivity extends BaseActivity implements ICargoDetailVie
   }
 
   @Override public void reInit() {
-    presenter.initUserInfo();
+    initUserInfo();
     mListView.clearAll();
     presenter.initCargoDetail(orderId);
   }

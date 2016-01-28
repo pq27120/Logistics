@@ -39,4 +39,6 @@ public interface MainView {
     void enterCargo();
 
     void enterUnCargo();
+
+    void enterEvaluaton();
 }

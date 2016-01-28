@@ -2,14 +2,21 @@ package com.huaren.logistics;
 
 import android.app.Application;
 import android.database.sqlite.SQLiteDatabase;
+import com.huaren.logistics.bean.OrderDetail;
+import com.huaren.logistics.dao.CustomerDao;
 import com.huaren.logistics.dao.DaoMaster;
 import com.huaren.logistics.dao.DaoSession;
+import com.huaren.logistics.dao.LogisticsOrderDao;
+import com.huaren.logistics.dao.OrderDetailDao;
 
 public class LogisticsApplication extends Application {
 
   private SQLiteDatabase db;
   private DaoMaster daoMaster;
   private DaoSession daoSession;
+  private CustomerDao customerDao;
+  private LogisticsOrderDao logisticsOrderDao;
+  private OrderDetailDao orderDetailDao;
   private static LogisticsApplication INSTANCE;
 
   public static LogisticsApplication getInstance() {
@@ -19,6 +26,8 @@ public class LogisticsApplication extends Application {
   @Override public void onCreate() {
     super.onCreate();
     INSTANCE = this;
+    CrashHandler crashHandler = CrashHandler.getInstance();
+    crashHandler.init(getApplicationContext());
     setupDatabase();
   }
 
@@ -35,9 +44,28 @@ public class LogisticsApplication extends Application {
     // 注意：该数据库连接属于 DaoMaster，所以多个 Session 指的是相同的数据库连接。
     daoMaster = new DaoMaster(db);
     daoSession = daoMaster.newSession();
+    initDao();
+  }
+
+  private void initDao() {
+    customerDao = daoSession.getCustomerDao();
+    logisticsOrderDao = daoSession.getLogisticsOrderDao();
+    orderDetailDao = daoSession.getOrderDetailDao();
   }
 
   public DaoSession getDaoSession() {
     return daoSession;
+  }
+
+  public OrderDetailDao getOrderDetailDao() {
+    return orderDetailDao;
+  }
+
+  public LogisticsOrderDao getLogisticsOrderDao() {
+    return logisticsOrderDao;
+  }
+
+  public CustomerDao getCustomerDao() {
+    return customerDao;
   }
 }

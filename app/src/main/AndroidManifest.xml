@@ -39,16 +39,32 @@
             android:label="@string/title_activity_cargo" >
         </activity>
         <activity
-            android:name=".detail.CargoDetailActivity"
-            android:label="@string/title_activity_cargo_detail" >
+            android:name=".cargo.CargoOrderActivity"
+            android:label="@string/title_activity_cargo" >
+        </activity>
+        <activity
+            android:name=".cargo.CargoDetailActivity"
+            android:label="@string/title_activity_cargo" >
         </activity>
         <activity
             android:name=".uncargo.UnCargoActivity"
             android:label="@string/title_activity_uncargo" >
         </activity>
         <activity
-            android:name=".undetail.UnCargoDetailActivity"
-            android:label="@string/title_activity_cargo_detail" >
+            android:name=".uncargo.UnCargoOrderActivity"
+            android:label="@string/title_activity_uncargo" >
+        </activity>
+        <activity
+            android:name=".uncargo.UnCargoDetailActivity"
+            android:label="@string/title_activity_cargo" >
+        </activity>
+        <activity
+            android:name=".evaluation.EvaluationActivity"
+            android:label="@string/title_activity_evalutaion" >
+        </activity>
+        <activity
+            android:name=".evaluation.EvaluationDetailActivity"
+            android:label="@string/title_activity_evalutaion_detail" >
         </activity>
     </application>
 

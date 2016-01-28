@@ -8,7 +8,6 @@ import android.widget.BaseAdapter;
 import android.widget.TextView;
 import com.huaren.logistics.R;
 import com.huaren.logistics.bean.Customer;
-import com.huaren.logistics.bean.Goods;
 import java.util.List;
 
 public class DownCargoAdapter extends BaseAdapter {
@@ -40,20 +39,20 @@ public class DownCargoAdapter extends BaseAdapter {
     TextView unloadSizeView = (TextView) convertView.findViewById(R.id.unload_tv);
     TextView loadSizeView = (TextView) convertView.findViewById(R.id.load_tv);
     Customer customer = customerList.get(position);
-    customerIdView.setText(customer.getCode());
+    customerIdView.setText(customer.getCustomerId());
     customerNameView.setText(customer.getName());
     int unload = 0;
     int load = 0;
-    if (customer.getGoods() != null && !customer.getGoods().isEmpty()) {
-      for (int i = 0; i < customer.getGoods().size(); i++) {
-        Goods goods = customer.getGoods().get(i);
-        if (goods.getIsLoad()) {
-          load++;
-        } else {
-          unload++;
-        }
-      }
-    }
+    //if (customer.getGoods() != null && !customer.getGoods().isEmpty()) {
+    //  for (int i = 0; i < customer.getGoods().size(); i++) {
+    //    Goods goods = customer.getGoods().get(i);
+    //    if (goods.getIsLoad()) {
+    //      load++;
+    //    } else {
+    //      unload++;
+    //    }
+    //  }
+    //}
     unloadSizeView.setText(unload + "");
     loadSizeView.setText(load + "");
     return convertView;

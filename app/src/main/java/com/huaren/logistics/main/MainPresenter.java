@@ -129,6 +129,7 @@ public class MainPresenter implements OnFinishedListener {
       case 4:
         break;
       case 5:
+        mainView.enterEvaluaton();
         break;
       case 6:
         break;
