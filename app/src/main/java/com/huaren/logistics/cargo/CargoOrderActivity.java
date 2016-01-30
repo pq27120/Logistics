@@ -1,5 +1,6 @@
 package com.huaren.logistics.cargo;
 
+import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
@@ -51,6 +52,12 @@ public class CargoOrderActivity extends BaseActivity implements ICargoOrderView 
     presenter = new CargoOrderPresenter(this);
     loadBtn.setOnClickListener(new LoadButtonClick());
     presenter.initCargoOrder(customerId);
+  }
+
+  public static void actionStart(Context context, String customerId) {
+    Intent intent = new Intent(context, CargoOrderActivity.class);
+    intent.putExtra("customerId", customerId);
+    context.startActivity(intent);
   }
 
   @Override public void addCard(Card card) {

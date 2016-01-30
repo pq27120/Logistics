@@ -24,9 +24,7 @@ public class CargoActivity extends BaseActivity implements ICargoView {
     mListView.addOnItemTouchListener(new RecyclerItemClickListener.OnItemClickListener() {
       @Override public void onItemClick(Card card, int position) {
         Log.d("CARD_TYPE", card.getTag().toString());
-        Intent intent = new Intent(CargoActivity.this, CargoOrderActivity.class);
-        intent.putExtra("customerId", card.getTag().toString());
-        startActivity(intent);
+        CargoOrderActivity.actionStart(CargoActivity.this, card.getTag().toString());
       }
 
       @Override public void onItemLongClick(Card card, int position) {
