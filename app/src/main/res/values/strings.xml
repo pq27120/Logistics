@@ -36,4 +36,10 @@
     <string name="quit">退出</string>
     <string name="info">我的</string>
     <string name="title_activity_info">我的</string>
+    <string name="activity_recycle_input_title">回收录入</string>
+    <string name="recycle_input_hint">请输入回收的货物件数</string>
+    <string name="recycle_input_btn">回收</string>
+    <string name="recycle_scan_hint">条码</string>
+    <string name="recycle_scan_btn">回收扫描</string>
+    <string name="activity_recycle_scan_title">回收扫描</string>
 </resources>

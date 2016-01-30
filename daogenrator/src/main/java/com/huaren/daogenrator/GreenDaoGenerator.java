@@ -30,6 +30,19 @@ public class GreenDaoGenerator {
    * @param schema
    */
   private static void addTable(Schema schema) {
+    Entity sysDicEntity = schema.addEntity("SysDic"); //字典表
+    sysDicEntity.addLongProperty("id").primaryKey();
+    sysDicEntity.addStringProperty("myName").notNull();
+    sysDicEntity.addStringProperty("myState");
+    sysDicEntity.addStringProperty("note");
+
+    Entity sysDicValueEntity = schema.addEntity("SysDicValue"); //字典值表
+    sysDicValueEntity.addLongProperty("id").primaryKey();
+    sysDicValueEntity.addStringProperty("myDisplayValue").notNull();
+    sysDicValueEntity.addIntProperty("dicId").notNull();
+    sysDicValueEntity.addStringProperty("myName").notNull();
+    sysDicValueEntity.addStringProperty("note");
+
     // 一个实体（类）就关联到数据库中的一张表，此处表名为「Customer」（既类名）
     Entity customer = schema.addEntity("Customer");
     // 你也可以重新给表命名
@@ -49,13 +62,26 @@ public class GreenDaoGenerator {
     orderInfo.addStringProperty("orderId").primaryKey();
     orderInfo.addStringProperty("orderName").notNull();
     orderInfo.addStringProperty("orderStatus").notNull();
+    orderInfo.addStringProperty("evaluation"); //用户评价值
     orderInfo.addStringProperty("customerId").notNull();
 
-    Entity orderDetail = schema.addEntity("OrderDetail");
+    Entity orderDetail = schema.addEntity("OrderDetail");//订单详情
     orderDetail.implementsSerializable();
     orderDetail.addStringProperty("detailId").primaryKey();
     orderDetail.addStringProperty("detailName").notNull();
     orderDetail.addStringProperty("detailStatus").notNull();
     orderDetail.addStringProperty("orderId").notNull();
+
+    Entity recycleInput = schema.addEntity("RecycleInput"); //回收录入信息
+    recycleInput.addIdProperty();
+    recycleInput.addStringProperty("customId").notNull();
+    recycleInput.addIntProperty("recycleNum").notNull();
+    recycleInput.addDateProperty("recycleTime").notNull();//回收录入时间
+
+    Entity recycleScan = schema.addEntity("RecycleScan"); //回收扫描信息
+    recycleScan.addIdProperty();
+    recycleScan.addDateProperty("recycleScanTime").notNull();
+    recycleScan.addLongProperty("inputId").notNull();
+    recycleScan.addStringProperty("scanCode").notNull();
   }
 }

@@ -41,4 +41,8 @@ public interface MainView {
     void enterEvaluaton();
 
     void enterInfo();
+
+    void enterRecycle();
+
+    void enterRecycleScan();
 }

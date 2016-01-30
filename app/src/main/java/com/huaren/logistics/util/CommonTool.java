@@ -4,7 +4,6 @@
  */
 package com.huaren.logistics.util;
 
-import android.app.Activity;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.content.pm.PackageInfo;
@@ -17,7 +16,6 @@ import android.net.NetworkInfo;
 import android.os.Environment;
 import android.util.Log;
 import android.view.View;
-import com.huaren.logistics.R;
 import com.huaren.logistics.common.Constant;
 import java.io.BufferedInputStream;
 import java.io.BufferedWriter;

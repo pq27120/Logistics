@@ -10,9 +10,13 @@ import com.huaren.logistics.LogisticsApplication;
 import com.huaren.logistics.bean.Customer;
 import com.huaren.logistics.bean.LogisticsOrder;
 import com.huaren.logistics.bean.OrderDetail;
+import com.huaren.logistics.bean.SysDic;
+import com.huaren.logistics.bean.SysDicValue;
 import com.huaren.logistics.dao.CustomerDao;
 import com.huaren.logistics.dao.LogisticsOrderDao;
 import com.huaren.logistics.dao.OrderDetailDao;
+import com.huaren.logistics.dao.SysDicDao;
+import com.huaren.logistics.dao.SysDicValueDao;
 import com.huaren.logistics.util.CommonTool;
 import com.huaren.logistics.util.UiTool;
 import com.huaren.logistics.util.webservice.WebServiceConnect;
@@ -58,18 +62,55 @@ public class DownCargoPresenter {
   private void addCustomerInfo(String detail) {
     parseXml(detail);
     insertCustomer();
+    addDictionary();
+  }
+
+  private void addDictionary() {
+    SysDic sysDic = new SysDic();
+    sysDic.setId(1l);
+    sysDic.setMyName("评价");
+
+    List<SysDicValue> sysDicValueList = new ArrayList<>();
+    SysDicValue sysDicValue = new SysDicValue();
+    sysDicValue.setId(1l);
+    sysDicValue.setDicId(1);
+    sysDicValue.setMyName("1");
+    sysDicValue.setMyDisplayValue("满意");
+    sysDicValueList.add(sysDicValue);
+
+    sysDicValue = new SysDicValue();
+    sysDicValue.setId(2l);
+    sysDicValue.setDicId(1);
+    sysDicValue.setMyName("2");
+    sysDicValue.setMyDisplayValue("一般");
+    sysDicValueList.add(sysDicValue);
+
+    sysDicValue = new SysDicValue();
+    sysDicValue.setId(3l);
+    sysDicValue.setDicId(1);
+    sysDicValue.setMyName("3");
+    sysDicValue.setMyDisplayValue("较差");
+    sysDicValueList.add(sysDicValue);
+
+    sysDic.setSysDicValueList(sysDicValueList);
+
+    SysDicDao sysDicDao = LogisticsApplication.getInstance().getSysDicDao();
+    sysDicDao.insertOrReplace(sysDic);
+
+    SysDicValueDao sysDicValueDao = LogisticsApplication.getInstance().getSysDicValueDao();
+    sysDicValueDao.insertOrReplaceInTx(sysDicValueList);
   }
 
   private void insertCustomer() {
     List<Customer> customerList = new ArrayList<>();
-    for (int custIndex = 1; custIndex < 10; custIndex++) {
+    for (int custIndex = 1; custIndex < 3; custIndex++) {
       Customer customer = new Customer();
       customer.setName("客户名称" + custIndex);
       customer.setAddress("地址名称" + custIndex);
       customer.setCustomerId("code" + custIndex);
       customer.setPassword("123456");
       List<LogisticsOrder> orderList = new ArrayList<>();
-      for (int orderIndex = 1; orderIndex < 11; orderIndex++) {
+      for (int orderIndex = 1; orderIndex < 3; orderIndex++) {
         LogisticsOrder order = new LogisticsOrder();
         order.setCustomerId(customer.getCustomerId());
         order.setOrderName("客户" + custIndex + "订单" + orderIndex);

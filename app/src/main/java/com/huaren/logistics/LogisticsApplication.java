@@ -2,12 +2,15 @@ package com.huaren.logistics;
 
 import android.app.Application;
 import android.database.sqlite.SQLiteDatabase;
-import com.huaren.logistics.bean.OrderDetail;
 import com.huaren.logistics.dao.CustomerDao;
 import com.huaren.logistics.dao.DaoMaster;
 import com.huaren.logistics.dao.DaoSession;
 import com.huaren.logistics.dao.LogisticsOrderDao;
 import com.huaren.logistics.dao.OrderDetailDao;
+import com.huaren.logistics.dao.RecycleInputDao;
+import com.huaren.logistics.dao.RecycleScanDao;
+import com.huaren.logistics.dao.SysDicDao;
+import com.huaren.logistics.dao.SysDicValueDao;
 
 public class LogisticsApplication extends Application {
 
@@ -17,6 +20,10 @@ public class LogisticsApplication extends Application {
   private CustomerDao customerDao;
   private LogisticsOrderDao logisticsOrderDao;
   private OrderDetailDao orderDetailDao;
+  private SysDicDao sysDicDao;
+  private SysDicValueDao sysDicValueDao;
+  private RecycleInputDao recycleInputDao;
+  private RecycleScanDao recycleScanDao;
   private static LogisticsApplication INSTANCE;
 
   public static LogisticsApplication getInstance() {
@@ -51,6 +58,10 @@ public class LogisticsApplication extends Application {
     customerDao = daoSession.getCustomerDao();
     logisticsOrderDao = daoSession.getLogisticsOrderDao();
     orderDetailDao = daoSession.getOrderDetailDao();
+    sysDicDao = daoSession.getSysDicDao();
+    sysDicValueDao = daoSession.getSysDicValueDao();
+    recycleInputDao = daoSession.getRecycleInputDao();
+    recycleScanDao = daoSession.getRecycleScanDao();
   }
 
   public DaoSession getDaoSession() {
@@ -63,6 +74,22 @@ public class LogisticsApplication extends Application {
 
   public LogisticsOrderDao getLogisticsOrderDao() {
     return logisticsOrderDao;
+  }
+
+  public SysDicDao getSysDicDao() {
+    return sysDicDao;
+  }
+
+  public SysDicValueDao getSysDicValueDao() {
+    return sysDicValueDao;
+  }
+
+  public RecycleInputDao getRecycleInputDao() {
+    return recycleInputDao;
+  }
+
+  public RecycleScanDao getRecycleScanDao() {
+    return recycleScanDao;
   }
 
   public CustomerDao getCustomerDao() {
