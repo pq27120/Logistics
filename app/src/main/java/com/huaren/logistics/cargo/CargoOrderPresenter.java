@@ -12,6 +12,7 @@ import com.huaren.logistics.dao.OrderDetailDao;
 import com.huaren.logistics.util.StringTool;
 import com.huaren.logistics.util.UiTool;
 import de.greenrobot.dao.query.QueryBuilder;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -125,6 +126,7 @@ public class CargoOrderPresenter {
     if (orderDetailList != null && !orderDetailList.isEmpty()) {
       OrderDetail orderDetail = orderDetailList.get(0);
       orderDetail.setDetailStatus("2");
+      orderDetail.setEditTime(new Date());
       orderDetailDao.insertOrReplaceInTx(orderDetail);
       updateOrderStatus(orderDetail.getOrderId());
     }
@@ -153,6 +155,7 @@ public class CargoOrderPresenter {
         LogisticsOrder logisticsOrder = logisticsOrderList.get(0);
         if ("1".equals(logisticsOrder.getOrderStatus())) {
           logisticsOrder.setOrderStatus("2");
+          logisticsOrder.setEditTime(new Date());
           logisticsOrderDao.insertOrReplaceInTx(logisticsOrder);
         }
       }

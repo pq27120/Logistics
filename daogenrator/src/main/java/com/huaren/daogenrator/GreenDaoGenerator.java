@@ -56,6 +56,8 @@ public class GreenDaoGenerator {
     customer.addStringProperty("name").notNull();
     customer.addStringProperty("password").notNull();
     customer.addStringProperty("address");
+    customer.addDateProperty("addTime").notNull();
+    customer.addDateProperty("editTime");
 
     Entity orderInfo = schema.addEntity("LogisticsOrder");
     orderInfo.implementsSerializable();
@@ -64,6 +66,8 @@ public class GreenDaoGenerator {
     orderInfo.addStringProperty("orderStatus").notNull();
     orderInfo.addStringProperty("evaluation"); //用户评价值
     orderInfo.addStringProperty("customerId").notNull();
+    orderInfo.addDateProperty("addTime").notNull();
+    orderInfo.addDateProperty("editTime");
 
     Entity orderDetail = schema.addEntity("OrderDetail");//订单详情
     orderDetail.implementsSerializable();
@@ -71,17 +75,21 @@ public class GreenDaoGenerator {
     orderDetail.addStringProperty("detailName").notNull();
     orderDetail.addStringProperty("detailStatus").notNull();
     orderDetail.addStringProperty("orderId").notNull();
+    orderDetail.addDateProperty("addTime").notNull();
+    orderDetail.addDateProperty("editTime");
 
     Entity recycleInput = schema.addEntity("RecycleInput"); //回收录入信息
     recycleInput.addIdProperty();
     recycleInput.addStringProperty("customId").notNull();
     recycleInput.addIntProperty("recycleNum").notNull();
     recycleInput.addDateProperty("recycleTime").notNull();//回收录入时间
+    recycleInput.addDateProperty("editTime");
 
     Entity recycleScan = schema.addEntity("RecycleScan"); //回收扫描信息
     recycleScan.addIdProperty();
     recycleScan.addDateProperty("recycleScanTime").notNull();
     recycleScan.addLongProperty("inputId").notNull();
     recycleScan.addStringProperty("scanCode").notNull();
+    recycleScan.addDateProperty("editTime");
   }
 }

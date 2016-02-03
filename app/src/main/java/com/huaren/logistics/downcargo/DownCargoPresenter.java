@@ -25,6 +25,7 @@ import com.huaren.logistics.util.webservice.WebServiceParam;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -109,6 +110,7 @@ public class DownCargoPresenter {
       customer.setAddress("地址名称" + custIndex);
       customer.setCustomerId("code" + custIndex);
       customer.setPassword("123456");
+      customer.setAddTime(new Date());
       List<LogisticsOrder> orderList = new ArrayList<>();
       for (int orderIndex = 1; orderIndex < 3; orderIndex++) {
         LogisticsOrder order = new LogisticsOrder();
@@ -116,6 +118,7 @@ public class DownCargoPresenter {
         order.setOrderName("客户" + custIndex + "订单" + orderIndex);
         order.setOrderId("code" + custIndex + "00" + orderIndex);
         order.setOrderStatus("1");
+        order.setAddTime(new Date());
 
         List<OrderDetail> orderDetailList = new ArrayList<>();
         for (int detailIndex = 1; detailIndex < 11; detailIndex++) {
@@ -124,6 +127,7 @@ public class DownCargoPresenter {
           orderDetail.setDetailId("code" + custIndex + "00" + orderIndex + "00" + detailIndex);
           orderDetail.setDetailName("客户" + custIndex + "订单" + orderIndex + "货物" + detailIndex);
           orderDetail.setDetailStatus("1");
+          orderDetail.setAddTime(new Date());
           orderDetailList.add(orderDetail);
         }
         order.setOrderDetails(orderDetailList);

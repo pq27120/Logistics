@@ -29,7 +29,7 @@ public class RecycleScanActivity extends BaseActivity implements IRecycleScanVie
         Log.d("LONG_CLICK", card.getTag().toString());
       }
     });
-    ((TextView) findViewById(R.id.tv_common_title)).setText(R.string.activity_recycle_input_title);
+    ((TextView) findViewById(R.id.tv_common_title)).setText(R.string.activity_recycle_scan_title);
     presenter = new RecycleScanPresent(this);
     initUserInfo();
     presenter.initCustomList();

@@ -46,7 +46,7 @@ public class UnCargoOrderActivity extends BaseActivity implements IUnCargoOrderV
         Log.d("LONG_CLICK", card.getTag().toString());
       }
     });
-    ((TextView) findViewById(R.id.tv_common_title)).setText(R.string.cargo);
+    ((TextView) findViewById(R.id.tv_common_title)).setText(R.string.uncargo);
     Intent intent = getIntent();
     customerId = intent.getStringExtra("customerId");
     presenter = new UnCargoOrderPresenter(this);

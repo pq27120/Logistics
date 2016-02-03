@@ -70,6 +70,7 @@
             android:background="@null"
             android:gravity="center"
             android:hint="@string/input_password"
+            android:inputType="textPassword"
             android:maxLines="1"
             android:singleLine="true"
             android:textSize="@dimen/text_size_middle"

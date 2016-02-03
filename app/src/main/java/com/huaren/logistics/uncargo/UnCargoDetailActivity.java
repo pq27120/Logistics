@@ -21,7 +21,7 @@ public class UnCargoDetailActivity extends BaseActivity implements IUnCargoDetai
     setContentView(R.layout.activity_uncargo_detail);
     initUserInfo();
     mListView = (MaterialListView) findViewById(R.id.material_listview);
-    ((TextView) findViewById(R.id.tv_common_title)).setText(R.string.cargo);
+    ((TextView) findViewById(R.id.tv_common_title)).setText(R.string.uncargo);
     Intent intent = getIntent();
     orderId = intent.getStringExtra("orderId");
     presenter = new UnCargoDetailPresenter(this);

@@ -31,7 +31,7 @@ public class RecycleScanDetailActivity extends BaseActivity implements IRecycleS
     initUserInfo();
     scanEt = (MaterialEditText) findViewById(R.id.input_et);
     scanBtn = (ButtonRectangle) findViewById(R.id.input_btn);
-    ((TextView) findViewById(R.id.tv_common_title)).setText(R.string.activity_recycle_input_title);
+    ((TextView) findViewById(R.id.tv_common_title)).setText(R.string.activity_recycle_scan_title);
     Intent intent = getIntent();
     customerId = intent.getStringExtra("customerId");
     recycleScanDetailPresent = new RecycleScanDetailPresent(this);
