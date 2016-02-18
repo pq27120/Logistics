@@ -1,5 +1,8 @@
 package com.huaren.logistics.evaluation;
 
+import com.huaren.logistics.bean.SysDicValue;
+import java.util.List;
+
 public interface IEvaluationDetailView {
-  void setUserInfo(String name, String driver, String licensePlate);
+  void initRadio(List<SysDicValue> list);
 }

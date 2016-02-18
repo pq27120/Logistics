@@ -1,6 +1,7 @@
 package com.huaren.logistics;
 
 import android.app.Application;
+import android.content.Context;
 import android.database.sqlite.SQLiteDatabase;
 import com.huaren.logistics.dao.CustomerDao;
 import com.huaren.logistics.dao.DaoMaster;
@@ -25,6 +26,7 @@ public class LogisticsApplication extends Application {
   private RecycleInputDao recycleInputDao;
   private RecycleScanDao recycleScanDao;
   private static LogisticsApplication INSTANCE;
+  private static Context context;
 
   public static LogisticsApplication getInstance() {
     return INSTANCE;
@@ -33,6 +35,7 @@ public class LogisticsApplication extends Application {
   @Override public void onCreate() {
     super.onCreate();
     INSTANCE = this;
+    context = getApplicationContext();
     CrashHandler crashHandler = CrashHandler.getInstance();
     crashHandler.init(getApplicationContext());
     setupDatabase();
@@ -94,5 +97,9 @@ public class LogisticsApplication extends Application {
 
   public CustomerDao getCustomerDao() {
     return customerDao;
+  }
+
+  public static Context getContext() {
+    return context;
   }
 }

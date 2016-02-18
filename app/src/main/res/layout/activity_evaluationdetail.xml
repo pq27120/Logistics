@@ -19,45 +19,46 @@
     <include layout="@layout/layout_comm_user"/>
 
     <LinearLayout
+        android:id="@+id/radio_ll"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="horizontal"
         >
-      <RadioGroup
-          android:layout_width="match_parent"
-          android:layout_height="wrap_content"
-          android:orientation="horizontal"
-          >
-        <RadioButton
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="@string/satisfaction"
-            android:id="@+id/evaluation_one"
-            android:textColor="@color/blue_one"
-            android:textSize="@dimen/text_size_large"
-            android:layout_weight="1"
-            />
+      <!--<RadioGroup-->
+          <!--android:layout_width="match_parent"-->
+          <!--android:layout_height="wrap_content"-->
+          <!--android:orientation="horizontal"-->
+          <!--&gt;-->
+        <!--<RadioButton-->
+            <!--android:layout_width="wrap_content"-->
+            <!--android:layout_height="wrap_content"-->
+            <!--android:text="@string/satisfaction"-->
+            <!--android:id="@+id/evaluation_one"-->
+            <!--android:textColor="@color/blue_one"-->
+            <!--android:textSize="@dimen/text_size_large"-->
+            <!--android:layout_weight="1"-->
+            <!--/>-->
 
-        <RadioButton
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="@string/general"
-            android:id="@+id/evaluation_two"
-            android:textColor="@color/blue_one"
-            android:textSize="@dimen/text_size_large"
-            android:layout_weight="1"
-            />
+        <!--<RadioButton-->
+            <!--android:layout_width="wrap_content"-->
+            <!--android:layout_height="wrap_content"-->
+            <!--android:text="@string/general"-->
+            <!--android:id="@+id/evaluation_two"-->
+            <!--android:textColor="@color/blue_one"-->
+            <!--android:textSize="@dimen/text_size_large"-->
+            <!--android:layout_weight="1"-->
+            <!--/>-->
 
-        <RadioButton
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="@string/poor"
-            android:id="@+id/evaluation_three"
-            android:textColor="@color/blue_one"
-            android:textSize="@dimen/text_size_large"
-            android:layout_weight="1"
-            />
-      </RadioGroup>
+        <!--<RadioButton-->
+            <!--android:layout_width="wrap_content"-->
+            <!--android:layout_height="wrap_content"-->
+            <!--android:text="@string/poor"-->
+            <!--android:id="@+id/evaluation_three"-->
+            <!--android:textColor="@color/blue_one"-->
+            <!--android:textSize="@dimen/text_size_large"-->
+            <!--android:layout_weight="1"-->
+            <!--/>-->
+      <!--</RadioGroup>-->
     </LinearLayout>
 
     <LinearLayout

@@ -171,6 +171,6 @@
       android:layout_above="@id/logistics"
       android:layout_marginBottom="10dp"
       android:layout_centerHorizontal="true"
-      android:src="@drawable/icon"
+      android:src="@drawable/ic_logo"
       />
 </RelativeLayout>
