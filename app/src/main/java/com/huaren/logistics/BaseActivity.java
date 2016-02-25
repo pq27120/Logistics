@@ -8,9 +8,7 @@ import com.huaren.logistics.util.CommonTool;
 
 public class BaseActivity extends Activity implements IBaseView {
 
-  private TextView nameTv;
-  private TextView driverTv;
-  private TextView licensePlateTv;
+  private TextView curUserTv;
 
   private BasePresent basePresent;
 
@@ -27,17 +25,13 @@ public class BaseActivity extends Activity implements IBaseView {
 
   protected void initUserInfo() {
     if(isUserShow()) {
-      nameTv = (TextView) findViewById(R.id.shipper_tv);
-      driverTv = (TextView) findViewById(R.id.driver_tv);
-      licensePlateTv = (TextView) findViewById(R.id.license_plate_tv);
+      curUserTv = (TextView) findViewById(R.id.curr_user_tv);
       basePresent.initUserInfo();
     }
   }
 
-  @Override public void setUserInfo(String name, String driver, String licensePlate) {
-    nameTv.setText(name);
-    driverTv.setText(driver);
-    licensePlateTv.setText(licensePlate);
+  @Override public void setUserInfo(String curName) {
+    curUserTv.setText(curName);
   }
 
   /** 是否展示用户信息 */

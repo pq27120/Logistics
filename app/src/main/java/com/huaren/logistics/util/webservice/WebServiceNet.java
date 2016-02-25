@@ -14,10 +14,8 @@ import org.ksoap2.transport.HttpTransportSE;
 
 public class WebServiceNet extends Thread {
   private String content;
-
   private WebServiceParam webServiceParam;
   private Handler parentHandler;
-  private String dataMsg;
   private SoapSerializationEnvelope envelope;
 
   private boolean isCancel = false; // 是否取消连接

@@ -22,22 +22,55 @@ import android.content.Context;
 import com.huaren.logistics.entity.UserInfo;
 import com.huaren.logistics.util.CommonTool;
 import com.huaren.logistics.util.StringTool;
+import com.huaren.logistics.util.UiTool;
+import com.huaren.logistics.util.webservice.WebServiceConnect;
+import com.huaren.logistics.util.webservice.WebServiceHandler;
+import com.huaren.logistics.util.webservice.WebServiceParam;
+import java.util.HashMap;
+import java.util.Map;
 
-public class LoginPresenter implements OnLoginFinishedListener {
+public class LoginPresenter{
 
   private LoginView loginView;
-  private LoginInteractor loginInteractor;
+  public WebServiceHandler handler;
+  protected WebServiceConnect webServiceConnect = new WebServiceConnect();
 
-  public LoginPresenter(LoginView loginView) {
+  public LoginPresenter(final LoginView loginView) {
     this.loginView = loginView;
-    this.loginInteractor = new LoginInteractorImpl();
+
+    handler = new WebServiceHandler((Context) loginView) {
+      @Override public void handleFirst() {
+
+      }
+
+      @Override public void handleMsg(int returnCode, String detail) {
+        switch (returnCode) {
+          case 1:
+            UiTool.showToast((Context) loginView, "调用成功！");
+            CommonTool.setSharePreference((Context) loginView, "isLogin", "true");
+            UserInfo userInfo = new UserInfo();
+            userInfo.setUserName("test");
+            if (loginView != null) {
+              loginView.navigateToHome();
+            }
+            break;
+        }
+      }
+    };
   }
 
   public void validateCredentials(String username, String password) {
     if (loginView != null) {
       loginView.showProgress();
     }
-    loginInteractor.login(username, password, this);
+    Map params = new HashMap();
+    params.put("S_PDTG_EMPLOPCODE", "admin");
+    params.put("date", "2010");
+    String method = "Getdingdan";
+    String action = "http://tempuri.org/Getdingdan";
+    WebServiceParam webServiceParam =
+        new WebServiceParam((Context) loginView, params, method, action, handler, 1);
+    webServiceConnect.addNet(webServiceParam);
   }
 
   public void remmemberUserName(String userName, boolean isCheck) {
@@ -52,35 +85,6 @@ public class LoginPresenter implements OnLoginFinishedListener {
 
   public void onDestroy() {
     loginView = null;
-  }
-
-  @Override public void onUsernameError() {
-    if (loginView != null) {
-      loginView.setUsernameError();
-      loginView.hideProgress();
-    }
-  }
-
-  @Override public void onPasswordError() {
-    if (loginView != null) {
-      loginView.setPasswordError();
-      loginView.hideProgress();
-    }
-  }
-
-  @Override public void onSuccess() {
-    CommonTool.setSharePreference((Context) loginView, "isLogin", "true");
-    UserInfo userInfo = new UserInfo();
-    userInfo.setName("承运人");
-    userInfo.setDriver("司机");
-    userInfo.setLicensePlate("湘A65560");
-    userInfo.setUserName("test");
-    CommonTool.setSharePreference((Context) loginView, "name", userInfo.getName());
-    CommonTool.setSharePreference((Context) loginView, "driver", userInfo.getDriver());
-    CommonTool.setSharePreference((Context) loginView, "licensePlate", userInfo.getLicensePlate());
-    if (loginView != null) {
-      loginView.navigateToHome();
-    }
   }
 
   public void initUsername() {

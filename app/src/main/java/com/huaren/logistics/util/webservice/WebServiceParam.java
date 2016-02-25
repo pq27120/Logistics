@@ -14,12 +14,9 @@ public class WebServiceParam {
   public String method;
   public String action;
 
-  public WebServiceParam() {
-  }
-
-  public WebServiceParam(Context ctt, Map<String, String> inParamMap,String method,String action,
+  public WebServiceParam(Context context, Map<String, String> inParamMap,String method,String action,
       Handler handler, int result) {
-    this.context = ctt;
+    this.context = context;
     this.inParamMap = inParamMap;
     this.netHandler = handler;
     this.result = result;

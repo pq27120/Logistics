@@ -22,7 +22,6 @@ import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
-import android.widget.ProgressBar;
 import com.gc.materialdesign.views.CheckBox;
 import com.huaren.logistics.R;
 import com.huaren.logistics.main.MainActivity;

@@ -11,9 +11,7 @@ public class BasePresent {
   }
 
   public void initUserInfo() {
-    String name = CommonTool.getSharePreference((Context) baseView, "name");
-    String driver = CommonTool.getSharePreference((Context) baseView, "name");
-    String licensePlate = CommonTool.getSharePreference((Context) baseView, "licensePlate");
-    baseView.setUserInfo(name, driver, licensePlate);
+    String curName = CommonTool.getSharePreference((Context) baseView, "userName");
+    baseView.setUserInfo(curName);
   }
 }

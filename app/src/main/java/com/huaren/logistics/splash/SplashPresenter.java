@@ -13,12 +13,18 @@ import com.huaren.logistics.entity.UpdateInfo;
 import com.huaren.logistics.util.CommonTool;
 import com.huaren.logistics.util.StreamTools;
 import com.huaren.logistics.util.StringTool;
+import com.huaren.logistics.util.UiTool;
+import com.huaren.logistics.util.webservice.WebServiceConnect;
+import com.huaren.logistics.util.webservice.WebServiceHandler;
+import com.huaren.logistics.util.webservice.WebServiceParam;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.util.HashMap;
+import java.util.Map;
 import net.tsz.afinal.FinalHttp;
 import net.tsz.afinal.http.AjaxCallBack;
 
@@ -34,8 +40,40 @@ public class SplashPresenter {
 
   private UpdateInfo updateInfo;
 
-  public SplashPresenter(ISplashView iSplashView) {
+  public WebServiceHandler webServiceHandler;
+  protected WebServiceConnect webServiceConnect = new WebServiceConnect();
+
+  public SplashPresenter(final ISplashView iSplashView) {
     this.iSplashView = iSplashView;
+
+    webServiceHandler = new WebServiceHandler((Context) iSplashView) {
+      @Override public void handleFirst() {
+      }
+
+      @Override public void handleMsg(int returnCode, String detail) {
+        switch (returnCode) {
+          case 1:
+            UiTool.showToast((Context) iSplashView, "调用成功！");
+            inserUserInfo(detail);
+            break;
+        }
+      }
+    };
+  }
+
+  private void inserUserInfo(String detail) {
+
+  }
+
+  public void fetchUserData() {
+    Map params = new HashMap();
+    params.put("S_PDTG_EMPLOPCODE", "admin");
+    params.put("date", "2010");
+    String method = "Getdingdan";
+    String action = "http://tempuri.org/Getdingdan";
+    WebServiceParam webServiceParam =
+        new WebServiceParam((Context) iSplashView, params, method, action, webServiceHandler, 1);
+    webServiceConnect.addNet(webServiceParam);
   }
 
   public void onDestroy() {
@@ -115,6 +153,7 @@ public class SplashPresenter {
           iSplashView.showUpdateDialog(updateInfo);
           break;
         case ENTER_HOME:
+          fetchUserData();
           if (StringTool.isNotNull(isLogin) && Boolean.valueOf(isLogin)) {
             iSplashView.enterMain();
           }else {

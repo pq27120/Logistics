@@ -3,6 +3,7 @@
     <string name="app_name">物流调度</string>
     <string name="action_settings">设置</string>
     <string name="user_name">用户名</string>
+    <string name="cur_user_name">当前登录用户：</string>
     <string name="password">密码</string>
     <string name="log_in">登 录</string>
     <string name="title_activity_main">MVP Example</string>
