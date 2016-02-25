@@ -7,6 +7,7 @@ import com.huaren.logistics.dao.CustomerDao;
 import com.huaren.logistics.dao.DaoMaster;
 import com.huaren.logistics.dao.DaoSession;
 import com.huaren.logistics.dao.LogisticsOrderDao;
+import com.huaren.logistics.dao.LogisticsUserDao;
 import com.huaren.logistics.dao.OrderDetailDao;
 import com.huaren.logistics.dao.RecycleInputDao;
 import com.huaren.logistics.dao.RecycleScanDao;
@@ -25,6 +26,7 @@ public class LogisticsApplication extends Application {
   private SysDicValueDao sysDicValueDao;
   private RecycleInputDao recycleInputDao;
   private RecycleScanDao recycleScanDao;
+  private LogisticsUserDao logisticsUserDao;
   private static LogisticsApplication INSTANCE;
   private static Context context;
 
@@ -65,6 +67,7 @@ public class LogisticsApplication extends Application {
     sysDicValueDao = daoSession.getSysDicValueDao();
     recycleInputDao = daoSession.getRecycleInputDao();
     recycleScanDao = daoSession.getRecycleScanDao();
+    logisticsUserDao = daoSession.getLogisticsUserDao();
   }
 
   public DaoSession getDaoSession() {
@@ -101,5 +104,9 @@ public class LogisticsApplication extends Application {
 
   public static Context getContext() {
     return context;
+  }
+
+  public LogisticsUserDao getLogisticsUserDao() {
+    return logisticsUserDao;
   }
 }

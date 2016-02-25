@@ -81,6 +81,10 @@ public class LoginActivity extends Activity implements LoginView, View.OnClickLi
     rememverCb.setChecked(isCheck);
   }
 
+  @Override public void clearPasswordEt() {
+    password.setText("");
+  }
+
   @Override public void onClick(View v) {
     presenter.validateCredentials(username.getText().toString(), password.getText().toString());
   }

@@ -49,7 +49,7 @@ public class DownCargoPresenter {
 
       }
 
-      @Override public void handleMsg(int returnCode, String detail) {
+      @Override public void handleMsg(int returnCode, Object detail) {
         switch (returnCode) {
           case 1:
             UiTool.showToast((Context) downCargoView, "调用成功！");
@@ -60,7 +60,7 @@ public class DownCargoPresenter {
     };
   }
 
-  private void addCustomerInfo(String detail) {
+  private void addCustomerInfo(Object detail) {
     parseXml(detail);
     insertCustomer();
     addDictionary();
@@ -194,7 +194,7 @@ public class DownCargoPresenter {
     downCargoView.showUpdateView(time, info);
   }
 
-  private void parseXml(String detail) {
+  private void parseXml(Object detail) {
     AssetManager am = downCargoView.getAssetManager();
     try {
       InputStream is = am.open("test.xml");

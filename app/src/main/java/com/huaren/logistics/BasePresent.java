@@ -11,7 +11,7 @@ public class BasePresent {
   }
 
   public void initUserInfo() {
-    String curName = CommonTool.getSharePreference((Context) baseView, "userName");
+    String curName = CommonTool.getSharePreference((Context) baseView, "curUserName");
     baseView.setUserInfo(curName);
   }
 }

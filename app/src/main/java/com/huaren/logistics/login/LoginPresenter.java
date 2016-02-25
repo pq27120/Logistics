@@ -19,58 +19,40 @@
 package com.huaren.logistics.login;
 
 import android.content.Context;
-import com.huaren.logistics.entity.UserInfo;
+import com.huaren.logistics.LogisticsApplication;
+import com.huaren.logistics.bean.LogisticsUser;
+import com.huaren.logistics.dao.LogisticsUserDao;
 import com.huaren.logistics.util.CommonTool;
 import com.huaren.logistics.util.StringTool;
 import com.huaren.logistics.util.UiTool;
-import com.huaren.logistics.util.webservice.WebServiceConnect;
-import com.huaren.logistics.util.webservice.WebServiceHandler;
-import com.huaren.logistics.util.webservice.WebServiceParam;
-import java.util.HashMap;
-import java.util.Map;
+import de.greenrobot.dao.query.QueryBuilder;
+import java.util.List;
 
-public class LoginPresenter{
+public class LoginPresenter {
 
   private LoginView loginView;
-  public WebServiceHandler handler;
-  protected WebServiceConnect webServiceConnect = new WebServiceConnect();
 
   public LoginPresenter(final LoginView loginView) {
     this.loginView = loginView;
-
-    handler = new WebServiceHandler((Context) loginView) {
-      @Override public void handleFirst() {
-
-      }
-
-      @Override public void handleMsg(int returnCode, String detail) {
-        switch (returnCode) {
-          case 1:
-            UiTool.showToast((Context) loginView, "调用成功！");
-            CommonTool.setSharePreference((Context) loginView, "isLogin", "true");
-            UserInfo userInfo = new UserInfo();
-            userInfo.setUserName("test");
-            if (loginView != null) {
-              loginView.navigateToHome();
-            }
-            break;
-        }
-      }
-    };
   }
 
   public void validateCredentials(String username, String password) {
     if (loginView != null) {
       loginView.showProgress();
     }
-    Map params = new HashMap();
-    params.put("S_PDTG_EMPLOPCODE", "admin");
-    params.put("date", "2010");
-    String method = "Getdingdan";
-    String action = "http://tempuri.org/Getdingdan";
-    WebServiceParam webServiceParam =
-        new WebServiceParam((Context) loginView, params, method, action, handler, 1);
-    webServiceConnect.addNet(webServiceParam);
+    LogisticsUserDao userDao = LogisticsApplication.getInstance().getLogisticsUserDao();
+    List<LogisticsUser> list = userDao.queryBuilder()
+        //.where(LogisticsUserDao.Properties.UserName.eq(username),
+        //    LogisticsUserDao.Properties.Pwd.eq(password))
+        .where(LogisticsUserDao.Properties.UserName.eq(username))
+        .list();
+    if (list != null && !list.isEmpty()) {
+      CommonTool.setSharePreference((Context) loginView, "curUserName", username);
+      loginView.navigateToHome();
+    }else{
+      UiTool.showToast((Context)loginView, "用户名或密码错误，请重新输入！");
+      loginView.clearPasswordEt();
+    }
   }
 
   public void remmemberUserName(String userName, boolean isCheck) {

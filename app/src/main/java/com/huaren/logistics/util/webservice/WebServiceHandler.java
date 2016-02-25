@@ -38,7 +38,7 @@ public abstract class WebServiceHandler extends Handler {
           //      handNullMsg(msg.what);
           //      UiTool.showToast(context, "暂无数据");
           //    } else {
-          handleMsg(msg.what, "");
+          handleMsg(msg.what, msg.obj);
           //    }
           //    return;
           //  }
@@ -82,7 +82,7 @@ public abstract class WebServiceHandler extends Handler {
    * @param returnCode 成功返回的returnCode
    * @param detail 返回的解析后的对象
    */
-  public abstract void handleMsg(int returnCode, String detail);
+  public abstract void handleMsg(int returnCode, Object detail);
 
   public void handNullMsg(int returnCode) {
   }

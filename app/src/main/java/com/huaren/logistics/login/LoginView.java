@@ -32,4 +32,6 @@ public interface LoginView {
     void fillRememberUserName(String userName);
 
     void setRememberCheck(boolean isCheck);
+
+    void clearPasswordEt();
 }

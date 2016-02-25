@@ -13,7 +13,7 @@ import org.ksoap2.serialization.SoapSerializationEnvelope;
 import org.ksoap2.transport.HttpTransportSE;
 
 public class WebServiceNet extends Thread {
-  private String content;
+  private SoapObject content;
   private WebServiceParam webServiceParam;
   private Handler parentHandler;
   private SoapSerializationEnvelope envelope;
@@ -51,7 +51,7 @@ public class WebServiceNet extends Thread {
 
   private boolean call() {
     boolean getFlag = false;
-    SoapObject soapObject = new SoapObject(Constant.ADDRESS_NAMESPACE, Constant.GET_DATA_METHOD);
+    SoapObject soapObject = new SoapObject(Constant.ADDRESS_NAMESPACE, webServiceParam.method);
     soapObject.addProperty("username", Constant.USER_NAME);
     soapObject.addProperty("pwd", Constant.PASSWORD);
     Map<String, String> map = webServiceParam.getInParamMap();
@@ -64,7 +64,7 @@ public class WebServiceNet extends Thread {
     envelope.setOutputSoapObject(soapObject);
     HttpTransportSE httpTransportSE = new HttpTransportSE(Constant.WEBSERVICE_URL);
     try {
-      httpTransportSE.call(Constant.GET_DATA_ACTION, envelope);
+      httpTransportSE.call(webServiceParam.action, envelope);
       getFlag = true;
     } catch (Exception e) {
       e.printStackTrace();
@@ -76,8 +76,8 @@ public class WebServiceNet extends Thread {
   private boolean getNetContent() {
     boolean getNetDataFlag = false;
     try {
-      Object object = envelope.bodyIn;
-      content = object.toString();
+      SoapObject soapObject = (SoapObject)envelope.bodyIn;
+      content = soapObject;
       getNetDataFlag = true;
     } catch (Exception e) {
       CommonTool.showLog(e.getMessage());
@@ -87,12 +87,12 @@ public class WebServiceNet extends Thread {
   }
 
   /** 通知 响应界面UI与连接集合 */
-  public void notifyUI(int resultState, String dataMsg) {
+  public void notifyUI(int resultState, SoapObject dataMsg) {
     CommonTool.showLog("dataMsg=" + dataMsg);
     if (isCancel) return;
     Message msg = new Message();
     msg.what = resultState;
-    if (StringTool.isNotNull(dataMsg)) {
+    if (dataMsg != null) {
       msg.obj = dataMsg;
     }
     // 通知界面响应请求
