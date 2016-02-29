@@ -21,7 +21,7 @@ public class UnCargoDetailPresenter{
     OrderDetailDao orderDetailDao =
         LogisticsApplication.getInstance().getDaoSession().getOrderDetailDao();
     List<OrderDetail> orderDetailList =
-        orderDetailDao.queryBuilder().where(OrderDetailDao.Properties.OrderId.eq(orderId)).list();
+        orderDetailDao.queryBuilder().where(OrderDetailDao.Properties.Ordered.eq(orderId)).list();
     for (int i = 0; i < orderDetailList.size(); i++) {
       OrderDetail orderDetail = orderDetailList.get(i);
       int drawable;
@@ -33,9 +33,9 @@ public class UnCargoDetailPresenter{
         drawable = R.drawable.star_finish;
         desc = "已卸车";
       }
-      Card card = new Card.Builder((Context) unCargoDetailView).setTag(orderDetail.getDetailId())
+      Card card = new Card.Builder((Context) unCargoDetailView).setTag(orderDetail.getGoodsId())
           .withProvider(SmallImageCardProvider.class)
-          .setTitle(orderDetail.getDetailName() + "(" + orderDetail.getDetailId() + ")")
+          .setTitle(orderDetail.getGoodsName() + "(" + orderDetail.getGoodsId() + ")")
           .setDescription(desc)
           .setDrawable(drawable)
           .endConfig()

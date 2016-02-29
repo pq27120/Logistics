@@ -25,15 +25,15 @@ public class RecycleScanPresent {
     for (int i = 0; i < customerList.size(); i++) {
       Customer customer = customerList.get(i);
       List<RecycleInput> recycleInputList = recycleInputDao.queryBuilder()
-          .where(RecycleInputDao.Properties.CustomId.eq(customer.getCustomerId()))
+          .where(RecycleInputDao.Properties.CooperateId.eq(customer.getCooperateId()))
           .list();
       int count = 0;
       if (recycleInputList != null && !recycleInputList.isEmpty()) {
         count = recycleInputList.get(0).getRecycleNum();
       }
-      Card card = new Card.Builder((Context) recycleScanView).setTag(customer.getCustomerId())
+      Card card = new Card.Builder((Context) recycleScanView).setTag(customer.getCooperateId())
           .withProvider(SmallImageCardProvider.class)
-          .setTitle(customer.getName() + "(" + customer.getCustomerId() + ")")
+          .setTitle(customer.getCooperateName() + "(" + customer.getCooperateId() + ")")
           .setDescription("回收货物" + count + "件")
           .endConfig()
           .build();

@@ -55,37 +55,43 @@ public class GreenDaoGenerator {
     customer.implementsSerializable();
     // greenDAO 会自动根据实体类的属性值来创建表字段，并赋予默认值
     // 接下来你便可以设置表中的字段：
-    customer.addStringProperty("customerId").primaryKey();
+    customer.addStringProperty("cooperateId").primaryKey();
     // 与在 Java 中使用驼峰命名法不同，默认数据库中的命名是使用大写和下划线来分割单词的。
     // For example, a property called “creationDate” will become a database column “CREATION_DATE”.
-    customer.addStringProperty("name").notNull();
-    customer.addStringProperty("password").notNull();
-    customer.addStringProperty("address");
+    customer.addStringProperty("cooperateName").notNull();
     customer.addDateProperty("addTime").notNull();
     customer.addDateProperty("editTime");
 
     Entity orderInfo = schema.addEntity("LogisticsOrder");
     orderInfo.implementsSerializable();
-    orderInfo.addStringProperty("orderId").primaryKey();
-    orderInfo.addStringProperty("orderName").notNull();
-    orderInfo.addStringProperty("orderStatus").notNull();
+    orderInfo.addStringProperty("ordered").primaryKey(); //订单编号
+    orderInfo.addStringProperty("dispatchNumber").notNull(); //调度单号
+    orderInfo.addStringProperty("dPdtgDate").notNull(); //调度时间
+    orderInfo.addStringProperty("lPdtgBatch").notNull(); //批次
+    orderInfo.addStringProperty("lPdtgMerdcategOldkey").notNull(); //冷藏类型
+    orderInfo.addIntProperty("boxNumber").notNull(); //箱数
+    orderInfo.addStringProperty("pathName").notNull(); //线路
+    orderInfo.addStringProperty("orderStatus").notNull(); //订单状态
     orderInfo.addStringProperty("evaluation"); //用户评价值
-    orderInfo.addStringProperty("customerId").notNull();
+    orderInfo.addStringProperty("cooperateID").notNull(); //客户ID
     orderInfo.addDateProperty("addTime").notNull();
     orderInfo.addDateProperty("editTime");
 
     Entity orderDetail = schema.addEntity("OrderDetail");//订单详情
     orderDetail.implementsSerializable();
-    orderDetail.addStringProperty("detailId").primaryKey();
-    orderDetail.addStringProperty("detailName").notNull();
+    orderDetail.addStringProperty("goodsId").primaryKey();//货品ID
+    orderDetail.addStringProperty("goodsName").notNull();//品名
+    orderDetail.addStringProperty("dispatchType").notNull();//冷藏类型
+    orderDetail.addStringProperty("iGroiValunum").notNull(); //件数
+    orderDetail.addStringProperty("lpn").notNull(); //箱号条码
     orderDetail.addStringProperty("detailStatus").notNull();
-    orderDetail.addStringProperty("orderId").notNull();
+    orderDetail.addStringProperty("ordered").notNull();//订单ID
     orderDetail.addDateProperty("addTime").notNull();
     orderDetail.addDateProperty("editTime");
 
     Entity recycleInput = schema.addEntity("RecycleInput"); //回收录入信息
     recycleInput.addIdProperty();
-    recycleInput.addStringProperty("customId").notNull();
+    recycleInput.addStringProperty("cooperateId").notNull();
     recycleInput.addIntProperty("recycleNum").notNull();
     recycleInput.addDateProperty("recycleTime").notNull();//回收录入时间
     recycleInput.addDateProperty("editTime");

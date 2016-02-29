@@ -36,7 +36,7 @@ public class RecycleScanDetailPresent {
     RecycleInputDao recycleInputDao = LogisticsApplication.getInstance().getRecycleInputDao();
     Long inputId = 0l;
     List<RecycleInput> recycleInputList = recycleInputDao.queryBuilder()
-        .where(RecycleInputDao.Properties.CustomId.eq(customerId))
+        .where(RecycleInputDao.Properties.CooperateId.eq(customerId))
         .list();
     if (recycleInputList != null && !recycleInputList.isEmpty()) {
       inputId = recycleInputList.get(0).getId();

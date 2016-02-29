@@ -84,7 +84,7 @@ public class SplashPresenter {
   }
 
   private ArrayList<LogisticsUser> parserUserInfoXml(Object detail) {
-    ArrayList<LogisticsUser> logisticsUserList = new ArrayList<>();;
+    ArrayList<LogisticsUser> logisticsUserList = new ArrayList<>();
     SoapObject soapObject = (SoapObject) detail;
     String xml = soapObject.getPropertyAsString("GetUsersResult");
     try {

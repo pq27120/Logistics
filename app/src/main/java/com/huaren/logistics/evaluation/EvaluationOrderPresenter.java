@@ -24,7 +24,7 @@ public class EvaluationOrderPresenter {
   public void initCargoOrder(String customerId) {
     LogisticsOrderDao logisticsOrderDao = LogisticsApplication.getInstance().getLogisticsOrderDao();
     List<LogisticsOrder> logisticsOrderList = logisticsOrderDao.queryBuilder()
-        .where(LogisticsOrderDao.Properties.CustomerId.eq(customerId))
+        .where(LogisticsOrderDao.Properties.CooperateID.eq(customerId))
         .list();
     for (int i = 0; i < logisticsOrderList.size(); i++) {
       LogisticsOrder logisticsOrder = logisticsOrderList.get(i);
@@ -39,9 +39,9 @@ public class EvaluationOrderPresenter {
       if (countMap.get("unLoadCount") == 0) {
         drawable = R.drawable.star_finish;
       }
-      Card card = new Card.Builder((Context) cargoOrderView).setTag(logisticsOrder.getOrderId())
+      Card card = new Card.Builder((Context) cargoOrderView).setTag(logisticsOrder.getOrdered())
           .withProvider(SmallImageCardProvider.class)
-          .setTitle(logisticsOrder.getOrderName() + "(" + logisticsOrder.getOrderId() + ")")
+          .setTitle(logisticsOrder.getOrdered())
           .setDescription(desc)
           .setDrawable(drawable)
           .endConfig()
@@ -57,7 +57,7 @@ public class EvaluationOrderPresenter {
     OrderDetailDao orderDetailDao = LogisticsApplication.getInstance().getOrderDetailDao();
     int total = 0, loadCount = 0, unLoadCount = 0;
     List<OrderDetail> orderDetailList = orderDetailDao.queryBuilder()
-        .where(OrderDetailDao.Properties.OrderId.eq(logisticsOrder.getOrderId()))
+        .where(OrderDetailDao.Properties.Ordered.eq(logisticsOrder.getOrdered()))
         .list();
     if (orderDetailList != null && !orderDetailList.isEmpty()) {
       total = orderDetailList.size();

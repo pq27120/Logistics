@@ -20,9 +20,9 @@ public class RecycleInputPresenter {
     List<Customer> customerList = customerDao.loadAll();
     for (int i = 0; i < customerList.size(); i++) {
       Customer customer = customerList.get(i);
-      Card card = new Card.Builder((Context) recycleInputView).setTag(customer.getCustomerId())
+      Card card = new Card.Builder((Context) recycleInputView).setTag(customer.getCooperateId())
           .withProvider(SmallImageCardProvider.class)
-          .setTitle(customer.getName() + "(" + customer.getCustomerId() + ")")
+          .setTitle(customer.getCooperateName() + "(" + customer.getCooperateId() + ")")
           .setDescription("")
           .endConfig()
           .build();

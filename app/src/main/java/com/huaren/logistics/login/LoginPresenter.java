@@ -23,9 +23,9 @@ import com.huaren.logistics.LogisticsApplication;
 import com.huaren.logistics.bean.LogisticsUser;
 import com.huaren.logistics.dao.LogisticsUserDao;
 import com.huaren.logistics.util.CommonTool;
+import com.huaren.logistics.util.MD5Util;
 import com.huaren.logistics.util.StringTool;
 import com.huaren.logistics.util.UiTool;
-import de.greenrobot.dao.query.QueryBuilder;
 import java.util.List;
 
 public class LoginPresenter {
@@ -42,9 +42,8 @@ public class LoginPresenter {
     }
     LogisticsUserDao userDao = LogisticsApplication.getInstance().getLogisticsUserDao();
     List<LogisticsUser> list = userDao.queryBuilder()
-        //.where(LogisticsUserDao.Properties.UserName.eq(username),
-        //    LogisticsUserDao.Properties.Pwd.eq(password))
-        .where(LogisticsUserDao.Properties.UserName.eq(username))
+        .where(LogisticsUserDao.Properties.UserName.eq(username),
+            LogisticsUserDao.Properties.Pwd.eq(MD5Util.MD5(password)))
         .list();
     if (list != null && !list.isEmpty()) {
       CommonTool.setSharePreference((Context) loginView, "curUserName", username);

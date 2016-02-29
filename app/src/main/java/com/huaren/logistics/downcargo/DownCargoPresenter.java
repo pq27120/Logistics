@@ -1,11 +1,7 @@
 package com.huaren.logistics.downcargo;
 
 import android.content.Context;
-import android.content.res.AssetManager;
-import android.os.Handler;
-import android.os.Message;
 import android.util.Xml;
-import android.widget.Toast;
 import com.huaren.logistics.LogisticsApplication;
 import com.huaren.logistics.bean.Customer;
 import com.huaren.logistics.bean.LogisticsOrder;
@@ -23,12 +19,13 @@ import com.huaren.logistics.util.webservice.WebServiceConnect;
 import com.huaren.logistics.util.webservice.WebServiceHandler;
 import com.huaren.logistics.util.webservice.WebServiceParam;
 import java.io.IOException;
-import java.io.InputStream;
+import java.io.StringReader;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import org.ksoap2.serialization.SoapObject;
 import org.xmlpull.v1.XmlPullParser;
 import org.xmlpull.v1.XmlPullParserException;
 
@@ -36,10 +33,10 @@ public class DownCargoPresenter {
 
   private IDownCargoView downCargoView;
 
-  private List<Customer> customerList;
-
   public WebServiceHandler handler;
+  public WebServiceHandler dictHandler;
   protected WebServiceConnect webServiceConnect = new WebServiceConnect();
+  private StringBuffer buffer = new StringBuffer("更新完成，更新了");
 
   public DownCargoPresenter(final IDownCargoView downCargoView) {
     this.downCargoView = downCargoView;
@@ -53,16 +50,34 @@ public class DownCargoPresenter {
         switch (returnCode) {
           case 1:
             UiTool.showToast((Context) downCargoView, "调用成功！");
-            addCustomerInfo(detail);
+            parseOrderInfo(detail);
+            break;
+        }
+      }
+    };
+
+    dictHandler = new WebServiceHandler((Context) downCargoView) {
+      @Override public void handleFirst() {
+
+      }
+
+      @Override public void handleMsg(int returnCode, Object detail) {
+        switch (returnCode) {
+          case 1:
+            parseDictInfo(detail);
             break;
         }
       }
     };
   }
 
-  private void addCustomerInfo(Object detail) {
-    parseXml(detail);
-    insertCustomer();
+  private void parseOrderInfo(Object detail) {
+    parseOrderXml(detail);
+    String time = CommonTool.parseCurrDateToString("yyyy-MM-dd HH:mm:ss");
+    downCargoView.showUpdateView(time, buffer.toString());
+  }
+
+  private void parseDictInfo(Object detail) {
     addDictionary();
   }
 
@@ -102,153 +117,152 @@ public class DownCargoPresenter {
     sysDicValueDao.insertOrReplaceInTx(sysDicValueList);
   }
 
-  private void insertCustomer() {
-    List<Customer> customerList = new ArrayList<>();
-    for (int custIndex = 1; custIndex < 3; custIndex++) {
-      Customer customer = new Customer();
-      customer.setName("客户名称" + custIndex);
-      customer.setAddress("地址名称" + custIndex);
-      customer.setCustomerId("code" + custIndex);
-      customer.setPassword("123456");
+  private void insertCustomer(Map<String, Customer> customerMap) {
+    CustomerDao customerDao = LogisticsApplication.getInstance().getCustomerDao();
+    for (Map.Entry<String, Customer> customerEntry : customerMap.entrySet()) {
+      Customer customer = customerEntry.getValue();
       customer.setAddTime(new Date());
-      List<LogisticsOrder> orderList = new ArrayList<>();
-      for (int orderIndex = 1; orderIndex < 3; orderIndex++) {
-        LogisticsOrder order = new LogisticsOrder();
-        order.setCustomerId(customer.getCustomerId());
-        order.setOrderName("客户" + custIndex + "订单" + orderIndex);
-        order.setOrderId("code" + custIndex + "00" + orderIndex);
-        order.setOrderStatus("1");
-        order.setAddTime(new Date());
-
-        List<OrderDetail> orderDetailList = new ArrayList<>();
-        for (int detailIndex = 1; detailIndex < 11; detailIndex++) {
-          OrderDetail orderDetail = new OrderDetail();
-          orderDetail.setOrderId(order.getOrderId());
-          orderDetail.setDetailId("code" + custIndex + "00" + orderIndex + "00" + detailIndex);
-          orderDetail.setDetailName("客户" + custIndex + "订单" + orderIndex + "货物" + detailIndex);
-          orderDetail.setDetailStatus("1");
-          orderDetail.setAddTime(new Date());
-          orderDetailList.add(orderDetail);
-        }
-        order.setOrderDetails(orderDetailList);
-        orderList.add(order);
-      }
-      customer.setOrders(orderList);
-      customerList.add(customer);
+      customerDao.insertOrReplace(customer);
     }
-
-    CommonTool.showLog(customerList.toString());
-
-    int customerCount = 0;
-    int orderCount = 0;
-    int orderDetailCount = 0;
-    CustomerDao customerDao = LogisticsApplication.getInstance().getDaoSession().getCustomerDao();
-    LogisticsOrderDao logisticsOrderDao = LogisticsApplication.getInstance().getDaoSession().getLogisticsOrderDao();
-    OrderDetailDao orderDetailDao = LogisticsApplication.getInstance().getDaoSession().getOrderDetailDao();
-    if (customerList != null && !customerList.isEmpty()) {
-      for (int i = 0; i < customerList.size(); i++) {
-        Customer customer1 = customerList.get(i);
-        long customerQueryCount = customerDao.queryBuilder()
-            .where(CustomerDao.Properties.CustomerId.eq(customer1.getCustomerId()))
-            .buildCount()
-            .count();
-        if (customerQueryCount <= 0) {
-          customerDao.insert(customer1);
-          customerCount++;
-        }
-        List<LogisticsOrder> orderList = customer1.getOrders();
-        if (orderList != null && !orderList.isEmpty()) {
-          for (int j = 0; j < orderList.size(); j++) {
-            LogisticsOrder order1 = orderList.get(j);
-            CommonTool.showLog(order1.toString());
-            long orderQueryCount = logisticsOrderDao.queryBuilder()
-                .where(LogisticsOrderDao.Properties.OrderId.eq(order1.getOrderId()))
-                .buildCount()
-                .count();
-            if (orderQueryCount == 0) {
-              logisticsOrderDao.insert(order1);
-              orderCount++;
-            }
-
-            List<OrderDetail> orderDetailList1 = order1.getOrderDetails();
-            for (int k = 0; k < orderDetailList1.size(); k++) {
-              OrderDetail orderDetail = orderDetailList1.get(k);
-              long orderDetailQueryCount = orderDetailDao.queryBuilder()
-                  .where(OrderDetailDao.Properties.DetailId.eq(orderDetail.getDetailId()))
-                  .buildCount()
-                  .count();
-              if (orderDetailQueryCount == 0) {
-                orderDetailDao.insert(orderDetail);
-                orderDetailCount++;
-              }
-            }
-          }
-        }
-      }
-    }
-
-    List<Customer> list = customerDao.loadAll();
-    System.out.println(list);
-    String time = CommonTool.parseCurrDateToString("yyyy-MM-dd HH:mm:ss");
-    String info = "更新了" + customerCount + "条客户记录，" + orderCount + " 条订单主单记录，" + orderDetailCount + "条订单详单记录";
-    downCargoView.showUpdateView(time, info);
+    buffer.append(customerMap.entrySet().size()).append("条客户信息");
   }
 
-  private void parseXml(Object detail) {
-    AssetManager am = downCargoView.getAssetManager();
+  private void insertOrderDetail(List<OrderDetail> orderDetailList) {
+    OrderDetailDao orderDetailDao = LogisticsApplication.getInstance().getOrderDetailDao();
+    for (OrderDetail orderDetail : orderDetailList) {
+      orderDetail.setAddTime(new Date());
+      orderDetail.setDetailStatus("1");
+      orderDetailDao.insertOrReplaceInTx(orderDetail);
+    }
+    buffer.append(",").append(orderDetailList.size()).append("条订单详情");
+  }
+
+  private void insertOrder(List<LogisticsOrder> logisticsOrderList) {
+    LogisticsOrderDao logisticsOrderDao = LogisticsApplication.getInstance().getLogisticsOrderDao();
+    for (LogisticsOrder logisticsOrder : logisticsOrderList) {
+      logisticsOrder.setAddTime(new Date());
+      logisticsOrder.setOrderStatus("1");
+      logisticsOrderDao.insertOrReplaceInTx(logisticsOrder);
+    }
+    buffer.append(",").append(logisticsOrderList.size()).append("条订单");
+  }
+
+  private void parseOrderXml(Object detail) {
+    Map<String, Customer> map = new HashMap<>();
+    List<LogisticsOrder> logisticsOrderList = null;
+    List<OrderDetail> orderDetailList = null;
+    Customer customer = null;
+    LogisticsOrder logisticsOrder = null;
+    OrderDetail orderDetail = null;
+    SoapObject soapObject = (SoapObject) detail;
+    String xml = soapObject.getPropertyAsString("GetdingdanResult");
     try {
-      InputStream is = am.open("test.xml");
       XmlPullParser parser = Xml.newPullParser();
-      parser.setInput(is, "utf-8");
+      parser.setInput(new StringReader(xml));
       //  产生第一个事件
       int eventType = parser.getEventType();
       //  当文档结束事件时退出循环
-      Customer customer = null;
       while (eventType != XmlPullParser.END_DOCUMENT) {
         switch (eventType) {
           // 开始文档
           case XmlPullParser.START_DOCUMENT:
             // new 集合，方便于添加元素
-            customerList = new ArrayList<>();
             break;
           // 开始标记
           case XmlPullParser.START_TAG:
             // 获得当前节点名（标记名）
             String name = parser.getName();
-            if ("CooperateID".equals(name)) {
-              customer = new Customer();
-              // 获得当前节点名的第一个属性的值
-              customer.setCustomerId(parser.nextText());
+            if ("Data".equals(name)) {
+              logisticsOrderList = new ArrayList<>();
+              orderDetailList = new ArrayList<>();
             }
-            if (customer != null) {
-              if ("CooperateName".equals(name)) {
-                // 获取当前节点名的文本节点的值
-                customer.setName(parser.nextText());
+            if ("ItemHeader".equals(name)) {
+              logisticsOrder = new LogisticsOrder();
+            }
+            if ("CooperateID".equals(name)) {
+              String cooperateId = parser.nextText();
+              logisticsOrder.setCooperateID(cooperateId);
+              if (map.containsKey(cooperateId)) {
+                customer = map.get(cooperateId);
+              } else {
+                customer = new Customer();
+                // 获得当前节点名的第一个属性的值
+                customer.setCooperateId(cooperateId);
+                map.put(cooperateId, customer);
               }
+            }
+            if ("CooperateName".equals(name)) {
+              // 获取当前节点名的文本节点的值
+              customer.setCooperateName(parser.nextText());
+            }
+            if ("DispatchNumber".equals(name)) {
+              logisticsOrder.setDispatchNumber(parser.nextText());
+            }
+            if ("D_PDTG_DATE".equals(name)) {
+              logisticsOrder.setDPdtgDate(parser.nextText());
+            }
+            if ("L_PDTG_BATCH".equals(name)) {
+              logisticsOrder.setLPdtgBatch(parser.nextText());
+            }
+            if ("L_PDTG_MERDCATEG_OldKey".equals(name)) {
+              logisticsOrder.setLPdtgMerdcategOldkey(parser.nextText());
+            }
+            if ("ORDERED".equals(name)) {
+              logisticsOrder.setOrdered(parser.nextText());
+            }
+            if ("BOXNUMBER".equals(name)) {
+              logisticsOrder.setBoxNumber(Integer.valueOf(parser.nextText()));
+            }
+            if ("PathName".equals(name)) {
+              logisticsOrder.setPathName(parser.nextText());
+            }
+            if ("Item".equals(name)) {
+              orderDetail = new OrderDetail();
+              orderDetail.setOrdered(logisticsOrder.getOrdered());
+            }
+            if ("GoodsID".equals(name)) {
+              orderDetail.setGoodsId(parser.nextText());
+            }
+            if ("GoodsName".equals(name)) {
+              orderDetail.setGoodsName(parser.nextText());
+            }
+            if ("DispatchType".equals(name)) {
+              orderDetail.setDispatchType(parser.nextText());
+            }
+            if ("I_groi_valunum".equals(name)) {
+              orderDetail.setIGroiValunum(parser.nextText());
+            }
+            if ("LPN".equals(name)) {
+              orderDetail.setLpn(parser.nextText());
             }
             break;
           // 结束标记
           case XmlPullParser.END_TAG:
-            // 当结束标记为 person时
-            if ("Data".equals(parser.getName())) {
-              customerList.add(customer);
-              // 清空。方便于加载第二个
-              customer = null;
+            String endName = parser.getName();
+            if ("Item".equals(endName)) {
+              orderDetailList.add(orderDetail);
+              orderDetail = null;
+            }
+            if ("ItemHeader".equals(endName)) {
+              logisticsOrderList.add(logisticsOrder);
+              logisticsOrder = null;
             }
             break;
         }
         // 获得解析器中的下一个事件
         eventType = parser.next();
       }
-      System.out.println(customerList);
     } catch (IOException e) {
       e.printStackTrace();
     } catch (XmlPullParserException e) {
       e.printStackTrace();
     }
+    insertCustomer(map);
+    insertOrder(logisticsOrderList);
+    insertOrderDetail(orderDetailList);
   }
 
-  public void downloadData() {
+  public void downloadOrderData() {
     Map params = new HashMap();
     params.put("S_PDTG_EMPLOPCODE", "admin");
     params.put("date", "2010");
@@ -259,17 +273,14 @@ public class DownCargoPresenter {
     webServiceConnect.addNet(webServiceParam);
   }
 
-  Handler mHandler = new Handler() {
-    public void handleMessage(Message msg) {
-      try {
-        switch (msg.what) {
-          case 2:
-            Toast.makeText((Context) downCargoView, "获取订单信息成功", Toast.LENGTH_SHORT).show();
-            break;
-        }
-      } catch (Exception e) {
-        e.printStackTrace();
-      }
-    }
-  };
+  public void downloadDictData() {
+    Map params = new HashMap();
+    params.put("S_PDTG_EMPLOPCODE", "admin");
+    params.put("date", "2010");
+    String method = "Getdingdan";
+    String action = "http://tempuri.org/Getdingdan";
+    WebServiceParam webServiceParam =
+        new WebServiceParam((Context) downCargoView, params, method, action, dictHandler, 1);
+    webServiceConnect.addNet(webServiceParam);
+  }
 }

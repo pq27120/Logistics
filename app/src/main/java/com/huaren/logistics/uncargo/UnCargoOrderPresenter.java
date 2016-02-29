@@ -28,7 +28,7 @@ public class UnCargoOrderPresenter {
   public void initCargoOrder(String customerId) {
     LogisticsOrderDao logisticsOrderDao = LogisticsApplication.getInstance().getLogisticsOrderDao();
     List<LogisticsOrder> logisticsOrderList = logisticsOrderDao.queryBuilder()
-        .where(LogisticsOrderDao.Properties.CustomerId.eq(customerId))
+        .where(LogisticsOrderDao.Properties.CooperateID.eq(customerId))
         .list();
     for (int i = 0; i < logisticsOrderList.size(); i++) {
       LogisticsOrder logisticsOrder = logisticsOrderList.get(i);
@@ -43,9 +43,9 @@ public class UnCargoOrderPresenter {
       if (countMap.get("unLoadCount") == 0) {
         drawable = R.drawable.star_finish;
       }
-      Card card = new Card.Builder((Context) cargoOrderView).setTag(logisticsOrder.getOrderId())
+      Card card = new Card.Builder((Context) cargoOrderView).setTag(logisticsOrder.getOrdered())
           .withProvider(SmallImageCardProvider.class)
-          .setTitle(logisticsOrder.getOrderName() + "(" + logisticsOrder.getOrderId() + ")")
+          .setTitle(logisticsOrder.getOrdered())
           .setDescription(desc)
           .setDrawable(drawable)
           .endConfig()
@@ -61,7 +61,7 @@ public class UnCargoOrderPresenter {
     OrderDetailDao orderDetailDao = LogisticsApplication.getInstance().getOrderDetailDao();
     int total = 0, loadCount = 0, unLoadCount = 0;
     List<OrderDetail> orderDetailList = orderDetailDao.queryBuilder()
-        .where(OrderDetailDao.Properties.OrderId.eq(logisticsOrder.getOrderId()))
+        .where(OrderDetailDao.Properties.Ordered.eq(logisticsOrder.getOrdered()))
         .list();
     if (orderDetailList != null && !orderDetailList.isEmpty()) {
       total = orderDetailList.size();
@@ -85,7 +85,7 @@ public class UnCargoOrderPresenter {
     if (StringTool.isNotNull(detailCode)) {
       OrderDetailDao orderDetailDao = LogisticsApplication.getInstance().getOrderDetailDao();
       QueryBuilder qb = orderDetailDao.queryBuilder();
-      qb.where(OrderDetailDao.Properties.DetailId.eq(detailCode));
+      qb.where(OrderDetailDao.Properties.GoodsId.eq(detailCode));
       List<OrderDetail> orderDetailList = qb.list();
       if (orderDetailList != null && !orderDetailList.isEmpty()) {
         OrderDetail orderDetail = orderDetailList.get(0);
@@ -99,11 +99,11 @@ public class UnCargoOrderPresenter {
         LogisticsOrderDao logisticsOrderDao =
             LogisticsApplication.getInstance().getDaoSession().getLogisticsOrderDao();
         QueryBuilder logisQb = logisticsOrderDao.queryBuilder();
-        logisQb.where(OrderDetailDao.Properties.OrderId.eq(orderDetail.getOrderId()));
+        logisQb.where(OrderDetailDao.Properties.Ordered.eq(orderDetail.getOrdered()));
         List<LogisticsOrder> logisticsOrderList = logisQb.list();
         if (logisticsOrderList != null && !logisticsOrderList.isEmpty()) {
           LogisticsOrder logisticsOrder = logisticsOrderList.get(0);
-          if (logisticsOrder.getCustomerId().equals(customerId)) {
+          if (logisticsOrder.getCooperateID().equals(customerId)) {
             cargoOrderView.showLoadDialog("卸车", "是否卸车？");
           } else {
             UiTool.showToast((Context) cargoOrderView, "不是当前客户" + customerId + "的货物，请不要卸车！");
@@ -123,14 +123,14 @@ public class UnCargoOrderPresenter {
     OrderDetailDao orderDetailDao =
         LogisticsApplication.getInstance().getDaoSession().getOrderDetailDao();
     QueryBuilder qb = orderDetailDao.queryBuilder();
-    qb.where(OrderDetailDao.Properties.DetailId.eq(detailId));
+    qb.where(OrderDetailDao.Properties.GoodsId.eq(detailId));
     List<OrderDetail> orderDetailList = qb.list();
     if (orderDetailList != null && !orderDetailList.isEmpty()) {
       OrderDetail orderDetail = orderDetailList.get(0);
       orderDetail.setDetailStatus("2");
       orderDetail.setEditTime(new Date());
       orderDetailDao.insertOrReplaceInTx(orderDetail);
-      updateOrderStatus(orderDetail.getOrderId());
+      updateOrderStatus(orderDetail.getOrdered());
     }
   }
 
@@ -140,7 +140,7 @@ public class UnCargoOrderPresenter {
     OrderDetailDao orderDetailDao =
         LogisticsApplication.getInstance().getDaoSession().getOrderDetailDao();
     QueryBuilder qb = orderDetailDao.queryBuilder();
-    qb.where(OrderDetailDao.Properties.OrderId.eq(orderId));
+    qb.where(OrderDetailDao.Properties.Ordered.eq(orderId));
     List<OrderDetail> orderDetailList = qb.list();
     boolean flag = true;
     for (int i = 0; i < orderDetailList.size(); i++) {
@@ -151,7 +151,7 @@ public class UnCargoOrderPresenter {
     }
     if (flag) {
       QueryBuilder qb1 = logisticsOrderDao.queryBuilder();
-      qb1.where(LogisticsOrderDao.Properties.OrderId.eq(orderId));
+      qb1.where(LogisticsOrderDao.Properties.Ordered.eq(orderId));
       List<LogisticsOrder> logisticsOrderList = qb1.list();
       if (logisticsOrderList != null && !logisticsOrderList.isEmpty()) {
         LogisticsOrder logisticsOrder = logisticsOrderList.get(0);

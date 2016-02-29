@@ -29,7 +29,7 @@ public class DownCargoActivity extends BaseActivity implements IDownCargoView {
     updateButton = (ButtonRectangle) findViewById(R.id.btn_update);
     ((TextView) findViewById(R.id.tv_common_title)).setText(R.string.down_cargo);
     presenter = new DownCargoPresenter(this);
-    presenter.downloadData();
+    presenter.downloadOrderData();
     updateButton.setOnClickListener(new UpdateButtonClick());
   }
 
@@ -63,7 +63,7 @@ public class DownCargoActivity extends BaseActivity implements IDownCargoView {
 
   private class UpdateButtonClick implements View.OnClickListener {
     @Override public void onClick(View v) {
-      presenter.downloadData();
+      presenter.downloadOrderData();
     }
   }
 }

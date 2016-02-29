@@ -27,7 +27,7 @@ public class RecycleInputDetailPresent {
       return;
     }
     QueryBuilder qb = recycleInputDao.queryBuilder();
-    qb.where(RecycleInputDao.Properties.CustomId.eq(customId));
+    qb.where(RecycleInputDao.Properties.CooperateId.eq(customId));
     List<RecycleInput> recycleInputList = qb.list();
     if (recycleInputList != null && !recycleInputList.isEmpty()) {
       RecycleInput recycleInput = recycleInputList.get(0);
@@ -41,7 +41,7 @@ public class RecycleInputDetailPresent {
 
   private void insertRecycleInput(String customId, String inputNum) {
     RecycleInput recycleInput = new RecycleInput();
-    recycleInput.setCustomId(customId);
+    recycleInput.setCooperateId(customId);
     recycleInput.setRecycleNum(Integer.valueOf(inputNum));
     recycleInput.setRecycleTime(new Date());
     recycleInputDao.insert(recycleInput);

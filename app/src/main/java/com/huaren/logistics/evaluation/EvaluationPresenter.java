@@ -36,9 +36,9 @@ public class EvaluationPresenter {
       if (countMap.get("unLoadCount") == 0) {
         drawable = R.drawable.star_finish;
       }
-      Card card = new Card.Builder((Context) evaluationView).setTag(customer.getCustomerId())
+      Card card = new Card.Builder((Context) evaluationView).setTag(customer.getCooperateId())
           .withProvider(SmallImageCardProvider.class)
-          .setTitle(customer.getName() + "(" + customer.getCustomerId() + ")")
+          .setTitle(customer.getCooperateName() + "(" + customer.getCooperateId() + ")")
           .setDescription(desc)
           .setDrawable(drawable)
           .endConfig()
@@ -54,7 +54,7 @@ public class EvaluationPresenter {
     LogisticsOrderDao logisticsOrderDao = LogisticsApplication.getInstance().getLogisticsOrderDao();
     int total = 0, loadCount = 0, unLoadCount = 0;
     List<LogisticsOrder> logisticsOrderList = logisticsOrderDao.queryBuilder()
-        .where(LogisticsOrderDao.Properties.CustomerId.eq(customer.getCustomerId()))
+        .where(LogisticsOrderDao.Properties.CooperateID.eq(customer.getCooperateId()))
         .list();
     if (logisticsOrderList != null && !logisticsOrderList.isEmpty()) {
       total = logisticsOrderList.size();
