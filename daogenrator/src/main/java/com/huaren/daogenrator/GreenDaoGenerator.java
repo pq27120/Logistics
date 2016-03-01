@@ -79,13 +79,13 @@ public class GreenDaoGenerator {
 
     Entity orderDetail = schema.addEntity("OrderDetail");//订单详情
     orderDetail.implementsSerializable();
-    orderDetail.addStringProperty("goodsId").primaryKey();//货品ID
+    orderDetail.addStringProperty("goodsId").notNull();//货品ID
+    orderDetail.addStringProperty("ordered").notNull();//订单ID
     orderDetail.addStringProperty("goodsName").notNull();//品名
     orderDetail.addStringProperty("dispatchType").notNull();//冷藏类型
     orderDetail.addStringProperty("iGroiValunum").notNull(); //件数
-    orderDetail.addStringProperty("lpn").notNull(); //箱号条码
+    orderDetail.addStringProperty("lpn").primaryKey(); //箱号条码
     orderDetail.addStringProperty("detailStatus").notNull();
-    orderDetail.addStringProperty("ordered").notNull();//订单ID
     orderDetail.addDateProperty("addTime").notNull();
     orderDetail.addDateProperty("editTime");
 

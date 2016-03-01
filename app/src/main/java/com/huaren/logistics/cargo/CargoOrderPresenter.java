@@ -7,6 +7,7 @@ import com.huaren.logistics.LogisticsApplication;
 import com.huaren.logistics.R;
 import com.huaren.logistics.bean.LogisticsOrder;
 import com.huaren.logistics.bean.OrderDetail;
+import com.huaren.logistics.common.OrderStatusEnum;
 import com.huaren.logistics.dao.LogisticsOrderDao;
 import com.huaren.logistics.dao.OrderDetailDao;
 import com.huaren.logistics.util.StringTool;
@@ -67,9 +68,9 @@ public class CargoOrderPresenter {
       total = orderDetailList.size();
       for (int i = 0; i < orderDetailList.size(); i++) {
         OrderDetail orderDetail = orderDetailList.get(i);
-        if ("1".equals(orderDetail.getDetailStatus())) {
+        if (OrderStatusEnum.READEY_CARGO.getStatus().equals(orderDetail.getDetailStatus())) {
           unLoadCount++;
-        } else if ("2".equals(orderDetail.getDetailStatus())) {
+        } else if (OrderStatusEnum.CARGO.getStatus().equals(orderDetail.getDetailStatus())) {
           loadCount++;
         }
       }
@@ -85,16 +86,16 @@ public class CargoOrderPresenter {
     if (StringTool.isNotNull(detailCode)) {
       OrderDetailDao orderDetailDao = LogisticsApplication.getInstance().getOrderDetailDao();
       QueryBuilder qb = orderDetailDao.queryBuilder();
-      qb.where(OrderDetailDao.Properties.GoodsId.eq(detailCode));
+      qb.where(OrderDetailDao.Properties.Lpn.eq(detailCode));
       List<OrderDetail> orderDetailList = qb.list();
       if (orderDetailList != null && !orderDetailList.isEmpty()) {
         OrderDetail orderDetail = orderDetailList.get(0);
-        if (!"1".equals(orderDetail.getDetailStatus())) {
+        if (!OrderStatusEnum.READEY_CARGO.getStatus().equals(orderDetail.getDetailStatus())) {
           UiTool.showToast((Context) cargoOrderView, "货物已装车！");
           return;
         }
         LogisticsOrderDao logisticsOrderDao =
-            LogisticsApplication.getInstance().getDaoSession().getLogisticsOrderDao();
+            LogisticsApplication.getInstance().getLogisticsOrderDao();
         QueryBuilder logisQb = logisticsOrderDao.queryBuilder();
         logisQb.where(OrderDetailDao.Properties.Ordered.eq(orderDetail.getOrdered()));
         List<LogisticsOrder> logisticsOrderList = logisQb.list();
@@ -121,11 +122,11 @@ public class CargoOrderPresenter {
     OrderDetailDao orderDetailDao =
         LogisticsApplication.getInstance().getDaoSession().getOrderDetailDao();
     QueryBuilder qb = orderDetailDao.queryBuilder();
-    qb.where(OrderDetailDao.Properties.GoodsId.eq(detailId));
+    qb.where(OrderDetailDao.Properties.Lpn.eq(detailId));
     List<OrderDetail> orderDetailList = qb.list();
     if (orderDetailList != null && !orderDetailList.isEmpty()) {
       OrderDetail orderDetail = orderDetailList.get(0);
-      orderDetail.setDetailStatus("2");
+      orderDetail.setDetailStatus(OrderStatusEnum.CARGO.getStatus());
       orderDetail.setEditTime(new Date());
       orderDetailDao.insertOrReplaceInTx(orderDetail);
       updateOrderStatus(orderDetail.getOrdered());
@@ -143,7 +144,7 @@ public class CargoOrderPresenter {
     boolean flag = true;
     for (int i = 0; i < orderDetailList.size(); i++) {
       OrderDetail orderDetail = orderDetailList.get(i);
-      if ("1".equals(orderDetail.getDetailStatus())) {
+      if (OrderStatusEnum.READEY_CARGO.getStatus().equals(orderDetail.getDetailStatus())) {
         flag = false;
       }
     }

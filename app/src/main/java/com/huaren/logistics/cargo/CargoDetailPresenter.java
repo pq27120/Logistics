@@ -6,7 +6,9 @@ import com.dexafree.materialList.card.provider.SmallImageCardProvider;
 import com.huaren.logistics.LogisticsApplication;
 import com.huaren.logistics.R;
 import com.huaren.logistics.bean.OrderDetail;
+import com.huaren.logistics.common.OrderStatusEnum;
 import com.huaren.logistics.dao.OrderDetailDao;
+import com.huaren.logistics.util.CommonTool;
 import java.util.List;
 
 public class CargoDetailPresenter {
@@ -24,17 +26,15 @@ public class CargoDetailPresenter {
     for (int i = 0; i < orderDetailList.size(); i++) {
       OrderDetail orderDetail = orderDetailList.get(i);
       int drawable;
-      String desc;
-      if ("1".equals(orderDetail.getDetailStatus())) {
+      if (OrderStatusEnum.READEY_CARGO.getStatus().equals(orderDetail.getDetailStatus())) {
         drawable = R.drawable.star_do;
-        desc = "未装车";
       } else {
         drawable = R.drawable.star_finish;
-        desc = "已装车";
       }
+      String desc = CommonTool.getDescByStatus(orderDetail.getDetailStatus());
       Card card = new Card.Builder((Context) cargoDetailView).setTag(orderDetail.getGoodsId())
           .withProvider(SmallImageCardProvider.class)
-          .setTitle(orderDetail.getGoodsName() + "(" + orderDetail.getGoodsId() + ")")
+          .setTitle(orderDetail.getGoodsName() + "(" + orderDetail.getLpn() + ")")
           .setDescription(desc)
           .setDrawable(drawable)
           .endConfig()

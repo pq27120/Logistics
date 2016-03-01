@@ -17,6 +17,7 @@ import android.os.Environment;
 import android.util.Log;
 import android.view.View;
 import com.huaren.logistics.common.Constant;
+import com.huaren.logistics.common.OrderStatusEnum;
 import java.io.BufferedInputStream;
 import java.io.BufferedWriter;
 import java.io.File;
@@ -272,5 +273,26 @@ public class CommonTool {
    */
   public static String parseCurrDateToString(String format) {
     return new SimpleDateFormat(format).format(new Date());
+  }
+
+  /**
+   * 根据状态获取订单描述
+   * @param status
+   * @return
+   */
+  public static String getDescByStatus(String status) {
+    String desc = "";
+    if (OrderStatusEnum.READEY_CARGO.getStatus().equals(status)) {
+      desc = OrderStatusEnum.READEY_CARGO.getDesc();
+    } else if (OrderStatusEnum.CARGO.getStatus().equals(status)) {
+      desc = OrderStatusEnum.CARGO.getDesc();
+    } else if (OrderStatusEnum.UNCARGO.getStatus().equals(status)) {
+      desc = OrderStatusEnum.UNCARGO.getDesc();
+    } else if (OrderStatusEnum.EXAM.getStatus().equals(status)) {
+      desc = OrderStatusEnum.EXAM.getDesc();
+    } else if (OrderStatusEnum.EVALUATION.getStatus().equals(status)) {
+      desc = OrderStatusEnum.EVALUATION.getDesc();
+    }
+    return desc;
   }
 }

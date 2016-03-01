@@ -18,6 +18,7 @@ import com.huaren.logistics.util.UiTool;
 import com.huaren.logistics.util.webservice.WebServiceConnect;
 import com.huaren.logistics.util.webservice.WebServiceHandler;
 import com.huaren.logistics.util.webservice.WebServiceParam;
+import de.greenrobot.dao.query.QueryBuilder;
 import java.io.IOException;
 import java.io.StringReader;
 import java.util.ArrayList;
@@ -119,32 +120,53 @@ public class DownCargoPresenter {
 
   private void insertCustomer(Map<String, Customer> customerMap) {
     CustomerDao customerDao = LogisticsApplication.getInstance().getCustomerDao();
+    int customerNum = 0;
     for (Map.Entry<String, Customer> customerEntry : customerMap.entrySet()) {
       Customer customer = customerEntry.getValue();
       customer.setAddTime(new Date());
-      customerDao.insertOrReplace(customer);
+      QueryBuilder qb = customerDao.queryBuilder();
+      List<Customer> customerList =
+          qb.where(CustomerDao.Properties.CooperateId.eq(customer.getCooperateId())).list();
+      if (customerList == null || customerList.isEmpty()) {
+        customerNum++;
+        customerDao.insert(customer);
+      }
     }
-    buffer.append(customerMap.entrySet().size()).append("条客户信息");
+    buffer.append(customerNum).append("条客户信息");
   }
 
   private void insertOrderDetail(List<OrderDetail> orderDetailList) {
     OrderDetailDao orderDetailDao = LogisticsApplication.getInstance().getOrderDetailDao();
+    int detailNum = 0;
     for (OrderDetail orderDetail : orderDetailList) {
       orderDetail.setAddTime(new Date());
       orderDetail.setDetailStatus("1");
-      orderDetailDao.insertOrReplaceInTx(orderDetail);
+      QueryBuilder qb = orderDetailDao.queryBuilder();
+      List<OrderDetail> queryList =
+          qb.where(OrderDetailDao.Properties.Lpn.eq(orderDetail.getLpn())).list();
+      if (queryList == null || queryList.isEmpty()) {
+        detailNum++;
+        orderDetailDao.insert(orderDetail);
+      }
     }
-    buffer.append(",").append(orderDetailList.size()).append("条订单详情");
+    buffer.append(",").append(detailNum).append("条订单详情");
   }
 
   private void insertOrder(List<LogisticsOrder> logisticsOrderList) {
     LogisticsOrderDao logisticsOrderDao = LogisticsApplication.getInstance().getLogisticsOrderDao();
+    int orderNum = 0;
     for (LogisticsOrder logisticsOrder : logisticsOrderList) {
       logisticsOrder.setAddTime(new Date());
       logisticsOrder.setOrderStatus("1");
-      logisticsOrderDao.insertOrReplaceInTx(logisticsOrder);
+      QueryBuilder qb = logisticsOrderDao.queryBuilder();
+      List<LogisticsOrderDao> queryList =
+          qb.where(LogisticsOrderDao.Properties.Ordered.eq(logisticsOrder.getOrdered())).list();
+      if (queryList == null || queryList.isEmpty()) {
+        orderNum++;
+        logisticsOrderDao.insert(logisticsOrder);
+      }
     }
-    buffer.append(",").append(logisticsOrderList.size()).append("条订单");
+    buffer.append(",").append(orderNum).append("条订单");
   }
 
   private void parseOrderXml(Object detail) {
