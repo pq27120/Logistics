@@ -30,6 +30,7 @@ public class DownCargoActivity extends BaseActivity implements IDownCargoView {
     ((TextView) findViewById(R.id.tv_common_title)).setText(R.string.down_cargo);
     presenter = new DownCargoPresenter(this);
     presenter.downloadOrderData();
+    presenter.downloadDictData();
     updateButton.setOnClickListener(new UpdateButtonClick());
   }
 

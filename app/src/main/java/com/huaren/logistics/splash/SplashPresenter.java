@@ -16,7 +16,6 @@ import com.huaren.logistics.entity.UpdateInfo;
 import com.huaren.logistics.util.CommonTool;
 import com.huaren.logistics.util.StreamTools;
 import com.huaren.logistics.util.StringTool;
-import com.huaren.logistics.util.UiTool;
 import com.huaren.logistics.util.webservice.WebServiceConnect;
 import com.huaren.logistics.util.webservice.WebServiceHandler;
 import com.huaren.logistics.util.webservice.WebServiceParam;
