@@ -50,7 +50,6 @@ public class DownCargoPresenter {
       @Override public void handleMsg(int returnCode, Object detail) {
         switch (returnCode) {
           case 1:
-            UiTool.showToast((Context) downCargoView, "调用成功！");
             parseOrderInfo(detail);
             break;
         }

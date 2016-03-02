@@ -61,7 +61,6 @@ public class SplashPresenter {
       @Override public void handleMsg(int returnCode, Object detail) {
         switch (returnCode) {
           case 1:
-            UiTool.showToast((Context) iSplashView, "调用成功！");
             initUserInfo(detail);
             break;
         }
