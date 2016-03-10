@@ -25,6 +25,7 @@ import android.view.View;
 import com.gc.materialdesign.views.CheckBox;
 import com.huaren.logistics.R;
 import com.huaren.logistics.main.MainActivity;
+import com.huaren.logistics.util.CommonTool;
 import com.rengwuxian.materialedittext.MaterialEditText;
 
 public class LoginActivity extends Activity implements LoginView, View.OnClickListener {
@@ -77,8 +78,12 @@ public class LoginActivity extends Activity implements LoginView, View.OnClickLi
     username.setText(userName);
   }
 
-  @Override public void setRememberCheck(boolean isCheck) {
-    rememverCb.setChecked(isCheck);
+  @Override public void setRememberCheck(final boolean isCheck) {
+    rememverCb.post(new Runnable() {
+      @Override public void run() {
+        rememverCb.setChecked(isCheck);
+      }
+    });
   }
 
   @Override public void clearPasswordEt() {
