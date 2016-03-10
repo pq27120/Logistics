@@ -34,6 +34,7 @@ public class EvaluationOrderActivity extends BaseActivity implements IEvaluation
         Log.d("CARD_TYPE", card.getTag().toString());
         Intent intent = new Intent(EvaluationOrderActivity.this, EvaluationDetailActivity.class);
         intent.putExtra("orderId", card.getTag().toString());
+        intent.putExtra("customerId", customerId);
         startActivity(intent);
       }
 

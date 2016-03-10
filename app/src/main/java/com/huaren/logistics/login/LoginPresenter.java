@@ -41,9 +41,11 @@ public class LoginPresenter {
       loginView.showProgress();
     }
     LogisticsUserDao userDao = LogisticsApplication.getInstance().getLogisticsUserDao();
+    String md5Pass = MD5Util.MD5(password);
+    CommonTool.showLog(md5Pass);
     List<LogisticsUser> list = userDao.queryBuilder()
         .where(LogisticsUserDao.Properties.UserName.eq(username),
-            LogisticsUserDao.Properties.Pwd.eq(MD5Util.MD5(password)))
+            LogisticsUserDao.Properties.Pwd.eq(md5Pass))
         .list();
     if (list != null && !list.isEmpty()) {
       CommonTool.setSharePreference((Context) loginView, "curUserName", username);

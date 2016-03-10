@@ -7,6 +7,7 @@ import com.huaren.logistics.LogisticsApplication;
 import com.huaren.logistics.R;
 import com.huaren.logistics.bean.Customer;
 import com.huaren.logistics.bean.LogisticsOrder;
+import com.huaren.logistics.common.OrderStatusEnum;
 import com.huaren.logistics.dao.CustomerDao;
 import com.huaren.logistics.dao.LogisticsOrderDao;
 import java.util.HashMap;
@@ -21,7 +22,7 @@ public class EvaluationPresenter {
   }
 
   public void initCargoList() {
-    CustomerDao customerDao = LogisticsApplication.getInstance().getDaoSession().getCustomerDao();
+    CustomerDao customerDao = LogisticsApplication.getInstance().getCustomerDao();
     List<Customer> customerList = customerDao.loadAll();
     for (int i = 0; i < customerList.size(); i++) {
       Customer customer = customerList.get(i);
@@ -60,9 +61,9 @@ public class EvaluationPresenter {
       total = logisticsOrderList.size();
       for (int i = 0; i < logisticsOrderList.size(); i++) {
         LogisticsOrder logisticsOrder = logisticsOrderList.get(i);
-        if ("4".equals(logisticsOrder.getOrderStatus())) {
+        if (OrderStatusEnum.UNCARGO.getStatus().equals(logisticsOrder.getOrderStatus())) {
           unLoadCount++;
-        } else if ("5".equals(logisticsOrder.getOrderStatus())) {
+        } else if (OrderStatusEnum.EVALUATION.getStatus().equals(logisticsOrder.getOrderStatus())) {
           loadCount++;
         }
       }

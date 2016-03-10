@@ -288,8 +288,6 @@ public class CommonTool {
       desc = OrderStatusEnum.CARGO.getDesc();
     } else if (OrderStatusEnum.UNCARGO.getStatus().equals(status)) {
       desc = OrderStatusEnum.UNCARGO.getDesc();
-    } else if (OrderStatusEnum.EXAM.getStatus().equals(status)) {
-      desc = OrderStatusEnum.EXAM.getDesc();
     } else if (OrderStatusEnum.EVALUATION.getStatus().equals(status)) {
       desc = OrderStatusEnum.EVALUATION.getDesc();
     }

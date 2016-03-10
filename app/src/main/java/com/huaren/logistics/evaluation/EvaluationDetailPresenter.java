@@ -1,9 +1,16 @@
 package com.huaren.logistics.evaluation;
 
+import android.content.Context;
 import com.huaren.logistics.LogisticsApplication;
+import com.huaren.logistics.bean.LogisticsOrder;
 import com.huaren.logistics.bean.SysDicValue;
+import com.huaren.logistics.common.OrderStatusEnum;
+import com.huaren.logistics.dao.LogisticsOrderDao;
 import com.huaren.logistics.dao.SysDicValueDao;
+import com.huaren.logistics.util.CommonTool;
+import com.huaren.logistics.util.UiTool;
 import de.greenrobot.dao.query.QueryBuilder;
+import java.util.Date;
 import java.util.List;
 
 public class EvaluationDetailPresenter {
@@ -14,13 +21,35 @@ public class EvaluationDetailPresenter {
   }
 
   public void initEvaluationDetail(String orderId) {
-    initEvaluationRadio();
+    LogisticsOrderDao logisticsOrderDao = LogisticsApplication.getInstance().getLogisticsOrderDao();
+    LogisticsOrder logisticsOrder = logisticsOrderDao.queryBuilder().where(LogisticsOrderDao.Properties.Ordered.eq(orderId)).unique();
+    if (logisticsOrder.getOrderStatus().equals(OrderStatusEnum.EVALUATION.getStatus())) {
+      initEvaluationRadio(false, logisticsOrder.getEvaluation());
+    } else {
+      initEvaluationRadio(true, null);
+    }
   }
 
-  private void initEvaluationRadio() {
+  private void initEvaluationRadio(boolean flag, String evaluation) {
     SysDicValueDao sysDicValueDao = LogisticsApplication.getInstance().getSysDicValueDao();
     QueryBuilder qb = sysDicValueDao.queryBuilder();
     List<SysDicValue> list = qb.where(SysDicValueDao.Properties.DicId.eq(1l)).list();
-    evaluationDetailView.initRadio(list);
+    evaluationDetailView.initRadio(list,flag,evaluation);
+  }
+
+  public boolean checkCustomerPass(String customerId, String pass) {
+    return true;
+  }
+
+  public void evaluationOrder(String orderId, SysDicValue sysDicValue) {
+    LogisticsOrderDao logisticsOrderDao = LogisticsApplication.getInstance().getLogisticsOrderDao();
+    LogisticsOrder logisticsOrder = logisticsOrderDao.queryBuilder().where(LogisticsOrderDao.Properties.Ordered.eq(orderId)).unique();
+    logisticsOrder.setEvaluation("" + sysDicValue.getId());
+    logisticsOrder.setEditTime(new Date());
+    logisticsOrder.setOrderStatus(OrderStatusEnum.EVALUATION.getStatus());
+    logisticsOrderDao.update(logisticsOrder);
+    CommonTool.showLog(logisticsOrder.getEvaluation());
+    UiTool.showToast((Context)evaluationDetailView, "评价完成！");
+    evaluationDetailView.back();
   }
 }
