@@ -5,19 +5,22 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.TextView;
+import com.dexafree.materialList.card.Card;
+import com.dexafree.materialList.view.MaterialListView;
 import com.gc.materialdesign.views.ButtonRectangle;
 import com.huaren.logistics.ActivityCollector;
 import com.huaren.logistics.BaseActivity;
 import com.huaren.logistics.R;
 import com.rengwuxian.materialedittext.MaterialEditText;
 
-public class RecycleScanDetailActivity extends BaseActivity implements IRecycleScanDetailView{
+public class RecycleScanDetailActivity extends BaseActivity implements IRecycleScanDetailView {
 
   private String customerId;
 
   private MaterialEditText scanEt;
   private ButtonRectangle scanBtn;
   private RecycleScanDetailPresent recycleScanDetailPresent;
+  private MaterialListView mListView;
 
   public static void actionStart(Context context, String customerId) {
     Intent intent = new Intent(context, RecycleScanDetailActivity.class);
@@ -27,14 +30,16 @@ public class RecycleScanDetailActivity extends BaseActivity implements IRecycleS
 
   @Override protected void onCreate(Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
-    setContentView(R.layout.activity_recycle_input_detail);
+    setContentView(R.layout.activity_recycle_scan_detail);
     initUserInfo();
     scanEt = (MaterialEditText) findViewById(R.id.input_et);
     scanBtn = (ButtonRectangle) findViewById(R.id.input_btn);
+    mListView = (MaterialListView) findViewById(R.id.material_listview);
     ((TextView) findViewById(R.id.tv_common_title)).setText(R.string.activity_recycle_scan_title);
     Intent intent = getIntent();
     customerId = intent.getStringExtra("customerId");
     recycleScanDetailPresent = new RecycleScanDetailPresent(this);
+    recycleScanDetailPresent.initRecycleScanList(customerId);
     scanBtn.setOnClickListener(new ScanBtnClick());
   }
 
@@ -47,5 +52,9 @@ public class RecycleScanDetailActivity extends BaseActivity implements IRecycleS
     @Override public void onClick(View v) {
       recycleScanDetailPresent.recycleGoods(customerId, scanEt.getText().toString());
     }
+  }
+
+  @Override public void addCard(Card card) {
+    mListView.add(card);
   }
 }

@@ -1,6 +1,8 @@
 package com.huaren.logistics.recyclescan;
 
 import android.content.Context;
+import com.dexafree.materialList.card.Card;
+import com.dexafree.materialList.card.provider.SmallImageCardProvider;
 import com.huaren.logistics.LogisticsApplication;
 import com.huaren.logistics.bean.RecycleInput;
 import com.huaren.logistics.bean.RecycleScan;
@@ -46,5 +48,26 @@ public class RecycleScanDetailPresent {
     recycleScan.setInputId(inputId);
     recycleScan.setRecycleScanTime(new Date());
     recycleScanDao.insert(recycleScan);
+  }
+
+  public void initRecycleScanList(String customerId) {
+    RecycleInputDao recycleInputDao = LogisticsApplication.getInstance().getRecycleInputDao();
+    RecycleInput recycleInput =
+        recycleInputDao.queryBuilder().where(RecycleInputDao.Properties.CooperateId.eq(customerId)).unique();
+    if (recycleInput != null) {
+      RecycleScanDao recycleScanDao = LogisticsApplication.getInstance().getRecycleScanDao();
+      List<RecycleScan> recycleScanList = recycleScanDao.queryBuilder()
+          .where(RecycleScanDao.Properties.InputId.eq(recycleInput.getId())).list();
+      for(int i=0;i<recycleScanList.size();i++) {
+        RecycleScan recycleScan = recycleScanList.get(i);
+      Card card = new Card.Builder((Context) recycleScanDetailView).setTag(recycleScan.getScanCode())
+          .withProvider(SmallImageCardProvider.class)
+          .setTitle(recycleScan.getScanCode())
+          .setDescription("")
+          .endConfig()
+          .build();
+      recycleScanDetailView.addCard(card);
+      }
+    }
   }
 }

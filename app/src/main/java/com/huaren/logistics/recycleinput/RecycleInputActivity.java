@@ -32,7 +32,6 @@ public class RecycleInputActivity extends BaseActivity implements IRecycleInputV
     });
     ((TextView) findViewById(R.id.tv_common_title)).setText(R.string.activity_recycle_input_title);
     presenter = new RecycleInputPresenter(this);
-    initUserInfo();
     presenter.initCustomList();
   }
 

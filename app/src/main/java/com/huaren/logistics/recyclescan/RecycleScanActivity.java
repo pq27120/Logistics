@@ -31,7 +31,6 @@ public class RecycleScanActivity extends BaseActivity implements IRecycleScanVie
     });
     ((TextView) findViewById(R.id.tv_common_title)).setText(R.string.activity_recycle_scan_title);
     presenter = new RecycleScanPresent(this);
-    initUserInfo();
     presenter.initCustomList();
   }
 
