@@ -85,7 +85,7 @@ public class EvaluationDetailActivity extends BaseActivity implements IEvaluatio
   }
 
   @Override public void back() {
-    EvaluationDetailActivity.this.finish();
+    EvaluationOrderActivity.actionStart(EvaluationDetailActivity.this, customerId, orderId);
   }
 
   private class EvaluationButtonClick implements View.OnClickListener {

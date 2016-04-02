@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:orientation="vertical"
     android:layout_width="match_parent"
@@ -22,7 +22,5 @@
       android:text="@string/quit"
       android:layout_gravity="center_horizontal"
       android:textSize="@dimen/text_size_middle"
-      android:layout_alignParentBottom="true"
-      android:layout_centerHorizontal="true"
       />
-</RelativeLayout>
+</LinearLayout>

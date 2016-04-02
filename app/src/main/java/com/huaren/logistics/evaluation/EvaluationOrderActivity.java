@@ -30,6 +30,7 @@ public class EvaluationOrderActivity extends BaseActivity implements IEvaluation
         intent.putExtra("orderId", card.getTag().toString());
         intent.putExtra("customerId", customerId);
         startActivity(intent);
+        finish();
       }
 
       @Override public void onItemLongClick(Card card, int position) {
