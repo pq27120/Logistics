@@ -13,7 +13,7 @@
       android:allowBackup="true"
       android:icon="@mipmap/ic_launcher"
       android:label="@string/app_name"
-      android:theme="@android:style/Theme.NoTitleBar.Fullscreen"
+      android:theme="@android:style/Theme.NoTitleBar"
       >
     <activity
         android:name=".splash.SplashActivity"
@@ -29,84 +29,120 @@
     <activity
         android:name=".login.LoginActivity"
         android:label="@string/app_name"
+        android:configChanges="orientation|keyboardHidden|navigation"
+        android:launchMode="singleTask"
+        android:screenOrientation="portrait"
         >
     </activity>
     <activity
         android:name=".main.MainActivity"
         android:label="@string/title_activity_main"
+        android:configChanges="orientation|keyboardHidden|navigation"
+        android:launchMode="singleTask"
+        android:screenOrientation="portrait"
         >
     </activity>
     <activity
         android:name=".downcargo.DownCargoActivity"
+        android:configChanges="orientation|keyboardHidden|navigation"
+        android:launchMode="singleTask"
+        android:screenOrientation="portrait"
         android:label="@string/title_activity_downcargo"
         >
     </activity>
     <activity
         android:name=".cargo.CargoActivity"
+        android:configChanges="orientation|keyboardHidden|navigation"
+        android:launchMode="singleTask"
+        android:screenOrientation="portrait"
         android:label="@string/title_activity_cargo"
         >
     </activity>
     <activity
         android:name=".cargo.CargoOrderActivity"
+        android:configChanges="orientation|keyboardHidden|navigation"
+        android:launchMode="singleTask"
+        android:screenOrientation="portrait"
         android:label="@string/title_activity_cargo"
         >
     </activity>
     <activity
         android:name=".cargo.CargoDetailActivity"
+        android:configChanges="orientation|keyboardHidden|navigation"
+        android:launchMode="singleTask"
+        android:screenOrientation="portrait"
         android:label="@string/title_activity_cargo"
         >
     </activity>
     <activity
         android:name=".uncargo.UnCargoActivity"
+        android:configChanges="orientation|keyboardHidden|navigation"
+        android:launchMode="singleTask"
+        android:screenOrientation="portrait"
         android:label="@string/title_activity_uncargo"
         >
     </activity>
     <activity
         android:name=".uncargo.UnCargoOrderActivity"
+        android:configChanges="orientation|keyboardHidden|navigation"
+        android:launchMode="singleTask"
+        android:screenOrientation="portrait"
         android:label="@string/title_activity_uncargo"
         >
     </activity>
     <activity
         android:name=".uncargo.UnCargoDetailActivity"
+        android:configChanges="orientation|keyboardHidden|navigation"
+        android:launchMode="singleTask"
+        android:screenOrientation="portrait"
         android:label="@string/title_activity_cargo"
         >
     </activity>
     <activity
         android:name=".evaluation.EvaluationActivity"
+        android:configChanges="orientation|keyboardHidden|navigation"
+        android:launchMode="singleTask"
+        android:screenOrientation="portrait"
         android:label="@string/title_activity_evalutaion"
         >
     </activity>
     <activity
         android:name=".evaluation.EvaluationOrderActivity"
+        android:configChanges="orientation|keyboardHidden|navigation"
+        android:launchMode="singleTask"
+        android:screenOrientation="portrait"
         android:label="@string/title_activity_evalutaion"
         >
     </activity>
     <activity
         android:name=".evaluation.EvaluationDetailActivity"
+        android:configChanges="orientation|keyboardHidden|navigation"
+        android:launchMode="singleTask"
+        android:screenOrientation="portrait"
         android:label="@string/title_activity_evalutaion_detail"
         >
     </activity>
     <activity
-        android:name=".recycleinput.RecycleInputActivity"
-        android:label="@string/activity_recycle_input_title"
-        />
-    <activity
         android:name=".recycleinput.RecycleInputDetailActivity"
+        android:configChanges="orientation|keyboardHidden|navigation"
+        android:launchMode="singleTask"
+        android:screenOrientation="portrait"
         android:label="@string/activity_recycle_input_title"
-        />
-    <activity
-        android:name=".recyclescan.RecycleScanActivity"
-        android:label="@string/activity_recycle_scan_title"
         />
     <activity
         android:name=".recyclescan.RecycleScanDetailActivity"
+        android:configChanges="orientation|keyboardHidden|navigation"
+        android:launchMode="singleTask"
+        android:screenOrientation="portrait"
         android:label="@string/activity_recycle_scan_title"
         />
     <activity
         android:name=".info.InfoActivity"
+        android:configChanges="orientation|keyboardHidden|navigation"
+        android:launchMode="singleTask"
+        android:screenOrientation="portrait"
         android:label="@string/title_activity_info"
         >
     </activity>
   </application>
-
 </manifest>

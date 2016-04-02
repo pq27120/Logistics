@@ -21,16 +21,13 @@ public class CargoDetailPresenter {
   public void initCargoDetail(String orderId) {
     OrderDetailDao orderDetailDao =
         LogisticsApplication.getInstance().getDaoSession().getOrderDetailDao();
-    List<OrderDetail> orderDetailList =
-        orderDetailDao.queryBuilder().where(OrderDetailDao.Properties.Ordered.eq(orderId)).list();
+    List<OrderDetail> orderDetailList = orderDetailDao.queryBuilder()
+        .where(OrderDetailDao.Properties.Ordered.eq(orderId),
+            OrderDetailDao.Properties.DetailStatus.eq(OrderStatusEnum.READEY_CARGO.getStatus()))
+        .list();
     for (int i = 0; i < orderDetailList.size(); i++) {
       OrderDetail orderDetail = orderDetailList.get(i);
-      int drawable;
-      if (OrderStatusEnum.READEY_CARGO.getStatus().equals(orderDetail.getDetailStatus())) {
-        drawable = R.drawable.star_do;
-      } else {
-        drawable = R.drawable.star_finish;
-      }
+      int drawable = R.drawable.star_do;
       String desc = CommonTool.getDescByStatus(orderDetail.getDetailStatus());
       Card card = new Card.Builder((Context) cargoDetailView).setTag(orderDetail.getGoodsId())
           .withProvider(SmallImageCardProvider.class)
