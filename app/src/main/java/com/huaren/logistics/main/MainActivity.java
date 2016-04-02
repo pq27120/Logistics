@@ -33,8 +33,8 @@ import com.huaren.logistics.cargo.CargoActivity;
 import com.huaren.logistics.downcargo.DownCargoActivity;
 import com.huaren.logistics.evaluation.EvaluationActivity;
 import com.huaren.logistics.info.InfoActivity;
-import com.huaren.logistics.recycleinput.RecycleInputActivity;
-import com.huaren.logistics.recyclescan.RecycleScanActivity;
+import com.huaren.logistics.recycleinput.RecycleInputDetailActivity;
+import com.huaren.logistics.recyclescan.RecycleScanDetailActivity;
 import com.huaren.logistics.uncargo.UnCargoActivity;
 import java.util.List;
 
@@ -121,11 +121,11 @@ public class MainActivity extends BaseActivity implements MainView, AdapterView.
     }
 
     @Override public void enterRecycle() {
-        startActivity(new Intent(this, RecycleInputActivity.class));
+        startActivity(new Intent(this, RecycleInputDetailActivity.class));
     }
 
     @Override public void enterRecycleScan() {
-        startActivity(new Intent(this, RecycleScanActivity.class));
+        startActivity(new Intent(this, RecycleScanDetailActivity.class));
     }
 
     @Override public void onItemClick(AdapterView<?> parent, View view, int position, long id) {

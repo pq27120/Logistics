@@ -29,7 +29,8 @@ public class CargoOrderPresenter {
   public void initCargoOrder(String customerId) {
     LogisticsOrderDao logisticsOrderDao = LogisticsApplication.getInstance().getLogisticsOrderDao();
     List<LogisticsOrder> logisticsOrderList = logisticsOrderDao.queryBuilder()
-        .where(LogisticsOrderDao.Properties.CooperateID.eq(customerId))
+        .where(LogisticsOrderDao.Properties.CooperateID.eq(customerId)
+            , LogisticsOrderDao.Properties.OrderStatus.eq(OrderStatusEnum.READEY_CARGO.getStatus()))
         .list();
     for (int i = 0; i < logisticsOrderList.size(); i++) {
       LogisticsOrder logisticsOrder = logisticsOrderList.get(i);
@@ -91,6 +92,7 @@ public class CargoOrderPresenter {
       if (orderDetailList != null && !orderDetailList.isEmpty()) {
         OrderDetail orderDetail = orderDetailList.get(0);
         if (!OrderStatusEnum.READEY_CARGO.getStatus().equals(orderDetail.getDetailStatus())) {
+          LogisticsApplication.getInstance().getSoundPoolUtil().playWrong();
           UiTool.showToast((Context) cargoOrderView, "货物已装车！");
           return;
         }
@@ -108,12 +110,15 @@ public class CargoOrderPresenter {
                 "当前客户" + customerId + "，是否切换到客户" + logisticsOrder.getCooperateID());
           }
         } else {
+          LogisticsApplication.getInstance().getSoundPoolUtil().playWrong();
           UiTool.showToast((Context) cargoOrderView, "货物信息不存在！");
         }
       } else {
+        LogisticsApplication.getInstance().getSoundPoolUtil().playWrong();
         UiTool.showToast((Context) cargoOrderView, "货物信息不存在！");
       }
     } else {
+      LogisticsApplication.getInstance().getSoundPoolUtil().playWrong();
       UiTool.showToast((Context) cargoOrderView, "请扫码后再装车！");
     }
   }
@@ -155,7 +160,7 @@ public class CargoOrderPresenter {
       if (logisticsOrderList != null && !logisticsOrderList.isEmpty()) {
         LogisticsOrder logisticsOrder = logisticsOrderList.get(0);
         if ("1".equals(logisticsOrder.getOrderStatus())) {
-          logisticsOrder.setOrderStatus("2");
+          logisticsOrder.setOrderStatus(OrderStatusEnum.CARGO.getStatus());
           logisticsOrder.setEditTime(new Date());
           logisticsOrderDao.insertOrReplaceInTx(logisticsOrder);
         }

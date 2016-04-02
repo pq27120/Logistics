@@ -13,6 +13,7 @@ import com.huaren.logistics.dao.RecycleInputDao;
 import com.huaren.logistics.dao.RecycleScanDao;
 import com.huaren.logistics.dao.SysDicDao;
 import com.huaren.logistics.dao.SysDicValueDao;
+import com.huaren.logistics.util.SoundPoolUtil;
 
 public class LogisticsApplication extends Application {
 
@@ -29,6 +30,7 @@ public class LogisticsApplication extends Application {
   private LogisticsUserDao logisticsUserDao;
   private static LogisticsApplication INSTANCE;
   private static Context context;
+  private SoundPoolUtil soundPoolUtil;
 
   public static LogisticsApplication getInstance() {
     return INSTANCE;
@@ -41,6 +43,7 @@ public class LogisticsApplication extends Application {
     CrashHandler crashHandler = CrashHandler.getInstance();
     crashHandler.init(getApplicationContext());
     setupDatabase();
+    soundPoolUtil = new SoundPoolUtil(context);
   }
 
   /**
@@ -52,6 +55,7 @@ public class LogisticsApplication extends Application {
     // 注意：默认的 DaoMaster.DevOpenHelper 会在数据库升级时，删除所有的表，意味着这将导致数据的丢失。
     // 所以，在正式的项目中，你还应该做一层封装，来实现数据库的安全升级。
     DaoMaster.DevOpenHelper helper = new DaoMaster.DevOpenHelper(this, "logistics-db", null);
+    //DaoMaster.OpenHelper helper = new SQLiteOpenHelper(this, null);
     db = helper.getWritableDatabase();
     // 注意：该数据库连接属于 DaoMaster，所以多个 Session 指的是相同的数据库连接。
     daoMaster = new DaoMaster(db);
@@ -108,5 +112,9 @@ public class LogisticsApplication extends Application {
 
   public LogisticsUserDao getLogisticsUserDao() {
     return logisticsUserDao;
+  }
+
+  public SoundPoolUtil getSoundPoolUtil() {
+    return soundPoolUtil;
   }
 }

@@ -29,7 +29,8 @@ public class UnCargoOrderPresenter {
   public void initCargoOrder(String customerId) {
     LogisticsOrderDao logisticsOrderDao = LogisticsApplication.getInstance().getLogisticsOrderDao();
     List<LogisticsOrder> logisticsOrderList = logisticsOrderDao.queryBuilder()
-        .where(LogisticsOrderDao.Properties.CooperateID.eq(customerId))
+        .where(LogisticsOrderDao.Properties.CooperateID.eq(customerId),
+            LogisticsOrderDao.Properties.OrderStatus.eq(OrderStatusEnum.CARGO.getStatus()))
         .list();
     for (int i = 0; i < logisticsOrderList.size(); i++) {
       LogisticsOrder logisticsOrder = logisticsOrderList.get(i);
@@ -68,9 +69,9 @@ public class UnCargoOrderPresenter {
       total = orderDetailList.size();
       for (int i = 0; i < orderDetailList.size(); i++) {
         OrderDetail orderDetail = orderDetailList.get(i);
-        if ("2".equals(orderDetail.getDetailStatus())) {
+        if (OrderStatusEnum.CARGO.getStatus().equals(orderDetail.getDetailStatus())) {
           unLoadCount++;
-        } else if ("3".equals(orderDetail.getDetailStatus())) {
+        } else if (OrderStatusEnum.UNCARGO.getStatus().equals(orderDetail.getDetailStatus())) {
           loadCount++;
         }
       }
@@ -90,10 +91,12 @@ public class UnCargoOrderPresenter {
       List<OrderDetail> orderDetailList = qb.list();
       if (orderDetailList != null && !orderDetailList.isEmpty()) {
         OrderDetail orderDetail = orderDetailList.get(0);
-        if ("3".equals(orderDetail.getDetailStatus())) {
+        if (OrderStatusEnum.UNCARGO.getStatus().equals(orderDetail.getDetailStatus())) {
+          LogisticsApplication.getInstance().getSoundPoolUtil().playWrong();
           UiTool.showToast((Context) cargoOrderView, "货物已卸车！");
           return;
-        } else if (!"2".equals(orderDetail.getDetailStatus())) {
+        } else if (!OrderStatusEnum.CARGO.getStatus().equals(orderDetail.getDetailStatus())) {
+          LogisticsApplication.getInstance().getSoundPoolUtil().playWrong();
           UiTool.showToast((Context) cargoOrderView, "该货物无法卸车！");
           return;
         }
@@ -107,28 +110,31 @@ public class UnCargoOrderPresenter {
           if (logisticsOrder.getCooperateID().equals(customerId)) {
             cargoOrderView.showLoadDialog("卸车", "是否卸车？");
           } else {
+            LogisticsApplication.getInstance().getSoundPoolUtil().playWrong();
             UiTool.showToast((Context) cargoOrderView, "不是当前客户" + customerId + "的货物，请不要卸车！");
           }
         } else {
+          LogisticsApplication.getInstance().getSoundPoolUtil().playWrong();
           UiTool.showToast((Context) cargoOrderView, "货物信息不存在！");
         }
       } else {
+        LogisticsApplication.getInstance().getSoundPoolUtil().playWrong();
         UiTool.showToast((Context) cargoOrderView, "货物信息不存在！");
       }
     } else {
+      LogisticsApplication.getInstance().getSoundPoolUtil().playWrong();
       UiTool.showToast((Context) cargoOrderView, "请扫码后再装车！");
     }
   }
 
   public void updateOrderCargo(String detailId) {
-    OrderDetailDao orderDetailDao =
-        LogisticsApplication.getInstance().getOrderDetailDao();
+    OrderDetailDao orderDetailDao = LogisticsApplication.getInstance().getOrderDetailDao();
     QueryBuilder qb = orderDetailDao.queryBuilder();
     qb.where(OrderDetailDao.Properties.Lpn.eq(detailId));
     List<OrderDetail> orderDetailList = qb.list();
     if (orderDetailList != null && !orderDetailList.isEmpty()) {
       OrderDetail orderDetail = orderDetailList.get(0);
-      orderDetail.setDetailStatus("3");
+      orderDetail.setDetailStatus(OrderStatusEnum.UNCARGO.getStatus());
       orderDetail.setEditTime(new Date());
       orderDetailDao.insertOrReplaceInTx(orderDetail);
       updateOrderStatus(orderDetail.getOrdered());
@@ -136,17 +142,15 @@ public class UnCargoOrderPresenter {
   }
 
   private void updateOrderStatus(String orderId) {
-    LogisticsOrderDao logisticsOrderDao =
-        LogisticsApplication.getInstance().getLogisticsOrderDao();
-    OrderDetailDao orderDetailDao =
-        LogisticsApplication.getInstance().getOrderDetailDao();
+    LogisticsOrderDao logisticsOrderDao = LogisticsApplication.getInstance().getLogisticsOrderDao();
+    OrderDetailDao orderDetailDao = LogisticsApplication.getInstance().getOrderDetailDao();
     QueryBuilder qb = orderDetailDao.queryBuilder();
     qb.where(OrderDetailDao.Properties.Ordered.eq(orderId));
     List<OrderDetail> orderDetailList = qb.list();
     boolean flag = true;
     for (int i = 0; i < orderDetailList.size(); i++) {
       OrderDetail orderDetail = orderDetailList.get(i);
-      if ("1".equals(orderDetail.getDetailStatus())) {
+      if (OrderStatusEnum.CARGO.getStatus().equals(orderDetail.getDetailStatus())) {
         flag = false;
       }
     }
@@ -156,10 +160,11 @@ public class UnCargoOrderPresenter {
       List<LogisticsOrder> logisticsOrderList = qb1.list();
       if (logisticsOrderList != null && !logisticsOrderList.isEmpty()) {
         LogisticsOrder logisticsOrder = logisticsOrderList.get(0);
-        if ("2".equals(logisticsOrder.getOrderStatus())) {
+        if (OrderStatusEnum.CARGO.getStatus().equals(logisticsOrder.getOrderStatus())) {
           logisticsOrder.setOrderStatus(OrderStatusEnum.UNCARGO.getStatus());
           logisticsOrder.setEditTime(new Date());
           logisticsOrderDao.insertOrReplaceInTx(logisticsOrder);
+          cargoOrderView.enterApprovalView(logisticsOrder.getCooperateID(), orderId);
         }
       }
     }

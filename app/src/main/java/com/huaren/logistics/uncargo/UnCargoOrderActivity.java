@@ -14,7 +14,8 @@ import com.dexafree.materialList.view.MaterialListView;
 import com.gc.materialdesign.views.ButtonRectangle;
 import com.huaren.logistics.BaseActivity;
 import com.huaren.logistics.R;
-import com.huaren.logistics.cargo.CargoDetailActivity;
+import com.huaren.logistics.evaluation.EvaluationOrderActivity;
+import com.huaren.logistics.util.UiTool;
 import com.rengwuxian.materialedittext.MaterialEditText;
 
 public class UnCargoOrderActivity extends BaseActivity implements IUnCargoOrderView {
@@ -32,6 +33,7 @@ public class UnCargoOrderActivity extends BaseActivity implements IUnCargoOrderV
     setContentView(R.layout.activity_uncargo_order);
     initUserInfo();
     unRemoveEt = (MaterialEditText) findViewById(R.id.load_et);
+    UiTool.hideSoftInputMethod(UnCargoOrderActivity.this, unRemoveEt);
     unRemoveBtn = (ButtonRectangle) findViewById(R.id.remove_btn);
     mListView = (MaterialListView) findViewById(R.id.material_listview);
     mListView.addOnItemTouchListener(new RecyclerItemClickListener.OnItemClickListener() {
@@ -84,6 +86,10 @@ public class UnCargoOrderActivity extends BaseActivity implements IUnCargoOrderV
     initUserInfo();
     mListView.clearAll();
     presenter.initCargoOrder(customerId);
+  }
+
+  @Override public void enterApprovalView(String customerId, String orderId) {
+    EvaluationOrderActivity.actionStart(UnCargoOrderActivity.this, customerId, orderId);
   }
 
   private class LoadButtonClick implements View.OnClickListener {

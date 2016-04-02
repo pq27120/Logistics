@@ -33,7 +33,7 @@ public class EvaluationDetailPresenter {
   private void initEvaluationRadio(boolean flag, String evaluation) {
     SysDicValueDao sysDicValueDao = LogisticsApplication.getInstance().getSysDicValueDao();
     QueryBuilder qb = sysDicValueDao.queryBuilder();
-    List<SysDicValue> list = qb.where(SysDicValueDao.Properties.DicId.eq(1l)).list();
+    List<SysDicValue> list = qb.where(SysDicValueDao.Properties.DicId.eq(20)).list();
     evaluationDetailView.initRadio(list,flag,evaluation);
   }
 
@@ -49,6 +49,7 @@ public class EvaluationDetailPresenter {
     logisticsOrder.setOrderStatus(OrderStatusEnum.EVALUATION.getStatus());
     logisticsOrderDao.update(logisticsOrder);
     CommonTool.showLog(logisticsOrder.getEvaluation());
+    LogisticsApplication.getInstance().getSoundPoolUtil().playRight();
     UiTool.showToast((Context)evaluationDetailView, "评价完成！");
     evaluationDetailView.back();
   }

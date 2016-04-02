@@ -43,6 +43,7 @@
           app:met_iconLeft="@drawable/iv_username"
           app:met_iconPadding="0dp"
           app:met_textColor="@android:color/black"
+          android:maxLength="8"
           />
     </LinearLayout>
 
@@ -80,6 +81,7 @@
             android:focusableInTouchMode="true"
             app:met_iconLeft="@drawable/iv_pass"
             app:met_iconPadding="0dp"
+            android:maxLength="8"
             />
       </LinearLayout>
     </LinearLayout>

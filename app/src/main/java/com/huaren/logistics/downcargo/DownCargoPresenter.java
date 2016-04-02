@@ -13,8 +13,7 @@ import com.huaren.logistics.dao.LogisticsOrderDao;
 import com.huaren.logistics.dao.OrderDetailDao;
 import com.huaren.logistics.dao.SysDicDao;
 import com.huaren.logistics.dao.SysDicValueDao;
-import com.huaren.logistics.util.CommonTool;
-import com.huaren.logistics.util.UiTool;
+import com.huaren.logistics.util.DateUtil;
 import com.huaren.logistics.util.webservice.WebServiceConnect;
 import com.huaren.logistics.util.webservice.WebServiceHandler;
 import com.huaren.logistics.util.webservice.WebServiceParam;
@@ -36,6 +35,7 @@ public class DownCargoPresenter {
 
   public WebServiceHandler handler;
   public WebServiceHandler dictHandler;
+  public WebServiceHandler dictValueHandler;
   protected WebServiceConnect webServiceConnect = new WebServiceConnect();
   private StringBuffer buffer = new StringBuffer("更新完成，更新了");
 
@@ -69,52 +69,150 @@ public class DownCargoPresenter {
         }
       }
     };
+
+    dictValueHandler = new WebServiceHandler((Context) downCargoView) {
+      @Override public void handleFirst() {
+
+      }
+
+      @Override public void handleMsg(int returnCode, Object detail) {
+        switch (returnCode) {
+          case 1:
+            parseDictValueInfo(detail);
+            break;
+        }
+      }
+    };
+  }
+
+  private void parseDictValueInfo(Object detail) {
+    List<SysDicValue> sysDicValueList = null;
+    SysDicValue sysDicValue = null;
+    SoapObject soapObject = (SoapObject) detail;
+    String xml = soapObject.getPropertyAsString("GetDictionaryValueResult");
+    try {
+      XmlPullParser parser = Xml.newPullParser();
+      parser.setInput(new StringReader(xml));
+      //  产生第一个事件
+      int eventType = parser.getEventType();
+      //  当文档结束事件时退出循环
+      while (eventType != XmlPullParser.END_DOCUMENT) {
+        switch (eventType) {
+          // 开始文档
+          case XmlPullParser.START_DOCUMENT:
+            // new 集合，方便于添加元素
+            sysDicValueList = new ArrayList<>();
+            break;
+          // 开始标记
+          case XmlPullParser.START_TAG:
+            // 获得当前节点名（标记名）
+            String name = parser.getName();
+            if ("Data".equals(name)) {
+              sysDicValue = new SysDicValue();
+            }
+            if ("ID".equals(name)) {
+              String id = parser.nextText();
+              sysDicValue.setId(Long.valueOf(id));
+            }
+            if ("MyDisplayValue".equals(name)) {
+              sysDicValue.setMyDisplayValue(parser.nextText());
+            }
+            if ("DictionaryTableID".equals(name)) {
+              sysDicValue.setDicId(Integer.valueOf(parser.nextText()));
+            }
+            if ("Note".equals(name)) {
+              sysDicValue.setNote(parser.nextText());
+            }
+            if ("MyValue".equals(name)) {
+              sysDicValue.setMyName(parser.nextText());
+            }
+            break;
+          // 结束标记
+          case XmlPullParser.END_TAG:
+            String endName = parser.getName();
+            if ("Data".equals(endName)) {
+              sysDicValueList.add(sysDicValue);
+              sysDicValue = null;
+            }
+            break;
+        }
+        // 获得解析器中的下一个事件
+        eventType = parser.next();
+      }
+    } catch (IOException e) {
+      e.printStackTrace();
+    } catch (XmlPullParserException e) {
+      e.printStackTrace();
+    }
+    SysDicValueDao sysDicValueDao = LogisticsApplication.getInstance().getSysDicValueDao();
+    sysDicValueDao.insertOrReplaceInTx(sysDicValueList);
   }
 
   private void parseOrderInfo(Object detail) {
     parseOrderXml(detail);
-    String time = CommonTool.parseCurrDateToString("yyyy-MM-dd HH:mm:ss");
+    String time = DateUtil.parseCurrDateToString("yyyy-MM-dd HH:mm:ss");
     downCargoView.showUpdateView(time, buffer.toString());
   }
 
   private void parseDictInfo(Object detail) {
-    addDictionary();
-  }
-
-  private void addDictionary() {
-    SysDic sysDic = new SysDic();
-    sysDic.setId(1l);
-    sysDic.setMyName("评价");
-
-    List<SysDicValue> sysDicValueList = new ArrayList<>();
-    SysDicValue sysDicValue = new SysDicValue();
-    sysDicValue.setId(1l);
-    sysDicValue.setDicId(1);
-    sysDicValue.setMyName("1");
-    sysDicValue.setMyDisplayValue("满意");
-    sysDicValueList.add(sysDicValue);
-
-    sysDicValue = new SysDicValue();
-    sysDicValue.setId(2l);
-    sysDicValue.setDicId(1);
-    sysDicValue.setMyName("2");
-    sysDicValue.setMyDisplayValue("一般");
-    sysDicValueList.add(sysDicValue);
-
-    sysDicValue = new SysDicValue();
-    sysDicValue.setId(3l);
-    sysDicValue.setDicId(1);
-    sysDicValue.setMyName("3");
-    sysDicValue.setMyDisplayValue("较差");
-    sysDicValueList.add(sysDicValue);
-
-    sysDic.setSysDicValueList(sysDicValueList);
-
+    List<SysDic> sysDicList = null;
+    SysDic sysDic = null;
+    SoapObject soapObject = (SoapObject) detail;
+    String xml = soapObject.getPropertyAsString("GetDictionaryTableResult");
+    try {
+      XmlPullParser parser = Xml.newPullParser();
+      parser.setInput(new StringReader(xml));
+      //  产生第一个事件
+      int eventType = parser.getEventType();
+      //  当文档结束事件时退出循环
+      while (eventType != XmlPullParser.END_DOCUMENT) {
+        switch (eventType) {
+          // 开始文档
+          case XmlPullParser.START_DOCUMENT:
+            // new 集合，方便于添加元素
+            sysDicList = new ArrayList<>();
+            break;
+          // 开始标记
+          case XmlPullParser.START_TAG:
+            // 获得当前节点名（标记名）
+            String name = parser.getName();
+            if ("Data".equals(name)) {
+              sysDic = new SysDic();
+            }
+            if ("ID".equals(name)) {
+              String id = parser.nextText();
+              sysDic.setId(Long.valueOf(id));
+            }
+            if ("MyName".equals(name)) {
+              // 获取当前节点名的文本节点的值
+              sysDic.setMyName(parser.nextText());
+            }
+            if ("MyState".equals(name)) {
+              sysDic.setMyState(parser.nextText());
+            }
+            if ("Note".equals(name)) {
+              sysDic.setNote(parser.nextText());
+            }
+            break;
+          // 结束标记
+          case XmlPullParser.END_TAG:
+            String endName = parser.getName();
+            if ("Data".equals(endName)) {
+              sysDicList.add(sysDic);
+              sysDic = null;
+            }
+            break;
+        }
+        // 获得解析器中的下一个事件
+        eventType = parser.next();
+      }
+    } catch (IOException e) {
+      e.printStackTrace();
+    } catch (XmlPullParserException e) {
+      e.printStackTrace();
+    }
     SysDicDao sysDicDao = LogisticsApplication.getInstance().getSysDicDao();
-    sysDicDao.insertOrReplace(sysDic);
-
-    SysDicValueDao sysDicValueDao = LogisticsApplication.getInstance().getSysDicValueDao();
-    sysDicValueDao.insertOrReplaceInTx(sysDicValueList);
+    sysDicDao.insertOrReplaceInTx(sysDicList);
   }
 
   private void insertCustomer(Map<String, Customer> customerMap) {
@@ -298,10 +396,21 @@ public class DownCargoPresenter {
     Map params = new HashMap();
     params.put("S_PDTG_EMPLOPCODE", "admin");
     params.put("date", "2010");
-    String method = "Getdingdan";
-    String action = "http://tempuri.org/Getdingdan";
+    String method = "GetDictionaryTable";
+    String action = "http://tempuri.org/GetDictionaryTable";
     WebServiceParam webServiceParam =
         new WebServiceParam((Context) downCargoView, params, method, action, dictHandler, 1);
+    webServiceConnect.addNet(webServiceParam);
+  }
+
+  public void downloadDictValueData() {
+    Map params = new HashMap();
+    params.put("S_PDTG_EMPLOPCODE", "admin");
+    params.put("date", "2010");
+    String method = "GetDictionaryValue";
+    String action = "http://tempuri.org/GetDictionaryValue";
+    WebServiceParam webServiceParam =
+        new WebServiceParam((Context) downCargoView, params, method, action, dictValueHandler, 1);
     webServiceConnect.addNet(webServiceParam);
   }
 }

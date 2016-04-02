@@ -42,7 +42,6 @@ public class LoginPresenter {
     }
     LogisticsUserDao userDao = LogisticsApplication.getInstance().getLogisticsUserDao();
     String md5Pass = MD5Util.MD5(password);
-    CommonTool.showLog(md5Pass);
     List<LogisticsUser> list = userDao.queryBuilder()
         .where(LogisticsUserDao.Properties.UserName.eq(username),
             LogisticsUserDao.Properties.Pwd.eq(md5Pass))
@@ -51,6 +50,7 @@ public class LoginPresenter {
       CommonTool.setSharePreference((Context) loginView, "curUserName", username);
       loginView.navigateToHome();
     }else{
+      LogisticsApplication.getInstance().getSoundPoolUtil().playWrong();
       UiTool.showToast((Context)loginView, "用户名或密码错误，请重新输入！");
       loginView.clearPasswordEt();
     }

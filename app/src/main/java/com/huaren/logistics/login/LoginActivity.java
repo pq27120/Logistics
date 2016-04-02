@@ -25,7 +25,7 @@ import android.view.View;
 import com.gc.materialdesign.views.CheckBox;
 import com.huaren.logistics.R;
 import com.huaren.logistics.main.MainActivity;
-import com.huaren.logistics.util.CommonTool;
+import com.huaren.logistics.util.UiTool;
 import com.rengwuxian.materialedittext.MaterialEditText;
 
 public class LoginActivity extends Activity implements LoginView, View.OnClickListener {
@@ -40,9 +40,10 @@ public class LoginActivity extends Activity implements LoginView, View.OnClickLi
     setContentView(R.layout.activity_login);
 
     username = (MaterialEditText) findViewById(R.id.username);
+    UiTool.hideSoftInputMethod(LoginActivity.this, username);
     password = (MaterialEditText) findViewById(R.id.password);
+    UiTool.hideSoftInputMethod(LoginActivity.this, password);
     rememverCb = (CheckBox) findViewById(R.id.remember_cb);
-    rememverCb.setOncheckListener(new RememberChecked());
     findViewById(R.id.btn_login).setOnClickListener(this);
     presenter = new LoginPresenter(this);
     presenter.initUsername();
@@ -91,12 +92,7 @@ public class LoginActivity extends Activity implements LoginView, View.OnClickLi
   }
 
   @Override public void onClick(View v) {
+    presenter.remmemberUserName(username.getText().toString(), rememverCb.isCheck());
     presenter.validateCredentials(username.getText().toString(), password.getText().toString());
-  }
-
-  private class RememberChecked implements CheckBox.OnCheckListener {
-    @Override public void onCheck(CheckBox view, boolean check) {
-      presenter.remmemberUserName(username.getText().toString(), check);
-    }
   }
 }

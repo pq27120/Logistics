@@ -2,9 +2,7 @@ package com.huaren.daogenrator;
 
 import de.greenrobot.daogenerator.DaoGenerator;
 import de.greenrobot.daogenerator.Entity;
-import de.greenrobot.daogenerator.Property;
 import de.greenrobot.daogenerator.Schema;
-import de.greenrobot.daogenerator.ToMany;
 
 public class GreenDaoGenerator {
   public static void main(String[] args) throws Exception {
@@ -91,7 +89,6 @@ public class GreenDaoGenerator {
 
     Entity recycleInput = schema.addEntity("RecycleInput"); //回收录入信息
     recycleInput.addIdProperty();
-    recycleInput.addStringProperty("cooperateId").notNull();
     recycleInput.addIntProperty("recycleNum").notNull();
     recycleInput.addDateProperty("recycleTime").notNull();//回收录入时间
     recycleInput.addDateProperty("editTime");
@@ -99,7 +96,6 @@ public class GreenDaoGenerator {
     Entity recycleScan = schema.addEntity("RecycleScan"); //回收扫描信息
     recycleScan.addIdProperty();
     recycleScan.addDateProperty("recycleScanTime").notNull();
-    recycleScan.addLongProperty("inputId").notNull();
     recycleScan.addStringProperty("scanCode").notNull();
     recycleScan.addDateProperty("editTime");
   }

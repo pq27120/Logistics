@@ -1,21 +1,15 @@
 package com.huaren.logistics.evaluation;
 
+import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
-import android.support.annotation.NonNull;
 import android.util.Log;
-import android.view.View;
 import android.widget.TextView;
-import com.afollestad.materialdialogs.DialogAction;
-import com.afollestad.materialdialogs.MaterialDialog;
 import com.dexafree.materialList.card.Card;
 import com.dexafree.materialList.listeners.RecyclerItemClickListener;
 import com.dexafree.materialList.view.MaterialListView;
-import com.gc.materialdesign.views.ButtonRectangle;
 import com.huaren.logistics.BaseActivity;
 import com.huaren.logistics.R;
-import com.huaren.logistics.cargo.CargoDetailActivity;
-import com.rengwuxian.materialedittext.MaterialEditText;
 
 public class EvaluationOrderActivity extends BaseActivity implements IEvaluationOrderView {
   private EvaluationOrderPresenter presenter;
@@ -47,6 +41,13 @@ public class EvaluationOrderActivity extends BaseActivity implements IEvaluation
     customerId = intent.getStringExtra("customerId");
     presenter = new EvaluationOrderPresenter(this);
     presenter.initCargoOrder(customerId);
+  }
+
+  public static void actionStart(Context context, String customerId, String orderId) {
+    Intent intent = new Intent(context, EvaluationOrderActivity.class);
+    intent.putExtra("customerId", customerId);
+    intent.putExtra("orderId", orderId);
+    context.startActivity(intent);
   }
 
   @Override public void addCard(Card card) {

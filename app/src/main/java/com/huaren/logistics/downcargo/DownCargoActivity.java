@@ -31,6 +31,7 @@ public class DownCargoActivity extends BaseActivity implements IDownCargoView {
     presenter = new DownCargoPresenter(this);
     presenter.downloadOrderData();
     presenter.downloadDictData();
+    presenter.downloadDictValueData();
     updateButton.setOnClickListener(new UpdateButtonClick());
   }
 

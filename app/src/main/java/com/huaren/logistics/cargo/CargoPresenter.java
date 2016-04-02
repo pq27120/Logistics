@@ -7,6 +7,7 @@ import com.huaren.logistics.LogisticsApplication;
 import com.huaren.logistics.R;
 import com.huaren.logistics.bean.Customer;
 import com.huaren.logistics.bean.LogisticsOrder;
+import com.huaren.logistics.common.OrderStatusEnum;
 import com.huaren.logistics.dao.CustomerDao;
 import com.huaren.logistics.dao.LogisticsOrderDao;
 import java.util.HashMap;
@@ -61,9 +62,9 @@ public class CargoPresenter {
       total = logisticsOrderList.size();
       for (int i = 0; i < logisticsOrderList.size(); i++) {
         LogisticsOrder logisticsOrder = logisticsOrderList.get(i);
-        if ("1".equals(logisticsOrder.getOrderStatus())) {
+        if (OrderStatusEnum.READEY_CARGO.getStatus().equals(logisticsOrder.getOrderStatus())) {
           unLoadCount++;
-        } else if ("2".equals(logisticsOrder.getOrderStatus())) {
+        } else if (OrderStatusEnum.CARGO.getStatus().equals(logisticsOrder.getOrderStatus())) {
           loadCount++;
         }
       }

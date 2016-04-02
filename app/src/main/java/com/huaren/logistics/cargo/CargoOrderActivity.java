@@ -15,6 +15,7 @@ import com.dexafree.materialList.view.MaterialListView;
 import com.gc.materialdesign.views.ButtonRectangle;
 import com.huaren.logistics.BaseActivity;
 import com.huaren.logistics.R;
+import com.huaren.logistics.util.UiTool;
 import com.rengwuxian.materialedittext.MaterialEditText;
 
 public class CargoOrderActivity extends BaseActivity implements ICargoOrderView {
@@ -32,6 +33,7 @@ public class CargoOrderActivity extends BaseActivity implements ICargoOrderView 
     setContentView(R.layout.activity_cargo_order);
     initUserInfo();
     loadEt = (MaterialEditText) findViewById(R.id.load_et);
+    UiTool.hideSoftInputMethod(CargoOrderActivity.this, loadEt);
     loadBtn = (ButtonRectangle) findViewById(R.id.load_btn);
     mListView = (MaterialListView) findViewById(R.id.material_listview);
     mListView.addOnItemTouchListener(new RecyclerItemClickListener.OnItemClickListener() {

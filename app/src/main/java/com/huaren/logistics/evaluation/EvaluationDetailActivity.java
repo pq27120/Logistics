@@ -10,9 +10,9 @@ import android.widget.RadioGroup;
 import android.widget.TextView;
 import com.gc.materialdesign.views.ButtonRectangle;
 import com.huaren.logistics.BaseActivity;
+import com.huaren.logistics.LogisticsApplication;
 import com.huaren.logistics.R;
 import com.huaren.logistics.bean.SysDicValue;
-import com.huaren.logistics.util.CommonTool;
 import com.huaren.logistics.util.UiTool;
 import com.rengwuxian.materialedittext.MaterialEditText;
 import java.util.List;
@@ -35,6 +35,8 @@ public class EvaluationDetailActivity extends BaseActivity implements IEvaluatio
 
   private List<SysDicValue> list;
 
+  private String checkRadioName;
+
   @Override protected void onCreate(Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
     setContentView(R.layout.activity_evaluationdetail);
@@ -42,6 +44,7 @@ public class EvaluationDetailActivity extends BaseActivity implements IEvaluatio
     ((TextView) findViewById(R.id.tv_common_title)).setText(R.string.evaluation);
     radioLl = (LinearLayout) findViewById(R.id.radio_ll);
     passEt = (MaterialEditText) findViewById(R.id.user_pass_et);
+    UiTool.hideSoftInputMethod(EvaluationDetailActivity.this, passEt);
     evBtn = (ButtonRectangle) findViewById(R.id.evaluation_btn);
     Intent intent = getIntent();
     orderId = intent.getStringExtra("orderId");
@@ -68,7 +71,17 @@ public class EvaluationDetailActivity extends BaseActivity implements IEvaluatio
       radioButton.setTextColor(getResources().getColor(R.color.blue_one));
       radioGroup.addView(radioButton);
     }
+    radioGroup.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
+      @Override public void onCheckedChanged(RadioGroup group, int checkedId) {
+        selectRadioBtn();
+      }
+    });
     radioLl.addView(radioGroup);
+  }
+
+  private void selectRadioBtn() {
+    RadioButton radioButton = (RadioButton) findViewById(radioGroup.getCheckedRadioButtonId());
+    checkRadioName = radioButton.getText().toString();
   }
 
   @Override public void back() {
@@ -79,14 +92,20 @@ public class EvaluationDetailActivity extends BaseActivity implements IEvaluatio
     @Override public void onClick(View v) {
       int radioButtonID = radioGroup.getCheckedRadioButtonId();
       if (radioButtonID == -1) {
+        LogisticsApplication.getInstance().getSoundPoolUtil().playWrong();
         UiTool.showToast(EvaluationDetailActivity.this, "请选择评价选项！");
       } else {
         boolean passCheck = presenter.checkCustomerPass(customerId, passEt.getText().toString());
         if (!passCheck) {
+          LogisticsApplication.getInstance().getSoundPoolUtil().playWrong();
           UiTool.showToast(EvaluationDetailActivity.this, "客户密码不正确！");
         } else {
-          SysDicValue sysDicValue = list.get(radioButtonID - 1);
-          presenter.evaluationOrder(orderId, sysDicValue);
+          for (int i = 0; i < list.size(); i++) {
+            SysDicValue sysDicValue = list.get(i);
+            if (sysDicValue.getMyDisplayValue().equals(checkRadioName)) {
+              presenter.evaluationOrder(orderId, sysDicValue);
+            }
+          }
         }
       }
     }
