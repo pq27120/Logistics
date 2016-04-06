@@ -1,15 +1,9 @@
 package com.huaren.logistics.evaluation;
 
-import android.content.Context;
-import com.dexafree.materialList.card.Card;
-import com.dexafree.materialList.card.provider.SmallImageCardProvider;
 import com.huaren.logistics.LogisticsApplication;
 import com.huaren.logistics.R;
 import com.huaren.logistics.bean.Customer;
-import com.huaren.logistics.bean.LogisticsOrder;
-import com.huaren.logistics.common.OrderStatusEnum;
 import com.huaren.logistics.dao.CustomerDao;
-import com.huaren.logistics.dao.LogisticsOrderDao;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -37,14 +31,14 @@ public class EvaluationPresenter {
       if (countMap.get("unLoadCount") == 0) {
         drawable = R.drawable.star_finish;
       }
-      Card card = new Card.Builder((Context) evaluationView).setTag(customer.getCooperateId())
-          .withProvider(SmallImageCardProvider.class)
-          .setTitle(customer.getCooperateName() + "(" + customer.getCooperateId() + ")")
-          .setDescription(desc)
-          .setDrawable(drawable)
-          .endConfig()
-          .build();
-      evaluationView.addCard(card);
+      //Card card = new Card.Builder((Context) evaluationView).setTag(customer.getCooperateId())
+      //    .withProvider(SmallImageCardProvider.class)
+      //    .setTitle(customer.getCooperateName() + "(" + customer.getCooperateId() + ")")
+      //    .setDescription(desc)
+      //    .setDrawable(drawable)
+      //    .endConfig()
+      //    .build();
+      //evaluationView.addCard(card);
     }
   }
 
@@ -52,26 +46,26 @@ public class EvaluationPresenter {
    * 计算总货物、装车主订单数量、未装车主订单数量
    */
   private Map<String, Integer> countLoadOrder(Customer customer) {
-    LogisticsOrderDao logisticsOrderDao = LogisticsApplication.getInstance().getLogisticsOrderDao();
-    int total = 0, loadCount = 0, unLoadCount = 0;
-    List<LogisticsOrder> logisticsOrderList = logisticsOrderDao.queryBuilder()
-        .where(LogisticsOrderDao.Properties.CooperateID.eq(customer.getCooperateId()))
-        .list();
-    if (logisticsOrderList != null && !logisticsOrderList.isEmpty()) {
-      total = logisticsOrderList.size();
-      for (int i = 0; i < logisticsOrderList.size(); i++) {
-        LogisticsOrder logisticsOrder = logisticsOrderList.get(i);
-        if (OrderStatusEnum.UNCARGO.getStatus().equals(logisticsOrder.getOrderStatus())) {
-          unLoadCount++;
-        } else if (OrderStatusEnum.EVALUATION.getStatus().equals(logisticsOrder.getOrderStatus())) {
-          loadCount++;
-        }
-      }
-    }
+    //LogisticsOrderDao logisticsOrderDao = LogisticsApplication.getInstance().getLogisticsOrderDao();
+    //int total = 0, loadCount = 0, unLoadCount = 0;
+    //List<LogisticsOrder> logisticsOrderList = logisticsOrderDao.queryBuilder()
+    //    .where(LogisticsOrderDao.Properties.CooperateID.eq(customer.getCooperateId()))
+    //    .list();
+    //if (logisticsOrderList != null && !logisticsOrderList.isEmpty()) {
+    //  total = logisticsOrderList.size();
+    //  for (int i = 0; i < logisticsOrderList.size(); i++) {
+    //    LogisticsOrder logisticsOrder = logisticsOrderList.get(i);
+    //    if (OrderStatusEnum.UNCARGO.getStatus().equals(logisticsOrder.getOrderStatus())) {
+    //      unLoadCount++;
+    //    } else if (OrderStatusEnum.EVALUATION.getStatus().equals(logisticsOrder.getOrderStatus())) {
+    //      loadCount++;
+    //    }
+    //  }
+    //}
     Map<String, Integer> map = new HashMap<>();
-    map.put("total", total);
-    map.put("unLoadCount", unLoadCount);
-    map.put("loadCount", loadCount);
+    //map.put("total", total);
+    //map.put("unLoadCount", unLoadCount);
+    //map.put("loadCount", loadCount);
     return map;
   }
 }

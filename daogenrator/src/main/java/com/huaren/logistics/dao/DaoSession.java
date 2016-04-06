@@ -13,7 +13,6 @@ import com.huaren.logistics.bean.LogisticsUser;
 import com.huaren.logistics.bean.SysDic;
 import com.huaren.logistics.bean.SysDicValue;
 import com.huaren.logistics.bean.Customer;
-import com.huaren.logistics.bean.LogisticsOrder;
 import com.huaren.logistics.bean.OrderDetail;
 import com.huaren.logistics.bean.RecycleInput;
 import com.huaren.logistics.bean.RecycleScan;
@@ -22,7 +21,6 @@ import com.huaren.logistics.dao.LogisticsUserDao;
 import com.huaren.logistics.dao.SysDicDao;
 import com.huaren.logistics.dao.SysDicValueDao;
 import com.huaren.logistics.dao.CustomerDao;
-import com.huaren.logistics.dao.LogisticsOrderDao;
 import com.huaren.logistics.dao.OrderDetailDao;
 import com.huaren.logistics.dao.RecycleInputDao;
 import com.huaren.logistics.dao.RecycleScanDao;
@@ -40,7 +38,6 @@ public class DaoSession extends AbstractDaoSession {
     private final DaoConfig sysDicDaoConfig;
     private final DaoConfig sysDicValueDaoConfig;
     private final DaoConfig customerDaoConfig;
-    private final DaoConfig logisticsOrderDaoConfig;
     private final DaoConfig orderDetailDaoConfig;
     private final DaoConfig recycleInputDaoConfig;
     private final DaoConfig recycleScanDaoConfig;
@@ -49,7 +46,6 @@ public class DaoSession extends AbstractDaoSession {
     private final SysDicDao sysDicDao;
     private final SysDicValueDao sysDicValueDao;
     private final CustomerDao customerDao;
-    private final LogisticsOrderDao logisticsOrderDao;
     private final OrderDetailDao orderDetailDao;
     private final RecycleInputDao recycleInputDao;
     private final RecycleScanDao recycleScanDao;
@@ -70,9 +66,6 @@ public class DaoSession extends AbstractDaoSession {
         customerDaoConfig = daoConfigMap.get(CustomerDao.class).clone();
         customerDaoConfig.initIdentityScope(type);
 
-        logisticsOrderDaoConfig = daoConfigMap.get(LogisticsOrderDao.class).clone();
-        logisticsOrderDaoConfig.initIdentityScope(type);
-
         orderDetailDaoConfig = daoConfigMap.get(OrderDetailDao.class).clone();
         orderDetailDaoConfig.initIdentityScope(type);
 
@@ -86,7 +79,6 @@ public class DaoSession extends AbstractDaoSession {
         sysDicDao = new SysDicDao(sysDicDaoConfig, this);
         sysDicValueDao = new SysDicValueDao(sysDicValueDaoConfig, this);
         customerDao = new CustomerDao(customerDaoConfig, this);
-        logisticsOrderDao = new LogisticsOrderDao(logisticsOrderDaoConfig, this);
         orderDetailDao = new OrderDetailDao(orderDetailDaoConfig, this);
         recycleInputDao = new RecycleInputDao(recycleInputDaoConfig, this);
         recycleScanDao = new RecycleScanDao(recycleScanDaoConfig, this);
@@ -95,7 +87,6 @@ public class DaoSession extends AbstractDaoSession {
         registerDao(SysDic.class, sysDicDao);
         registerDao(SysDicValue.class, sysDicValueDao);
         registerDao(Customer.class, customerDao);
-        registerDao(LogisticsOrder.class, logisticsOrderDao);
         registerDao(OrderDetail.class, orderDetailDao);
         registerDao(RecycleInput.class, recycleInputDao);
         registerDao(RecycleScan.class, recycleScanDao);
@@ -106,7 +97,6 @@ public class DaoSession extends AbstractDaoSession {
         sysDicDaoConfig.getIdentityScope().clear();
         sysDicValueDaoConfig.getIdentityScope().clear();
         customerDaoConfig.getIdentityScope().clear();
-        logisticsOrderDaoConfig.getIdentityScope().clear();
         orderDetailDaoConfig.getIdentityScope().clear();
         recycleInputDaoConfig.getIdentityScope().clear();
         recycleScanDaoConfig.getIdentityScope().clear();
@@ -126,10 +116,6 @@ public class DaoSession extends AbstractDaoSession {
 
     public CustomerDao getCustomerDao() {
         return customerDao;
-    }
-
-    public LogisticsOrderDao getLogisticsOrderDao() {
-        return logisticsOrderDao;
     }
 
     public OrderDetailDao getOrderDetailDao() {

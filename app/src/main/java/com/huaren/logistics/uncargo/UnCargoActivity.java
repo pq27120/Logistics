@@ -9,7 +9,6 @@ import com.dexafree.materialList.listeners.RecyclerItemClickListener;
 import com.dexafree.materialList.view.MaterialListView;
 import com.huaren.logistics.BaseActivity;
 import com.huaren.logistics.R;
-import com.huaren.logistics.cargo.CargoDetailActivity;
 
 public class UnCargoActivity extends BaseActivity implements IUnCargoView {
   private MaterialListView mListView;

@@ -24,9 +24,10 @@ public class CustomerDao extends AbstractDao<Customer, String> {
     */
     public static class Properties {
         public final static Property CooperateId = new Property(0, String.class, "cooperateId", true, "COOPERATE_ID");
-        public final static Property CooperateName = new Property(1, String.class, "cooperateName", false, "COOPERATE_NAME");
-        public final static Property AddTime = new Property(2, java.util.Date.class, "addTime", false, "ADD_TIME");
-        public final static Property EditTime = new Property(3, java.util.Date.class, "editTime", false, "EDIT_TIME");
+        public final static Property SPdtgCustfullname = new Property(1, String.class, "sPdtgCustfullname", false, "S_PDTG_CUSTFULLNAME");
+        public final static Property CoopPwd = new Property(2, String.class, "coopPwd", false, "COOP_PWD");
+        public final static Property AddTime = new Property(3, java.util.Date.class, "addTime", false, "ADD_TIME");
+        public final static Property EditTime = new Property(4, java.util.Date.class, "editTime", false, "EDIT_TIME");
     };
 
 
@@ -43,9 +44,10 @@ public class CustomerDao extends AbstractDao<Customer, String> {
         String constraint = ifNotExists? "IF NOT EXISTS ": "";
         db.execSQL("CREATE TABLE " + constraint + "'CUSTOMER' (" + //
                 "'COOPERATE_ID' TEXT PRIMARY KEY NOT NULL ," + // 0: cooperateId
-                "'COOPERATE_NAME' TEXT NOT NULL ," + // 1: cooperateName
-                "'ADD_TIME' INTEGER NOT NULL ," + // 2: addTime
-                "'EDIT_TIME' INTEGER);"); // 3: editTime
+                "'S_PDTG_CUSTFULLNAME' TEXT NOT NULL ," + // 1: sPdtgCustfullname
+                "'COOP_PWD' TEXT NOT NULL ," + // 2: coopPwd
+                "'ADD_TIME' INTEGER NOT NULL ," + // 3: addTime
+                "'EDIT_TIME' INTEGER);"); // 4: editTime
     }
 
     /** Drops the underlying database table. */
@@ -63,12 +65,13 @@ public class CustomerDao extends AbstractDao<Customer, String> {
         if (cooperateId != null) {
             stmt.bindString(1, cooperateId);
         }
-        stmt.bindString(2, entity.getCooperateName());
-        stmt.bindLong(3, entity.getAddTime().getTime());
+        stmt.bindString(2, entity.getSPdtgCustfullname());
+        stmt.bindString(3, entity.getCoopPwd());
+        stmt.bindLong(4, entity.getAddTime().getTime());
  
         java.util.Date editTime = entity.getEditTime();
         if (editTime != null) {
-            stmt.bindLong(4, editTime.getTime());
+            stmt.bindLong(5, editTime.getTime());
         }
     }
 
@@ -83,9 +86,10 @@ public class CustomerDao extends AbstractDao<Customer, String> {
     public Customer readEntity(Cursor cursor, int offset) {
         Customer entity = new Customer( //
             cursor.isNull(offset + 0) ? null : cursor.getString(offset + 0), // cooperateId
-            cursor.getString(offset + 1), // cooperateName
-            new java.util.Date(cursor.getLong(offset + 2)), // addTime
-            cursor.isNull(offset + 3) ? null : new java.util.Date(cursor.getLong(offset + 3)) // editTime
+            cursor.getString(offset + 1), // sPdtgCustfullname
+            cursor.getString(offset + 2), // coopPwd
+            new java.util.Date(cursor.getLong(offset + 3)), // addTime
+            cursor.isNull(offset + 4) ? null : new java.util.Date(cursor.getLong(offset + 4)) // editTime
         );
         return entity;
     }
@@ -94,9 +98,10 @@ public class CustomerDao extends AbstractDao<Customer, String> {
     @Override
     public void readEntity(Cursor cursor, Customer entity, int offset) {
         entity.setCooperateId(cursor.isNull(offset + 0) ? null : cursor.getString(offset + 0));
-        entity.setCooperateName(cursor.getString(offset + 1));
-        entity.setAddTime(new java.util.Date(cursor.getLong(offset + 2)));
-        entity.setEditTime(cursor.isNull(offset + 3) ? null : new java.util.Date(cursor.getLong(offset + 3)));
+        entity.setSPdtgCustfullname(cursor.getString(offset + 1));
+        entity.setCoopPwd(cursor.getString(offset + 2));
+        entity.setAddTime(new java.util.Date(cursor.getLong(offset + 3)));
+        entity.setEditTime(cursor.isNull(offset + 4) ? null : new java.util.Date(cursor.getLong(offset + 4)));
      }
     
     /** @inheritdoc */

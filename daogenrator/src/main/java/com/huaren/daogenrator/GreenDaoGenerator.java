@@ -56,34 +56,34 @@ public class GreenDaoGenerator {
     customer.addStringProperty("cooperateId").primaryKey();
     // 与在 Java 中使用驼峰命名法不同，默认数据库中的命名是使用大写和下划线来分割单词的。
     // For example, a property called “creationDate” will become a database column “CREATION_DATE”.
-    customer.addStringProperty("cooperateName").notNull();
+    customer.addStringProperty("sPdtgCustfullname").notNull();//客户姓名
+    customer.addStringProperty("coopPwd").notNull();
     customer.addDateProperty("addTime").notNull();
     customer.addDateProperty("editTime");
 
-    Entity orderInfo = schema.addEntity("LogisticsOrder");
-    orderInfo.implementsSerializable();
-    orderInfo.addStringProperty("ordered").primaryKey(); //订单编号
-    orderInfo.addStringProperty("dispatchNumber").notNull(); //调度单号
-    orderInfo.addStringProperty("dPdtgDate").notNull(); //调度时间
-    orderInfo.addStringProperty("lPdtgBatch").notNull(); //批次
-    orderInfo.addStringProperty("lPdtgMerdcategOldkey").notNull(); //冷藏类型
-    orderInfo.addIntProperty("boxNumber").notNull(); //箱数
-    orderInfo.addStringProperty("pathName").notNull(); //线路
-    orderInfo.addStringProperty("orderStatus").notNull(); //订单状态
-    orderInfo.addStringProperty("evaluation"); //用户评价值
-    orderInfo.addStringProperty("cooperateID").notNull(); //客户ID
-    orderInfo.addDateProperty("addTime").notNull();
-    orderInfo.addDateProperty("editTime");
-
     Entity orderDetail = schema.addEntity("OrderDetail");//订单详情
     orderDetail.implementsSerializable();
-    orderDetail.addStringProperty("goodsId").notNull();//货品ID
+    orderDetail.addStringProperty("detailId").primaryKey();//明细ID
+    orderDetail.addStringProperty("cooperateId").notNull(); //客户ID
+    orderDetail.addStringProperty("dispatchNumber").notNull(); //调度单号
+    orderDetail.addStringProperty("dispatchCreatTime").notNull(); //调度时间
+    orderDetail.addStringProperty("driversID").notNull(); //司机编码
+    orderDetail.addStringProperty("sPdtgEmplname").notNull(); //司机名称
+    orderDetail.addStringProperty("sPdtgEmplname2").notNull(); //随行人员
+    orderDetail.addStringProperty("suicherenyuanID").notNull(); //随行人员ID
+    orderDetail.addStringProperty("suicherenyuanID2").notNull(); //随行人员2ID
+    orderDetail.addStringProperty("sPdtgEmplname3").notNull(); //随行人员2名称
+    orderDetail.addStringProperty("sPdtgVehicleno").notNull(); //运输车辆
+    orderDetail.addStringProperty("countPieces").notNull(); //件数
+    orderDetail.addStringProperty("lPdtgBatch").notNull(); //件数
     orderDetail.addStringProperty("ordered").notNull();//订单ID
-    orderDetail.addStringProperty("goodsName").notNull();//品名
-    orderDetail.addStringProperty("dispatchType").notNull();//冷藏类型
-    orderDetail.addStringProperty("iGroiValunum").notNull(); //件数
-    orderDetail.addStringProperty("lpn").primaryKey(); //箱号条码
+    orderDetail.addStringProperty("orderId").notNull();
+    orderDetail.addStringProperty("waveKey").notNull();//波次
+    orderDetail.addStringProperty("lpn").notNull(); //箱号条码
+    orderDetail.addStringProperty("mtype").notNull();//类型
+    orderDetail.addStringProperty("uom").notNull();//
     orderDetail.addStringProperty("detailStatus").notNull();
+    orderDetail.addStringProperty("evaluation");//评价
     orderDetail.addDateProperty("addTime").notNull();
     orderDetail.addDateProperty("editTime");
 

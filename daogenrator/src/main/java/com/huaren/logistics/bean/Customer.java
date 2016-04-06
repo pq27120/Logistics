@@ -8,7 +8,9 @@ public class Customer implements java.io.Serializable {
 
     private String cooperateId;
     /** Not-null value. */
-    private String cooperateName;
+    private String sPdtgCustfullname;
+    /** Not-null value. */
+    private String coopPwd;
     /** Not-null value. */
     private java.util.Date addTime;
     private java.util.Date editTime;
@@ -20,9 +22,10 @@ public class Customer implements java.io.Serializable {
         this.cooperateId = cooperateId;
     }
 
-    public Customer(String cooperateId, String cooperateName, java.util.Date addTime, java.util.Date editTime) {
+    public Customer(String cooperateId, String sPdtgCustfullname, String coopPwd, java.util.Date addTime, java.util.Date editTime) {
         this.cooperateId = cooperateId;
-        this.cooperateName = cooperateName;
+        this.sPdtgCustfullname = sPdtgCustfullname;
+        this.coopPwd = coopPwd;
         this.addTime = addTime;
         this.editTime = editTime;
     }
@@ -36,13 +39,23 @@ public class Customer implements java.io.Serializable {
     }
 
     /** Not-null value. */
-    public String getCooperateName() {
-        return cooperateName;
+    public String getSPdtgCustfullname() {
+        return sPdtgCustfullname;
     }
 
     /** Not-null value; ensure this value is available before it is saved to the database. */
-    public void setCooperateName(String cooperateName) {
-        this.cooperateName = cooperateName;
+    public void setSPdtgCustfullname(String sPdtgCustfullname) {
+        this.sPdtgCustfullname = sPdtgCustfullname;
+    }
+
+    /** Not-null value. */
+    public String getCoopPwd() {
+        return coopPwd;
+    }
+
+    /** Not-null value; ensure this value is available before it is saved to the database. */
+    public void setCoopPwd(String coopPwd) {
+        this.coopPwd = coopPwd;
     }
 
     /** Not-null value. */

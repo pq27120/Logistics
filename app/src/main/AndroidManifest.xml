@@ -67,14 +67,6 @@
         >
     </activity>
     <activity
-        android:name=".cargo.CargoDetailActivity"
-        android:configChanges="orientation|keyboardHidden|navigation"
-        android:launchMode="singleTask"
-        android:screenOrientation="portrait"
-        android:label="@string/title_activity_cargo"
-        >
-    </activity>
-    <activity
         android:name=".uncargo.UnCargoActivity"
         android:configChanges="orientation|keyboardHidden|navigation"
         android:launchMode="singleTask"
@@ -88,14 +80,6 @@
         android:launchMode="singleTask"
         android:screenOrientation="portrait"
         android:label="@string/title_activity_uncargo"
-        >
-    </activity>
-    <activity
-        android:name=".uncargo.UnCargoDetailActivity"
-        android:configChanges="orientation|keyboardHidden|navigation"
-        android:launchMode="singleTask"
-        android:screenOrientation="portrait"
-        android:label="@string/title_activity_cargo"
         >
     </activity>
     <activity

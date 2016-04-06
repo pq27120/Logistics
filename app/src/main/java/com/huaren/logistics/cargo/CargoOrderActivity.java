@@ -36,18 +36,6 @@ public class CargoOrderActivity extends BaseActivity implements ICargoOrderView 
     UiTool.hideSoftInputMethod(CargoOrderActivity.this, loadEt);
     loadBtn = (ButtonRectangle) findViewById(R.id.load_btn);
     mListView = (MaterialListView) findViewById(R.id.material_listview);
-    mListView.addOnItemTouchListener(new RecyclerItemClickListener.OnItemClickListener() {
-      @Override public void onItemClick(Card card, int position) {
-        Log.d("CARD_TYPE", card.getTag().toString());
-        Intent intent = new Intent(CargoOrderActivity.this, CargoDetailActivity.class);
-        intent.putExtra("orderId", card.getTag().toString());
-        startActivity(intent);
-      }
-
-      @Override public void onItemLongClick(Card card, int position) {
-        Log.d("LONG_CLICK", card.getTag().toString());
-      }
-    });
     ((TextView) findViewById(R.id.tv_common_title)).setText(R.string.cargo);
     Intent intent = getIntent();
     customerId = intent.getStringExtra("customerId");

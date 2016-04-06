@@ -12,7 +12,6 @@ import com.huaren.logistics.dao.LogisticsUserDao;
 import com.huaren.logistics.dao.SysDicDao;
 import com.huaren.logistics.dao.SysDicValueDao;
 import com.huaren.logistics.dao.CustomerDao;
-import com.huaren.logistics.dao.LogisticsOrderDao;
 import com.huaren.logistics.dao.OrderDetailDao;
 import com.huaren.logistics.dao.RecycleInputDao;
 import com.huaren.logistics.dao.RecycleScanDao;
@@ -30,7 +29,6 @@ public class DaoMaster extends AbstractDaoMaster {
         SysDicDao.createTable(db, ifNotExists);
         SysDicValueDao.createTable(db, ifNotExists);
         CustomerDao.createTable(db, ifNotExists);
-        LogisticsOrderDao.createTable(db, ifNotExists);
         OrderDetailDao.createTable(db, ifNotExists);
         RecycleInputDao.createTable(db, ifNotExists);
         RecycleScanDao.createTable(db, ifNotExists);
@@ -42,7 +40,6 @@ public class DaoMaster extends AbstractDaoMaster {
         SysDicDao.dropTable(db, ifExists);
         SysDicValueDao.dropTable(db, ifExists);
         CustomerDao.dropTable(db, ifExists);
-        LogisticsOrderDao.dropTable(db, ifExists);
         OrderDetailDao.dropTable(db, ifExists);
         RecycleInputDao.dropTable(db, ifExists);
         RecycleScanDao.dropTable(db, ifExists);
@@ -81,7 +78,6 @@ public class DaoMaster extends AbstractDaoMaster {
         registerDaoClass(SysDicDao.class);
         registerDaoClass(SysDicValueDao.class);
         registerDaoClass(CustomerDao.class);
-        registerDaoClass(LogisticsOrderDao.class);
         registerDaoClass(OrderDetailDao.class);
         registerDaoClass(RecycleInputDao.class);
         registerDaoClass(RecycleScanDao.class);

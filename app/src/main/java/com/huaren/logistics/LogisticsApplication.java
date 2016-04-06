@@ -6,7 +6,6 @@ import android.database.sqlite.SQLiteDatabase;
 import com.huaren.logistics.dao.CustomerDao;
 import com.huaren.logistics.dao.DaoMaster;
 import com.huaren.logistics.dao.DaoSession;
-import com.huaren.logistics.dao.LogisticsOrderDao;
 import com.huaren.logistics.dao.LogisticsUserDao;
 import com.huaren.logistics.dao.OrderDetailDao;
 import com.huaren.logistics.dao.RecycleInputDao;
@@ -21,7 +20,6 @@ public class LogisticsApplication extends Application {
   private DaoMaster daoMaster;
   private DaoSession daoSession;
   private CustomerDao customerDao;
-  private LogisticsOrderDao logisticsOrderDao;
   private OrderDetailDao orderDetailDao;
   private SysDicDao sysDicDao;
   private SysDicValueDao sysDicValueDao;
@@ -65,7 +63,6 @@ public class LogisticsApplication extends Application {
 
   private void initDao() {
     customerDao = daoSession.getCustomerDao();
-    logisticsOrderDao = daoSession.getLogisticsOrderDao();
     orderDetailDao = daoSession.getOrderDetailDao();
     sysDicDao = daoSession.getSysDicDao();
     sysDicValueDao = daoSession.getSysDicValueDao();
@@ -80,10 +77,6 @@ public class LogisticsApplication extends Application {
 
   public OrderDetailDao getOrderDetailDao() {
     return orderDetailDao;
-  }
-
-  public LogisticsOrderDao getLogisticsOrderDao() {
-    return logisticsOrderDao;
   }
 
   public SysDicDao getSysDicDao() {

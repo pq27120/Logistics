@@ -6,19 +6,46 @@ package com.huaren.logistics.bean;
  */
 public class OrderDetail implements java.io.Serializable {
 
+    private String detailId;
     /** Not-null value. */
-    private String goodsId;
+    private String cooperateId;
+    /** Not-null value. */
+    private String dispatchNumber;
+    /** Not-null value. */
+    private String dispatchCreatTime;
+    /** Not-null value. */
+    private String driversID;
+    /** Not-null value. */
+    private String sPdtgEmplname;
+    /** Not-null value. */
+    private String sPdtgEmplname2;
+    /** Not-null value. */
+    private String suicherenyuanID;
+    /** Not-null value. */
+    private String suicherenyuanID2;
+    /** Not-null value. */
+    private String sPdtgEmplname3;
+    /** Not-null value. */
+    private String sPdtgVehicleno;
+    /** Not-null value. */
+    private String countPieces;
+    /** Not-null value. */
+    private String lPdtgBatch;
     /** Not-null value. */
     private String ordered;
     /** Not-null value. */
-    private String goodsName;
+    private String orderId;
     /** Not-null value. */
-    private String dispatchType;
+    private String waveKey;
     /** Not-null value. */
-    private String iGroiValunum;
     private String lpn;
     /** Not-null value. */
+    private String mtype;
+    /** Not-null value. */
+    private String uom;
+    /** Not-null value. */
     private String detailStatus;
+    private String evaluation;
     /** Not-null value. */
     private java.util.Date addTime;
     private java.util.Date editTime;
@@ -26,30 +53,162 @@ public class OrderDetail implements java.io.Serializable {
     public OrderDetail() {
     }
 
-    public OrderDetail(String lpn) {
-        this.lpn = lpn;
+    public OrderDetail(String detailId) {
+        this.detailId = detailId;
     }
 
-    public OrderDetail(String goodsId, String ordered, String goodsName, String dispatchType, String iGroiValunum, String lpn, String detailStatus, java.util.Date addTime, java.util.Date editTime) {
-        this.goodsId = goodsId;
+    public OrderDetail(String detailId, String cooperateId, String dispatchNumber, String dispatchCreatTime, String driversID, String sPdtgEmplname, String sPdtgEmplname2, String suicherenyuanID, String suicherenyuanID2, String sPdtgEmplname3, String sPdtgVehicleno, String countPieces, String lPdtgBatch, String ordered, String orderId, String waveKey, String lpn, String mtype, String uom, String detailStatus, String evaluation, java.util.Date addTime, java.util.Date editTime) {
+        this.detailId = detailId;
+        this.cooperateId = cooperateId;
+        this.dispatchNumber = dispatchNumber;
+        this.dispatchCreatTime = dispatchCreatTime;
+        this.driversID = driversID;
+        this.sPdtgEmplname = sPdtgEmplname;
+        this.sPdtgEmplname2 = sPdtgEmplname2;
+        this.suicherenyuanID = suicherenyuanID;
+        this.suicherenyuanID2 = suicherenyuanID2;
+        this.sPdtgEmplname3 = sPdtgEmplname3;
+        this.sPdtgVehicleno = sPdtgVehicleno;
+        this.countPieces = countPieces;
+        this.lPdtgBatch = lPdtgBatch;
         this.ordered = ordered;
-        this.goodsName = goodsName;
-        this.dispatchType = dispatchType;
-        this.iGroiValunum = iGroiValunum;
+        this.orderId = orderId;
+        this.waveKey = waveKey;
         this.lpn = lpn;
+        this.mtype = mtype;
+        this.uom = uom;
         this.detailStatus = detailStatus;
+        this.evaluation = evaluation;
         this.addTime = addTime;
         this.editTime = editTime;
     }
 
+    public String getDetailId() {
+        return detailId;
+    }
+
+    public void setDetailId(String detailId) {
+        this.detailId = detailId;
+    }
+
     /** Not-null value. */
-    public String getGoodsId() {
-        return goodsId;
+    public String getCooperateId() {
+        return cooperateId;
     }
 
     /** Not-null value; ensure this value is available before it is saved to the database. */
-    public void setGoodsId(String goodsId) {
-        this.goodsId = goodsId;
+    public void setCooperateId(String cooperateId) {
+        this.cooperateId = cooperateId;
+    }
+
+    /** Not-null value. */
+    public String getDispatchNumber() {
+        return dispatchNumber;
+    }
+
+    /** Not-null value; ensure this value is available before it is saved to the database. */
+    public void setDispatchNumber(String dispatchNumber) {
+        this.dispatchNumber = dispatchNumber;
+    }
+
+    /** Not-null value. */
+    public String getDispatchCreatTime() {
+        return dispatchCreatTime;
+    }
+
+    /** Not-null value; ensure this value is available before it is saved to the database. */
+    public void setDispatchCreatTime(String dispatchCreatTime) {
+        this.dispatchCreatTime = dispatchCreatTime;
+    }
+
+    /** Not-null value. */
+    public String getDriversID() {
+        return driversID;
+    }
+
+    /** Not-null value; ensure this value is available before it is saved to the database. */
+    public void setDriversID(String driversID) {
+        this.driversID = driversID;
+    }
+
+    /** Not-null value. */
+    public String getSPdtgEmplname() {
+        return sPdtgEmplname;
+    }
+
+    /** Not-null value; ensure this value is available before it is saved to the database. */
+    public void setSPdtgEmplname(String sPdtgEmplname) {
+        this.sPdtgEmplname = sPdtgEmplname;
+    }
+
+    /** Not-null value. */
+    public String getSPdtgEmplname2() {
+        return sPdtgEmplname2;
+    }
+
+    /** Not-null value; ensure this value is available before it is saved to the database. */
+    public void setSPdtgEmplname2(String sPdtgEmplname2) {
+        this.sPdtgEmplname2 = sPdtgEmplname2;
+    }
+
+    /** Not-null value. */
+    public String getSuicherenyuanID() {
+        return suicherenyuanID;
+    }
+
+    /** Not-null value; ensure this value is available before it is saved to the database. */
+    public void setSuicherenyuanID(String suicherenyuanID) {
+        this.suicherenyuanID = suicherenyuanID;
+    }
+
+    /** Not-null value. */
+    public String getSuicherenyuanID2() {
+        return suicherenyuanID2;
+    }
+
+    /** Not-null value; ensure this value is available before it is saved to the database. */
+    public void setSuicherenyuanID2(String suicherenyuanID2) {
+        this.suicherenyuanID2 = suicherenyuanID2;
+    }
+
+    /** Not-null value. */
+    public String getSPdtgEmplname3() {
+        return sPdtgEmplname3;
+    }
+
+    /** Not-null value; ensure this value is available before it is saved to the database. */
+    public void setSPdtgEmplname3(String sPdtgEmplname3) {
+        this.sPdtgEmplname3 = sPdtgEmplname3;
+    }
+
+    /** Not-null value. */
+    public String getSPdtgVehicleno() {
+        return sPdtgVehicleno;
+    }
+
+    /** Not-null value; ensure this value is available before it is saved to the database. */
+    public void setSPdtgVehicleno(String sPdtgVehicleno) {
+        this.sPdtgVehicleno = sPdtgVehicleno;
+    }
+
+    /** Not-null value. */
+    public String getCountPieces() {
+        return countPieces;
+    }
+
+    /** Not-null value; ensure this value is available before it is saved to the database. */
+    public void setCountPieces(String countPieces) {
+        this.countPieces = countPieces;
+    }
+
+    /** Not-null value. */
+    public String getLPdtgBatch() {
+        return lPdtgBatch;
+    }
+
+    /** Not-null value; ensure this value is available before it is saved to the database. */
+    public void setLPdtgBatch(String lPdtgBatch) {
+        this.lPdtgBatch = lPdtgBatch;
     }
 
     /** Not-null value. */
@@ -63,41 +222,53 @@ public class OrderDetail implements java.io.Serializable {
     }
 
     /** Not-null value. */
-    public String getGoodsName() {
-        return goodsName;
+    public String getOrderId() {
+        return orderId;
     }
 
     /** Not-null value; ensure this value is available before it is saved to the database. */
-    public void setGoodsName(String goodsName) {
-        this.goodsName = goodsName;
+    public void setOrderId(String orderId) {
+        this.orderId = orderId;
     }
 
     /** Not-null value. */
-    public String getDispatchType() {
-        return dispatchType;
+    public String getWaveKey() {
+        return waveKey;
     }
 
     /** Not-null value; ensure this value is available before it is saved to the database. */
-    public void setDispatchType(String dispatchType) {
-        this.dispatchType = dispatchType;
+    public void setWaveKey(String waveKey) {
+        this.waveKey = waveKey;
     }
 
     /** Not-null value. */
-    public String getIGroiValunum() {
-        return iGroiValunum;
-    }
-
-    /** Not-null value; ensure this value is available before it is saved to the database. */
-    public void setIGroiValunum(String iGroiValunum) {
-        this.iGroiValunum = iGroiValunum;
-    }
-
     public String getLpn() {
         return lpn;
     }
 
+    /** Not-null value; ensure this value is available before it is saved to the database. */
     public void setLpn(String lpn) {
         this.lpn = lpn;
+    }
+
+    /** Not-null value. */
+    public String getMtype() {
+        return mtype;
+    }
+
+    /** Not-null value; ensure this value is available before it is saved to the database. */
+    public void setMtype(String mtype) {
+        this.mtype = mtype;
+    }
+
+    /** Not-null value. */
+    public String getUom() {
+        return uom;
+    }
+
+    /** Not-null value; ensure this value is available before it is saved to the database. */
+    public void setUom(String uom) {
+        this.uom = uom;
     }
 
     /** Not-null value. */
@@ -108,6 +279,14 @@ public class OrderDetail implements java.io.Serializable {
     /** Not-null value; ensure this value is available before it is saved to the database. */
     public void setDetailStatus(String detailStatus) {
         this.detailStatus = detailStatus;
+    }
+
+    public String getEvaluation() {
+        return evaluation;
+    }
+
+    public void setEvaluation(String evaluation) {
+        this.evaluation = evaluation;
     }
 
     /** Not-null value. */

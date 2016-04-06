@@ -4,12 +4,10 @@ import android.content.Context;
 import android.util.Xml;
 import com.huaren.logistics.LogisticsApplication;
 import com.huaren.logistics.bean.Customer;
-import com.huaren.logistics.bean.LogisticsOrder;
 import com.huaren.logistics.bean.OrderDetail;
 import com.huaren.logistics.bean.SysDic;
 import com.huaren.logistics.bean.SysDicValue;
 import com.huaren.logistics.dao.CustomerDao;
-import com.huaren.logistics.dao.LogisticsOrderDao;
 import com.huaren.logistics.dao.OrderDetailDao;
 import com.huaren.logistics.dao.SysDicDao;
 import com.huaren.logistics.dao.SysDicValueDao;
@@ -246,33 +244,25 @@ public class DownCargoPresenter {
         orderDetailDao.insert(orderDetail);
       }
     }
-    buffer.append(",").append(detailNum).append("条订单详情");
-  }
-
-  private void insertOrder(List<LogisticsOrder> logisticsOrderList) {
-    LogisticsOrderDao logisticsOrderDao = LogisticsApplication.getInstance().getLogisticsOrderDao();
-    int orderNum = 0;
-    for (LogisticsOrder logisticsOrder : logisticsOrderList) {
-      logisticsOrder.setAddTime(new Date());
-      logisticsOrder.setOrderStatus("1");
-      QueryBuilder qb = logisticsOrderDao.queryBuilder();
-      List<LogisticsOrderDao> queryList =
-          qb.where(LogisticsOrderDao.Properties.Ordered.eq(logisticsOrder.getOrdered())).list();
-      if (queryList == null || queryList.isEmpty()) {
-        orderNum++;
-        logisticsOrderDao.insert(logisticsOrder);
-      }
-    }
-    buffer.append(",").append(orderNum).append("条订单");
+    buffer.append(",").append(detailNum).append("条明细");
   }
 
   private void parseOrderXml(Object detail) {
     Map<String, Customer> map = new HashMap<>();
-    List<LogisticsOrder> logisticsOrderList = null;
     List<OrderDetail> orderDetailList = null;
     Customer customer = null;
-    LogisticsOrder logisticsOrder = null;
     OrderDetail orderDetail = null;
+    String cooperateId = null;
+    String dispatchCreatTime = null;
+    String driversID = null;
+    String sPdtgEmplname = null;
+    String sPdtgEmplname2 = null;
+    String suicherenyuanID = null;
+    String suicherenyuanID2 = null;
+    String sPdtgEmplname3 = null;
+    String sPdtgVehicleno = null;
+    String countPieces = null;
+    String lPdtgBatch = null;
     SoapObject soapObject = (SoapObject) detail;
     String xml = soapObject.getPropertyAsString("GetdingdanResult");
     try {
@@ -292,15 +282,23 @@ public class DownCargoPresenter {
             // 获得当前节点名（标记名）
             String name = parser.getName();
             if ("Data".equals(name)) {
-              logisticsOrderList = new ArrayList<>();
               orderDetailList = new ArrayList<>();
             }
             if ("ItemHeader".equals(name)) {
-              logisticsOrder = new LogisticsOrder();
+              cooperateId = "";
+              dispatchCreatTime = "";
+              driversID = "";
+              sPdtgEmplname = "";
+              sPdtgEmplname2 = "";
+              suicherenyuanID = "";
+              suicherenyuanID2 = "";
+              sPdtgEmplname3 = "";
+              sPdtgVehicleno = "";
+              countPieces = "";
+              lPdtgBatch = "";
             }
             if ("CooperateID".equals(name)) {
-              String cooperateId = parser.nextText();
-              logisticsOrder.setCooperateID(cooperateId);
+              cooperateId = parser.nextText();
               if (map.containsKey(cooperateId)) {
                 customer = map.get(cooperateId);
               } else {
@@ -310,49 +308,81 @@ public class DownCargoPresenter {
                 map.put(cooperateId, customer);
               }
             }
-            if ("CooperateName".equals(name)) {
+            if ("CoopPWD".equals(name)) {
               // 获取当前节点名的文本节点的值
-              customer.setCooperateName(parser.nextText());
+              customer.setCoopPwd(parser.nextText());
             }
-            if ("DispatchNumber".equals(name)) {
-              logisticsOrder.setDispatchNumber(parser.nextText());
+            if ("S_PDTG_CUSTFULLNAME".equals(name)) {
+              // 获取当前节点名的文本节点的值
+              customer.setSPdtgCustfullname(parser.nextText());
             }
-            if ("D_PDTG_DATE".equals(name)) {
-              logisticsOrder.setDPdtgDate(parser.nextText());
+            if ("DispatchCreatTime".equals(name)) {
+              dispatchCreatTime = parser.nextText();
+            }
+            if ("DriversID".equals(name)) {
+              driversID = parser.nextText();
+            }
+            if ("S_PDTG_EMPLNAME".equals(name)) {
+              sPdtgEmplname = parser.nextText();
+            }
+            if ("S_PDTG_EMPLNAME2".equals(name)) {
+              sPdtgEmplname2 = parser.nextText();
+            }
+            if ("suicherenyuanID".equals(name)) {
+              suicherenyuanID = parser.nextText();
+            }
+            if ("suicherenyuanID2".equals(name)) {
+              suicherenyuanID2 = parser.nextText();
+            }
+            if ("S_PDTG_EMPLNAME3".equals(name)) {
+              sPdtgEmplname3 = parser.nextText();
+            }
+            if ("S_Pdtg_Vehicleno".equals(name)) {
+              sPdtgVehicleno = parser.nextText();
+            }
+            if ("CountPieces".equals(name)) {
+              countPieces = parser.nextText();
             }
             if ("L_PDTG_BATCH".equals(name)) {
-              logisticsOrder.setLPdtgBatch(parser.nextText());
-            }
-            if ("L_PDTG_MERDCATEG_OldKey".equals(name)) {
-              logisticsOrder.setLPdtgMerdcategOldkey(parser.nextText());
-            }
-            if ("ORDERED".equals(name)) {
-              logisticsOrder.setOrdered(parser.nextText());
-            }
-            if ("BOXNUMBER".equals(name)) {
-              logisticsOrder.setBoxNumber(Integer.valueOf(parser.nextText()));
-            }
-            if ("PathName".equals(name)) {
-              logisticsOrder.setPathName(parser.nextText());
+              lPdtgBatch = parser.nextText();
             }
             if ("Item".equals(name)) {
               orderDetail = new OrderDetail();
-              orderDetail.setOrdered(logisticsOrder.getOrdered());
+              orderDetail.setCooperateId(cooperateId);
+              orderDetail.setDispatchCreatTime(dispatchCreatTime);
+              orderDetail.setDriversID(driversID);
+              orderDetail.setSPdtgEmplname(sPdtgEmplname);
+              orderDetail.setSPdtgEmplname2(sPdtgEmplname2);
+              orderDetail.setSuicherenyuanID(suicherenyuanID);
+              orderDetail.setSuicherenyuanID2(suicherenyuanID2);
+              orderDetail.setSPdtgEmplname3(sPdtgEmplname3);
+              orderDetail.setSPdtgVehicleno(sPdtgVehicleno);
+              orderDetail.setCountPieces(countPieces);
+              orderDetail.setLPdtgBatch(lPdtgBatch);
             }
-            if ("GoodsID".equals(name)) {
-              orderDetail.setGoodsId(parser.nextText());
+            if ("DispatchNumber".equals(name)) {
+              orderDetail.setDispatchNumber(parser.nextText());
             }
-            if ("GoodsName".equals(name)) {
-              orderDetail.setGoodsName(parser.nextText());
+            if ("OrderID".equals(name)) {
+              orderDetail.setOrderId(parser.nextText());
             }
-            if ("DispatchType".equals(name)) {
-              orderDetail.setDispatchType(parser.nextText());
+            if ("WAVEKEY".equals(name)) {
+              orderDetail.setWaveKey(parser.nextText());
             }
-            if ("I_groi_valunum".equals(name)) {
-              orderDetail.setIGroiValunum(parser.nextText());
+            if ("DetailID".equals(name)) {
+              orderDetail.setDetailId(parser.nextText());
+            }
+            if ("ORDERED".equals(name)) {
+              orderDetail.setOrdered(parser.nextText());
+            }
+            if ("MTYPE".equals(name)) {
+              orderDetail.setMtype(parser.nextText());
             }
             if ("LPN".equals(name)) {
               orderDetail.setLpn(parser.nextText());
+            }
+            if ("UOM".equals(name)) {
+              orderDetail.setUom(parser.nextText());
             }
             break;
           // 结束标记
@@ -363,8 +393,17 @@ public class DownCargoPresenter {
               orderDetail = null;
             }
             if ("ItemHeader".equals(endName)) {
-              logisticsOrderList.add(logisticsOrder);
-              logisticsOrder = null;
+              cooperateId = null;
+              dispatchCreatTime = null;
+              driversID = null;
+              sPdtgEmplname = null;
+              sPdtgEmplname2 = null;
+              suicherenyuanID = null;
+              suicherenyuanID2 = null;
+              sPdtgEmplname3 = null;
+              sPdtgVehicleno = null;
+              countPieces = null;
+              lPdtgBatch = null;
             }
             break;
         }
@@ -377,7 +416,6 @@ public class DownCargoPresenter {
       e.printStackTrace();
     }
     insertCustomer(map);
-    insertOrder(logisticsOrderList);
     insertOrderDetail(orderDetailList);
   }
 
@@ -385,6 +423,7 @@ public class DownCargoPresenter {
     Map params = new HashMap();
     params.put("S_PDTG_EMPLOPCODE", "admin");
     params.put("date", "2010");
+    params.put("S_PDTG_EMPLOPCODE", "314");
     String method = "Getdingdan";
     String action = "http://tempuri.org/Getdingdan";
     WebServiceParam webServiceParam =

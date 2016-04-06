@@ -40,7 +40,7 @@ public class DownCargoAdapter extends BaseAdapter {
     TextView loadSizeView = (TextView) convertView.findViewById(R.id.load_tv);
     Customer customer = customerList.get(position);
     customerIdView.setText(customer.getCooperateId());
-    customerNameView.setText(customer.getCooperateName());
+    customerNameView.setText(customer.getSPdtgCustfullname());
     int unload = 0;
     int load = 0;
     //if (customer.getGoods() != null && !customer.getGoods().isEmpty()) {
