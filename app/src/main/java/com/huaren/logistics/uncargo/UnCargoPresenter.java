@@ -6,9 +6,10 @@ import com.dexafree.materialList.card.provider.SmallImageCardProvider;
 import com.huaren.logistics.LogisticsApplication;
 import com.huaren.logistics.R;
 import com.huaren.logistics.bean.Customer;
-import com.huaren.logistics.bean.LogisticsOrder;
+import com.huaren.logistics.bean.OrderDetail;
+import com.huaren.logistics.common.OrderStatusEnum;
 import com.huaren.logistics.dao.CustomerDao;
-import com.huaren.logistics.dao.LogisticsOrderDao;
+import com.huaren.logistics.dao.OrderDetailDao;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -22,16 +23,16 @@ public class UnCargoPresenter {
   }
 
   public void initCargoList() {
-    CustomerDao customerDao = LogisticsApplication.getInstance().getDaoSession().getCustomerDao();
+    CustomerDao customerDao = LogisticsApplication.getInstance().getCustomerDao();
     List<Customer> customerList = customerDao.loadAll();
     for (int i = 0; i < customerList.size(); i++) {
       Customer customer = customerList.get(i);
       Map<String, Integer> countMap = countLoadOrder(customer);
-      String desc = "订单总数："
+      String desc = "总数："
           + countMap.get("total")
-          + "，未卸车订单："
+          + "，未卸车明细："
           + countMap.get("unLoadCount")
-          + "，已卸车订单："
+          + "，已卸车明细："
           + countMap.get("loadCount");
       int drawable = R.drawable.star_do;
       if (countMap.get("unLoadCount") == 0) {
@@ -39,7 +40,7 @@ public class UnCargoPresenter {
       }
       Card card = new Card.Builder((Context) unCargoView).setTag(customer.getCooperateId())
           .withProvider(SmallImageCardProvider.class)
-          .setTitle(customer.getCooperateName() + "(" + customer.getCooperateId() + ")")
+          .setTitle(customer.getSPdtgCustfullname() + "(" + customer.getCooperateId() + ")")
           .setDescription(desc)
           .setDrawable(drawable)
           .endConfig()
@@ -52,18 +53,18 @@ public class UnCargoPresenter {
    * 计算总货物、卸车主订单数量、未卸车主订单数量
    */
   private Map<String, Integer> countLoadOrder(Customer customer) {
-    LogisticsOrderDao logisticsOrderDao = LogisticsApplication.getInstance().getLogisticsOrderDao();
+    OrderDetailDao orderDetailDao = LogisticsApplication.getInstance().getOrderDetailDao();
     int total = 0, loadCount = 0, unLoadCount = 0;
-    List<LogisticsOrder> logisticsOrderList = logisticsOrderDao.queryBuilder()
-        .where(LogisticsOrderDao.Properties.CooperateID.eq(customer.getCooperateId()))
+    List<OrderDetail> orderDetailList = orderDetailDao.queryBuilder()
+        .where(OrderDetailDao.Properties.CooperateId.eq(customer.getCooperateId()))
         .list();
-    if (logisticsOrderList != null && !logisticsOrderList.isEmpty()) {
-      total = logisticsOrderList.size();
-      for (int i = 0; i < logisticsOrderList.size(); i++) {
-        LogisticsOrder logisticsOrder = logisticsOrderList.get(i);
-        if ("2".equals(logisticsOrder.getOrderStatus())) {
+    if (orderDetailList != null && !orderDetailList.isEmpty()) {
+      total = orderDetailList.size();
+      for (int i = 0; i < orderDetailList.size(); i++) {
+        OrderDetail orderDetail = orderDetailList.get(i);
+        if (OrderStatusEnum.CARGO.getStatus().equals(orderDetail.getDetailStatus())) {
           unLoadCount++;
-        } else if ("3".equals(logisticsOrder.getOrderStatus())) {
+        } else if (OrderStatusEnum.UNCARGO.getStatus().equals(orderDetail.getDetailStatus())) {
           loadCount++;
         }
       }

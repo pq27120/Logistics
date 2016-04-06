@@ -36,18 +36,6 @@ public class UnCargoOrderActivity extends BaseActivity implements IUnCargoOrderV
     UiTool.hideSoftInputMethod(UnCargoOrderActivity.this, unRemoveEt);
     unRemoveBtn = (ButtonRectangle) findViewById(R.id.remove_btn);
     mListView = (MaterialListView) findViewById(R.id.material_listview);
-    mListView.addOnItemTouchListener(new RecyclerItemClickListener.OnItemClickListener() {
-      @Override public void onItemClick(Card card, int position) {
-        Log.d("CARD_TYPE", card.getTag().toString());
-        Intent intent = new Intent(UnCargoOrderActivity.this, UnCargoDetailActivity.class);
-        intent.putExtra("orderId", card.getTag().toString());
-        startActivity(intent);
-      }
-
-      @Override public void onItemLongClick(Card card, int position) {
-        Log.d("LONG_CLICK", card.getTag().toString());
-      }
-    });
     ((TextView) findViewById(R.id.tv_common_title)).setText(R.string.uncargo);
     Intent intent = getIntent();
     customerId = intent.getStringExtra("customerId");
