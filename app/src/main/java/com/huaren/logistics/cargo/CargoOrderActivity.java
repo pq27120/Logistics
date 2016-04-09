@@ -79,6 +79,7 @@ public class CargoOrderActivity extends BaseActivity implements ICargoOrderView 
   @Override public void reInit() {
     initUserInfo();
     mListView.clearAll();
+    loadEt.setText("");
     presenter.initCargoOrder(customerId);
   }
 

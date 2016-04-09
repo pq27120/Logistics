@@ -99,6 +99,13 @@
         >
     </activity>
     <activity
+        android:name=".recycleinput.RecycleInputActivity"
+        android:configChanges="orientation|keyboardHidden|navigation"
+        android:launchMode="singleTask"
+        android:screenOrientation="portrait"
+        android:label="@string/activity_recycle_input_title"
+        />
+    <activity
         android:name=".recycleinput.RecycleInputDetailActivity"
         android:configChanges="orientation|keyboardHidden|navigation"
         android:launchMode="singleTask"

@@ -37,6 +37,7 @@ public class RecycleScanDetailActivity extends BaseActivity implements IRecycleS
   @Override public void init() {
     initUserInfo();
     scanEt = (MaterialEditText) findViewById(R.id.input_et);
+    scanEt.setText("");
     UiTool.hideSoftInputMethod(RecycleScanDetailActivity.this, scanEt);
     scanBtn = (ButtonRectangle) findViewById(R.id.input_btn);
     mListView = (MaterialListView) findViewById(R.id.material_listview);

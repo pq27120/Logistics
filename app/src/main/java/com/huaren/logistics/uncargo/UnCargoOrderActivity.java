@@ -69,6 +69,7 @@ public class UnCargoOrderActivity extends BaseActivity implements IUnCargoOrderV
 
   @Override public void reInit() {
     initUserInfo();
+    unRemoveEt.setText("");
     mListView.clearAll();
     presenter.initCargoOrder(customerId);
   }

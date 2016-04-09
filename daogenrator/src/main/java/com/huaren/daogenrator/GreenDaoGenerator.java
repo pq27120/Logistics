@@ -109,9 +109,13 @@ public class GreenDaoGenerator {
 
     Entity recycleInput = schema.addEntity("RecycleInput"); //回收录入信息
     recycleInput.addIdProperty();
-    recycleInput.addIntProperty("cooperateId").notNull();//客户编码
+    recycleInput.addStringProperty("orderBatchId").notNull();
+    recycleInput.addStringProperty("cooperateId").notNull();//客户编码
     recycleInput.addIntProperty("lPdtgBatch").notNull();//批次
-    recycleInput.addIntProperty("recycleNum").notNull();
+    recycleInput.addStringProperty("driversID").notNull();//司机编号
+    recycleInput.addIntProperty("recycleNum").notNull();//回收数量
+    recycleInput.addLongProperty("recycleType").notNull();//回收类型
+    recycleInput.addStringProperty("recycleTypeValue").notNull();//回收类型名称
     recycleInput.addStringProperty("status").notNull();//0 停用 1 启用
     recycleInput.addDateProperty("recycleTime").notNull();//回收录入时间
     recycleInput.addDateProperty("editTime");

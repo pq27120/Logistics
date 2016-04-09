@@ -11,6 +11,7 @@ import com.huaren.logistics.bean.RecycleInput;
 import com.huaren.logistics.bean.RecycleScan;
 import com.huaren.logistics.bean.SysDic;
 import com.huaren.logistics.bean.SysDicValue;
+import com.huaren.logistics.common.OrderStatusEnum;
 import com.huaren.logistics.dao.CustomerDao;
 import com.huaren.logistics.dao.DownBatchInfoDao;
 import com.huaren.logistics.dao.OrderBatchDao;
@@ -234,10 +235,21 @@ public class DownCargoPresenter {
   private void insertOrderDetail(List<OrderDetail> orderDetailList) {
     OrderDetailDao orderDetailDao = LogisticsApplication.getInstance().getOrderDetailDao();
     for (OrderDetail orderDetail : orderDetailList) {
-      orderDetail.setAddTime(new Date());
-      orderDetail.setDetailStatus("1");
-      orderDetail.setStatus("1");
-      orderDetail.setCustomerId(orderDetail.getCooperateId() + orderDetail.getLPdtgBatch());
+      OrderDetail existDetail = orderDetailDao.queryBuilder()
+          .where(OrderDetailDao.Properties.DetailId.eq(orderDetail.getDetailId()))
+          .unique();
+      if (existDetail != null) {
+        orderDetail.setStatus(existDetail.getStatus());
+        orderDetail.setDetailStatus(existDetail.getDetailStatus());
+        orderDetail.setCustomerId(existDetail.getCustomerId());
+        orderDetail.setEditTime(new Date());
+        orderDetail.setAddTime(existDetail.getAddTime());
+      } else {
+        orderDetail.setAddTime(new Date());
+        orderDetail.setStatus("1");
+        orderDetail.setDetailStatus(OrderStatusEnum.READEY_CARGO.getStatus());
+        orderDetail.setCustomerId(orderDetail.getCooperateId() + orderDetail.getLPdtgBatch());
+      }
       orderDetailDao.insertOrReplace(orderDetail);
     }
     buffer.append(",").append(orderDetailList.size()).append("条明细");
@@ -265,7 +277,16 @@ public class DownCargoPresenter {
       OrderBatch orderBatch = orderBatchList.get(i);
       orderBatch.setId(
           orderBatch.getCooperateId() + orderBatch.getLPdtgBatch() + orderBatch.getDriversID());
-      orderBatch.setCanEvalutaion("0");
+      OrderBatch existOrderBatch = dao.queryBuilder()
+          .where(OrderBatchDao.Properties.Id.eq(
+              orderBatch.getCooperateId() + orderBatch.getLPdtgBatch() + orderBatch.getDriversID()))
+          .unique();
+      if (existOrderBatch != null) {
+        orderBatch.setCanEvalutaion(existOrderBatch.getCanEvalutaion());
+        orderBatch.setEvaluation(existOrderBatch.getEvaluation());
+      } else {
+        orderBatch.setCanEvalutaion("0");
+      }
       dao.insertOrReplace(orderBatch);
     }
   }
@@ -541,9 +562,9 @@ public class DownCargoPresenter {
     }
   }
 
-    /**
-     * 删除下载批次记录
-     */
+  /**
+   * 删除下载批次记录
+   */
 
   private void updateDownBatchInfo(long newlPdtgBatch) {
     DownBatchInfoDao dao = LogisticsApplication.getInstance().getDownBatchInfoDao();

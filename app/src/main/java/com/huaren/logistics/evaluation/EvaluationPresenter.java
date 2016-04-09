@@ -20,7 +20,8 @@ public class EvaluationPresenter {
   public void initCargoList() {
     OrderBatchDao orderBatchDao = LogisticsApplication.getInstance().getOrderBatchDao();
     List<OrderBatch> orderBatchList =
-        orderBatchDao.queryBuilder().where(OrderBatchDao.Properties.Status.eq("1")).list();
+        orderBatchDao.queryBuilder().where(OrderBatchDao.Properties.Status.eq("1"),
+            OrderBatchDao.Properties.CanEvalutaion.eq("1")).list();
     for (int i = 0; i < orderBatchList.size(); i++) {
       OrderBatch orderBatch = orderBatchList.get(i);
       String desc = "未评价";

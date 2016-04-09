@@ -46,6 +46,7 @@ public class RecycleScanDetailPresent {
 
   private void insertRecycleScan(String scanCode) {
     RecycleScan recycleScan = new RecycleScan();
+    recycleScan.setStatus("1");
     recycleScan.setScanCode(scanCode);
     recycleScan.setRecycleScanTime(new Date());
     recycleScanDao.insert(recycleScan);
@@ -55,7 +56,7 @@ public class RecycleScanDetailPresent {
 
   public void initRecycleScanList() {
     RecycleScanDao recycleScanDao = LogisticsApplication.getInstance().getRecycleScanDao();
-    List<RecycleScan> recycleScanList = recycleScanDao.queryBuilder().list();
+    List<RecycleScan> recycleScanList = recycleScanDao.queryBuilder().orderDesc(RecycleScanDao.Properties.RecycleScanTime).list();
     for (int i = 0; i < recycleScanList.size(); i++) {
       RecycleScan recycleScan = recycleScanList.get(i);
       Card card =

@@ -7,9 +7,17 @@ package com.huaren.logistics.bean;
 public class RecycleInput {
 
     private Long id;
-    private int cooperateId;
+    /** Not-null value. */
+    private String orderBatchId;
+    /** Not-null value. */
+    private String cooperateId;
     private int lPdtgBatch;
+    /** Not-null value. */
+    private String driversID;
     private int recycleNum;
+    private long recycleType;
+    /** Not-null value. */
+    private String recycleTypeValue;
     /** Not-null value. */
     private String status;
     /** Not-null value. */
@@ -23,11 +31,15 @@ public class RecycleInput {
         this.id = id;
     }
 
-    public RecycleInput(Long id, int cooperateId, int lPdtgBatch, int recycleNum, String status, java.util.Date recycleTime, java.util.Date editTime) {
+    public RecycleInput(Long id, String orderBatchId, String cooperateId, int lPdtgBatch, String driversID, int recycleNum, long recycleType, String recycleTypeValue, String status, java.util.Date recycleTime, java.util.Date editTime) {
         this.id = id;
+        this.orderBatchId = orderBatchId;
         this.cooperateId = cooperateId;
         this.lPdtgBatch = lPdtgBatch;
+        this.driversID = driversID;
         this.recycleNum = recycleNum;
+        this.recycleType = recycleType;
+        this.recycleTypeValue = recycleTypeValue;
         this.status = status;
         this.recycleTime = recycleTime;
         this.editTime = editTime;
@@ -41,11 +53,23 @@ public class RecycleInput {
         this.id = id;
     }
 
-    public int getCooperateId() {
+    /** Not-null value. */
+    public String getOrderBatchId() {
+        return orderBatchId;
+    }
+
+    /** Not-null value; ensure this value is available before it is saved to the database. */
+    public void setOrderBatchId(String orderBatchId) {
+        this.orderBatchId = orderBatchId;
+    }
+
+    /** Not-null value. */
+    public String getCooperateId() {
         return cooperateId;
     }
 
-    public void setCooperateId(int cooperateId) {
+    /** Not-null value; ensure this value is available before it is saved to the database. */
+    public void setCooperateId(String cooperateId) {
         this.cooperateId = cooperateId;
     }
 
@@ -57,12 +81,40 @@ public class RecycleInput {
         this.lPdtgBatch = lPdtgBatch;
     }
 
+    /** Not-null value. */
+    public String getDriversID() {
+        return driversID;
+    }
+
+    /** Not-null value; ensure this value is available before it is saved to the database. */
+    public void setDriversID(String driversID) {
+        this.driversID = driversID;
+    }
+
     public int getRecycleNum() {
         return recycleNum;
     }
 
     public void setRecycleNum(int recycleNum) {
         this.recycleNum = recycleNum;
+    }
+
+    public long getRecycleType() {
+        return recycleType;
+    }
+
+    public void setRecycleType(long recycleType) {
+        this.recycleType = recycleType;
+    }
+
+    /** Not-null value. */
+    public String getRecycleTypeValue() {
+        return recycleTypeValue;
+    }
+
+    /** Not-null value; ensure this value is available before it is saved to the database. */
+    public void setRecycleTypeValue(String recycleTypeValue) {
+        this.recycleTypeValue = recycleTypeValue;
     }
 
     /** Not-null value. */

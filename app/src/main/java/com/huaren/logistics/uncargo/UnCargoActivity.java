@@ -26,6 +26,7 @@ public class UnCargoActivity extends BaseActivity implements IUnCargoView {
         Intent intent = new Intent(UnCargoActivity.this, UnCargoOrderActivity.class);
         intent.putExtra("customerId", card.getTag().toString());
         startActivity(intent);
+        finish();
       }
 
       @Override public void onItemLongClick(Card card, int position) {

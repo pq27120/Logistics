@@ -1,5 +1,6 @@
-package com.huaren.logistics.cargo;
+package com.huaren.logistics.recycleinput;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 import android.widget.TextView;
@@ -8,22 +9,24 @@ import com.dexafree.materialList.listeners.RecyclerItemClickListener;
 import com.dexafree.materialList.view.MaterialListView;
 import com.huaren.logistics.BaseActivity;
 import com.huaren.logistics.R;
+import com.huaren.logistics.evaluation.EvaluationDetailActivity;
 
-public class CargoActivity extends BaseActivity implements ICargoView {
-
+public class RecycleInputActivity extends BaseActivity implements IRecycleInputView {
   private MaterialListView mListView;
 
-  private CargoPresenter presenter;
+  private RecycleInputPresenter presenter;
 
   @Override protected void onCreate(Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
-    setContentView(R.layout.activity_cargo);
+    setContentView(R.layout.activity_recycle_input);
     initUserInfo();
     mListView = (MaterialListView) findViewById(R.id.material_listview);
     mListView.addOnItemTouchListener(new RecyclerItemClickListener.OnItemClickListener() {
       @Override public void onItemClick(Card card, int position) {
         Log.d("CARD_TYPE", card.getTag().toString());
-        CargoOrderActivity.actionStart(CargoActivity.this, card.getTag().toString());
+        Intent intent = new Intent(RecycleInputActivity.this, RecycleInputDetailActivity.class);
+        intent.putExtra("orderBatchId", card.getTag().toString());
+        startActivity(intent);
         finish();
       }
 
@@ -31,9 +34,8 @@ public class CargoActivity extends BaseActivity implements ICargoView {
         Log.d("LONG_CLICK", card.getTag().toString());
       }
     });
-    ((TextView) findViewById(R.id.tv_common_title)).setText(R.string.cargo);
-    presenter = new CargoPresenter(this);
-    initUserInfo();
+    ((TextView) findViewById(R.id.tv_common_title)).setText(R.string.evaluation);
+    presenter = new RecycleInputPresenter(this);
     presenter.initCargoList();
   }
 
