@@ -13,6 +13,8 @@ import com.huaren.logistics.bean.LogisticsUser;
 import com.huaren.logistics.bean.SysDic;
 import com.huaren.logistics.bean.SysDicValue;
 import com.huaren.logistics.bean.Customer;
+import com.huaren.logistics.bean.DownBatchInfo;
+import com.huaren.logistics.bean.OrderBatch;
 import com.huaren.logistics.bean.OrderDetail;
 import com.huaren.logistics.bean.RecycleInput;
 import com.huaren.logistics.bean.RecycleScan;
@@ -21,6 +23,8 @@ import com.huaren.logistics.dao.LogisticsUserDao;
 import com.huaren.logistics.dao.SysDicDao;
 import com.huaren.logistics.dao.SysDicValueDao;
 import com.huaren.logistics.dao.CustomerDao;
+import com.huaren.logistics.dao.DownBatchInfoDao;
+import com.huaren.logistics.dao.OrderBatchDao;
 import com.huaren.logistics.dao.OrderDetailDao;
 import com.huaren.logistics.dao.RecycleInputDao;
 import com.huaren.logistics.dao.RecycleScanDao;
@@ -38,6 +42,8 @@ public class DaoSession extends AbstractDaoSession {
     private final DaoConfig sysDicDaoConfig;
     private final DaoConfig sysDicValueDaoConfig;
     private final DaoConfig customerDaoConfig;
+    private final DaoConfig downBatchInfoDaoConfig;
+    private final DaoConfig orderBatchDaoConfig;
     private final DaoConfig orderDetailDaoConfig;
     private final DaoConfig recycleInputDaoConfig;
     private final DaoConfig recycleScanDaoConfig;
@@ -46,6 +52,8 @@ public class DaoSession extends AbstractDaoSession {
     private final SysDicDao sysDicDao;
     private final SysDicValueDao sysDicValueDao;
     private final CustomerDao customerDao;
+    private final DownBatchInfoDao downBatchInfoDao;
+    private final OrderBatchDao orderBatchDao;
     private final OrderDetailDao orderDetailDao;
     private final RecycleInputDao recycleInputDao;
     private final RecycleScanDao recycleScanDao;
@@ -66,6 +74,12 @@ public class DaoSession extends AbstractDaoSession {
         customerDaoConfig = daoConfigMap.get(CustomerDao.class).clone();
         customerDaoConfig.initIdentityScope(type);
 
+        downBatchInfoDaoConfig = daoConfigMap.get(DownBatchInfoDao.class).clone();
+        downBatchInfoDaoConfig.initIdentityScope(type);
+
+        orderBatchDaoConfig = daoConfigMap.get(OrderBatchDao.class).clone();
+        orderBatchDaoConfig.initIdentityScope(type);
+
         orderDetailDaoConfig = daoConfigMap.get(OrderDetailDao.class).clone();
         orderDetailDaoConfig.initIdentityScope(type);
 
@@ -79,6 +93,8 @@ public class DaoSession extends AbstractDaoSession {
         sysDicDao = new SysDicDao(sysDicDaoConfig, this);
         sysDicValueDao = new SysDicValueDao(sysDicValueDaoConfig, this);
         customerDao = new CustomerDao(customerDaoConfig, this);
+        downBatchInfoDao = new DownBatchInfoDao(downBatchInfoDaoConfig, this);
+        orderBatchDao = new OrderBatchDao(orderBatchDaoConfig, this);
         orderDetailDao = new OrderDetailDao(orderDetailDaoConfig, this);
         recycleInputDao = new RecycleInputDao(recycleInputDaoConfig, this);
         recycleScanDao = new RecycleScanDao(recycleScanDaoConfig, this);
@@ -87,6 +103,8 @@ public class DaoSession extends AbstractDaoSession {
         registerDao(SysDic.class, sysDicDao);
         registerDao(SysDicValue.class, sysDicValueDao);
         registerDao(Customer.class, customerDao);
+        registerDao(DownBatchInfo.class, downBatchInfoDao);
+        registerDao(OrderBatch.class, orderBatchDao);
         registerDao(OrderDetail.class, orderDetailDao);
         registerDao(RecycleInput.class, recycleInputDao);
         registerDao(RecycleScan.class, recycleScanDao);
@@ -97,6 +115,8 @@ public class DaoSession extends AbstractDaoSession {
         sysDicDaoConfig.getIdentityScope().clear();
         sysDicValueDaoConfig.getIdentityScope().clear();
         customerDaoConfig.getIdentityScope().clear();
+        downBatchInfoDaoConfig.getIdentityScope().clear();
+        orderBatchDaoConfig.getIdentityScope().clear();
         orderDetailDaoConfig.getIdentityScope().clear();
         recycleInputDaoConfig.getIdentityScope().clear();
         recycleScanDaoConfig.getIdentityScope().clear();
@@ -116,6 +136,14 @@ public class DaoSession extends AbstractDaoSession {
 
     public CustomerDao getCustomerDao() {
         return customerDao;
+    }
+
+    public DownBatchInfoDao getDownBatchInfoDao() {
+        return downBatchInfoDao;
+    }
+
+    public OrderBatchDao getOrderBatchDao() {
+        return orderBatchDao;
     }
 
     public OrderDetailDao getOrderDetailDao() {

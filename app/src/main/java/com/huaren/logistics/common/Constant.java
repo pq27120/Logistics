@@ -14,7 +14,7 @@ public class Constant {
   //数据查询相关参数
   public static final String WEBSERVICE_URL = "http://222.128.50.124:8098/WebServiceForPDA_test.asmx";
 
-  public static final String USER_NAME = "username";
+  public static final String USER_NAME = "admin";
 
-  public static final String PASSWORD = "password";
+  public static final String PASSWORD = "1234mohu";
 }

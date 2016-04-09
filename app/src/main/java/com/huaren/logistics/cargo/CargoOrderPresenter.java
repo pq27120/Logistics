@@ -26,8 +26,9 @@ public class CargoOrderPresenter {
   public void initCargoOrder(String customerId) {
     OrderDetailDao orderDetailDao = LogisticsApplication.getInstance().getOrderDetailDao();
     List<OrderDetail> orderDetailList = orderDetailDao.queryBuilder()
-        .where(OrderDetailDao.Properties.CooperateId.eq(customerId),
-            OrderDetailDao.Properties.DetailStatus.eq(OrderStatusEnum.READEY_CARGO.getStatus()))
+        .where(OrderDetailDao.Properties.CustomerId.eq(customerId),
+            OrderDetailDao.Properties.DetailStatus.eq(OrderStatusEnum.READEY_CARGO.getStatus()),
+            OrderDetailDao.Properties.Status.eq("1"))
         .list();
     for (int i = 0; i < orderDetailList.size(); i++) {
       OrderDetail orderDetail = orderDetailList.get(i);
@@ -48,7 +49,7 @@ public class CargoOrderPresenter {
     if (StringTool.isNotNull(detailCode)) {
       OrderDetailDao orderDetailDao = LogisticsApplication.getInstance().getOrderDetailDao();
       QueryBuilder qb = orderDetailDao.queryBuilder();
-      qb.where(OrderDetailDao.Properties.Lpn.eq(detailCode));
+      qb.where(OrderDetailDao.Properties.Lpn.eq(detailCode),OrderDetailDao.Properties.Status.eq("1"));
       List<OrderDetail> orderDetailList = qb.list();
       if (orderDetailList != null && !orderDetailList.isEmpty()) {
         OrderDetail orderDetail = orderDetailList.get(0);
@@ -57,12 +58,12 @@ public class CargoOrderPresenter {
           UiTool.showToast((Context) cargoOrderView, "货物已装车！");
           return;
         }
-        if (orderDetail.getCooperateId().equals(customerId)) {
+        if (orderDetail.getCustomerId().equals(customerId)) {
           LogisticsApplication.getInstance().getSoundPoolUtil().playRight();
-          updateOrderCargo(customerId, detailCode);
+          updateOrderCargo(detailCode);
         } else {
           cargoOrderView.showLoadDialog("装车",
-              "当前客户" + customerId + "，是否切换到客户" + orderDetail.getCooperateId());
+              "当前客户" + customerId + "，是否切换到客户" + orderDetail.getCustomerId());
         }
       } else {
         LogisticsApplication.getInstance().getSoundPoolUtil().playWrong();
@@ -74,11 +75,11 @@ public class CargoOrderPresenter {
     }
   }
 
-  public void updateOrderCargo(String customerId, String detailId) {
+  public void updateOrderCargo(String lpn) {
     OrderDetailDao orderDetailDao =
         LogisticsApplication.getInstance().getDaoSession().getOrderDetailDao();
     QueryBuilder qb = orderDetailDao.queryBuilder();
-    qb.where(OrderDetailDao.Properties.Lpn.eq(detailId));
+    qb.where(OrderDetailDao.Properties.Lpn.eq(lpn), OrderDetailDao.Properties.Status.eq("1"));
     List<OrderDetail> orderDetailList = qb.list();
     if (orderDetailList != null && !orderDetailList.isEmpty()) {
       OrderDetail orderDetail = orderDetailList.get(0);

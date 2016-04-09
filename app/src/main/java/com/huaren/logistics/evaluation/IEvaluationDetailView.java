@@ -6,5 +6,5 @@ import java.util.List;
 public interface IEvaluationDetailView {
   void initRadio(List<SysDicValue> list,boolean flag, String evaluation);
 
-  void back();
+  void finishActivity();
 }

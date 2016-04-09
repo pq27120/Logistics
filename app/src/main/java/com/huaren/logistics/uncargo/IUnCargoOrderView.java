@@ -10,9 +10,7 @@ public interface IUnCargoOrderView {
   void reInit();
 
   /**
-   * 直接进入评价页面
-   * @param customerId 客户ID
-   * @param orderId 订单ID
+   * 销毁Activity
    */
-  void enterApprovalView(String customerId, String orderId);
+  void finishActivity();
 }

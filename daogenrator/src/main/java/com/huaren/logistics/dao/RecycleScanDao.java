@@ -24,9 +24,11 @@ public class RecycleScanDao extends AbstractDao<RecycleScan, Long> {
     */
     public static class Properties {
         public final static Property Id = new Property(0, Long.class, "id", true, "_id");
-        public final static Property RecycleScanTime = new Property(1, java.util.Date.class, "recycleScanTime", false, "RECYCLE_SCAN_TIME");
-        public final static Property ScanCode = new Property(2, String.class, "scanCode", false, "SCAN_CODE");
-        public final static Property EditTime = new Property(3, java.util.Date.class, "editTime", false, "EDIT_TIME");
+        public final static Property LPdtgBatch = new Property(1, int.class, "lPdtgBatch", false, "L_PDTG_BATCH");
+        public final static Property RecycleScanTime = new Property(2, java.util.Date.class, "recycleScanTime", false, "RECYCLE_SCAN_TIME");
+        public final static Property ScanCode = new Property(3, String.class, "scanCode", false, "SCAN_CODE");
+        public final static Property Status = new Property(4, String.class, "status", false, "STATUS");
+        public final static Property EditTime = new Property(5, java.util.Date.class, "editTime", false, "EDIT_TIME");
     };
 
 
@@ -43,9 +45,11 @@ public class RecycleScanDao extends AbstractDao<RecycleScan, Long> {
         String constraint = ifNotExists? "IF NOT EXISTS ": "";
         db.execSQL("CREATE TABLE " + constraint + "'RECYCLE_SCAN' (" + //
                 "'_id' INTEGER PRIMARY KEY ," + // 0: id
-                "'RECYCLE_SCAN_TIME' INTEGER NOT NULL ," + // 1: recycleScanTime
-                "'SCAN_CODE' TEXT NOT NULL ," + // 2: scanCode
-                "'EDIT_TIME' INTEGER);"); // 3: editTime
+                "'L_PDTG_BATCH' INTEGER NOT NULL ," + // 1: lPdtgBatch
+                "'RECYCLE_SCAN_TIME' INTEGER NOT NULL ," + // 2: recycleScanTime
+                "'SCAN_CODE' TEXT NOT NULL ," + // 3: scanCode
+                "'STATUS' TEXT NOT NULL ," + // 4: status
+                "'EDIT_TIME' INTEGER);"); // 5: editTime
     }
 
     /** Drops the underlying database table. */
@@ -63,12 +67,14 @@ public class RecycleScanDao extends AbstractDao<RecycleScan, Long> {
         if (id != null) {
             stmt.bindLong(1, id);
         }
-        stmt.bindLong(2, entity.getRecycleScanTime().getTime());
-        stmt.bindString(3, entity.getScanCode());
+        stmt.bindLong(2, entity.getLPdtgBatch());
+        stmt.bindLong(3, entity.getRecycleScanTime().getTime());
+        stmt.bindString(4, entity.getScanCode());
+        stmt.bindString(5, entity.getStatus());
  
         java.util.Date editTime = entity.getEditTime();
         if (editTime != null) {
-            stmt.bindLong(4, editTime.getTime());
+            stmt.bindLong(6, editTime.getTime());
         }
     }
 
@@ -83,9 +89,11 @@ public class RecycleScanDao extends AbstractDao<RecycleScan, Long> {
     public RecycleScan readEntity(Cursor cursor, int offset) {
         RecycleScan entity = new RecycleScan( //
             cursor.isNull(offset + 0) ? null : cursor.getLong(offset + 0), // id
-            new java.util.Date(cursor.getLong(offset + 1)), // recycleScanTime
-            cursor.getString(offset + 2), // scanCode
-            cursor.isNull(offset + 3) ? null : new java.util.Date(cursor.getLong(offset + 3)) // editTime
+            cursor.getInt(offset + 1), // lPdtgBatch
+            new java.util.Date(cursor.getLong(offset + 2)), // recycleScanTime
+            cursor.getString(offset + 3), // scanCode
+            cursor.getString(offset + 4), // status
+            cursor.isNull(offset + 5) ? null : new java.util.Date(cursor.getLong(offset + 5)) // editTime
         );
         return entity;
     }
@@ -94,9 +102,11 @@ public class RecycleScanDao extends AbstractDao<RecycleScan, Long> {
     @Override
     public void readEntity(Cursor cursor, RecycleScan entity, int offset) {
         entity.setId(cursor.isNull(offset + 0) ? null : cursor.getLong(offset + 0));
-        entity.setRecycleScanTime(new java.util.Date(cursor.getLong(offset + 1)));
-        entity.setScanCode(cursor.getString(offset + 2));
-        entity.setEditTime(cursor.isNull(offset + 3) ? null : new java.util.Date(cursor.getLong(offset + 3)));
+        entity.setLPdtgBatch(cursor.getInt(offset + 1));
+        entity.setRecycleScanTime(new java.util.Date(cursor.getLong(offset + 2)));
+        entity.setScanCode(cursor.getString(offset + 3));
+        entity.setStatus(cursor.getString(offset + 4));
+        entity.setEditTime(cursor.isNull(offset + 5) ? null : new java.util.Date(cursor.getLong(offset + 5)));
      }
     
     /** @inheritdoc */

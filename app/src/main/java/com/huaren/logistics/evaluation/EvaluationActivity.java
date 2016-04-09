@@ -2,11 +2,8 @@ package com.huaren.logistics.evaluation;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.support.annotation.NonNull;
 import android.util.Log;
 import android.widget.TextView;
-import com.afollestad.materialdialogs.DialogAction;
-import com.afollestad.materialdialogs.MaterialDialog;
 import com.dexafree.materialList.card.Card;
 import com.dexafree.materialList.listeners.RecyclerItemClickListener;
 import com.dexafree.materialList.view.MaterialListView;
@@ -26,8 +23,8 @@ public class EvaluationActivity extends BaseActivity implements  IEvaluationView
     mListView.addOnItemTouchListener(new RecyclerItemClickListener.OnItemClickListener() {
       @Override public void onItemClick(Card card, int position) {
         Log.d("CARD_TYPE", card.getTag().toString());
-        Intent intent = new Intent(EvaluationActivity.this, EvaluationOrderActivity.class);
-        intent.putExtra("customerId", card.getTag().toString());
+        Intent intent = new Intent(EvaluationActivity.this, EvaluationDetailActivity.class);
+        intent.putExtra("orderBatchId", card.getTag().toString());
         startActivity(intent);
       }
 

@@ -24,9 +24,12 @@ public class RecycleInputDao extends AbstractDao<RecycleInput, Long> {
     */
     public static class Properties {
         public final static Property Id = new Property(0, Long.class, "id", true, "_id");
-        public final static Property RecycleNum = new Property(1, int.class, "recycleNum", false, "RECYCLE_NUM");
-        public final static Property RecycleTime = new Property(2, java.util.Date.class, "recycleTime", false, "RECYCLE_TIME");
-        public final static Property EditTime = new Property(3, java.util.Date.class, "editTime", false, "EDIT_TIME");
+        public final static Property CooperateId = new Property(1, int.class, "cooperateId", false, "COOPERATE_ID");
+        public final static Property LPdtgBatch = new Property(2, int.class, "lPdtgBatch", false, "L_PDTG_BATCH");
+        public final static Property RecycleNum = new Property(3, int.class, "recycleNum", false, "RECYCLE_NUM");
+        public final static Property Status = new Property(4, String.class, "status", false, "STATUS");
+        public final static Property RecycleTime = new Property(5, java.util.Date.class, "recycleTime", false, "RECYCLE_TIME");
+        public final static Property EditTime = new Property(6, java.util.Date.class, "editTime", false, "EDIT_TIME");
     };
 
 
@@ -43,9 +46,12 @@ public class RecycleInputDao extends AbstractDao<RecycleInput, Long> {
         String constraint = ifNotExists? "IF NOT EXISTS ": "";
         db.execSQL("CREATE TABLE " + constraint + "'RECYCLE_INPUT' (" + //
                 "'_id' INTEGER PRIMARY KEY ," + // 0: id
-                "'RECYCLE_NUM' INTEGER NOT NULL ," + // 1: recycleNum
-                "'RECYCLE_TIME' INTEGER NOT NULL ," + // 2: recycleTime
-                "'EDIT_TIME' INTEGER);"); // 3: editTime
+                "'COOPERATE_ID' INTEGER NOT NULL ," + // 1: cooperateId
+                "'L_PDTG_BATCH' INTEGER NOT NULL ," + // 2: lPdtgBatch
+                "'RECYCLE_NUM' INTEGER NOT NULL ," + // 3: recycleNum
+                "'STATUS' TEXT NOT NULL ," + // 4: status
+                "'RECYCLE_TIME' INTEGER NOT NULL ," + // 5: recycleTime
+                "'EDIT_TIME' INTEGER);"); // 6: editTime
     }
 
     /** Drops the underlying database table. */
@@ -63,12 +69,15 @@ public class RecycleInputDao extends AbstractDao<RecycleInput, Long> {
         if (id != null) {
             stmt.bindLong(1, id);
         }
-        stmt.bindLong(2, entity.getRecycleNum());
-        stmt.bindLong(3, entity.getRecycleTime().getTime());
+        stmt.bindLong(2, entity.getCooperateId());
+        stmt.bindLong(3, entity.getLPdtgBatch());
+        stmt.bindLong(4, entity.getRecycleNum());
+        stmt.bindString(5, entity.getStatus());
+        stmt.bindLong(6, entity.getRecycleTime().getTime());
  
         java.util.Date editTime = entity.getEditTime();
         if (editTime != null) {
-            stmt.bindLong(4, editTime.getTime());
+            stmt.bindLong(7, editTime.getTime());
         }
     }
 
@@ -83,9 +92,12 @@ public class RecycleInputDao extends AbstractDao<RecycleInput, Long> {
     public RecycleInput readEntity(Cursor cursor, int offset) {
         RecycleInput entity = new RecycleInput( //
             cursor.isNull(offset + 0) ? null : cursor.getLong(offset + 0), // id
-            cursor.getInt(offset + 1), // recycleNum
-            new java.util.Date(cursor.getLong(offset + 2)), // recycleTime
-            cursor.isNull(offset + 3) ? null : new java.util.Date(cursor.getLong(offset + 3)) // editTime
+            cursor.getInt(offset + 1), // cooperateId
+            cursor.getInt(offset + 2), // lPdtgBatch
+            cursor.getInt(offset + 3), // recycleNum
+            cursor.getString(offset + 4), // status
+            new java.util.Date(cursor.getLong(offset + 5)), // recycleTime
+            cursor.isNull(offset + 6) ? null : new java.util.Date(cursor.getLong(offset + 6)) // editTime
         );
         return entity;
     }
@@ -94,9 +106,12 @@ public class RecycleInputDao extends AbstractDao<RecycleInput, Long> {
     @Override
     public void readEntity(Cursor cursor, RecycleInput entity, int offset) {
         entity.setId(cursor.isNull(offset + 0) ? null : cursor.getLong(offset + 0));
-        entity.setRecycleNum(cursor.getInt(offset + 1));
-        entity.setRecycleTime(new java.util.Date(cursor.getLong(offset + 2)));
-        entity.setEditTime(cursor.isNull(offset + 3) ? null : new java.util.Date(cursor.getLong(offset + 3)));
+        entity.setCooperateId(cursor.getInt(offset + 1));
+        entity.setLPdtgBatch(cursor.getInt(offset + 2));
+        entity.setRecycleNum(cursor.getInt(offset + 3));
+        entity.setStatus(cursor.getString(offset + 4));
+        entity.setRecycleTime(new java.util.Date(cursor.getLong(offset + 5)));
+        entity.setEditTime(cursor.isNull(offset + 6) ? null : new java.util.Date(cursor.getLong(offset + 6)));
      }
     
     /** @inheritdoc */

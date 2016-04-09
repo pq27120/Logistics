@@ -4,18 +4,25 @@ import android.content.Context;
 import android.util.Xml;
 import com.huaren.logistics.LogisticsApplication;
 import com.huaren.logistics.bean.Customer;
+import com.huaren.logistics.bean.DownBatchInfo;
+import com.huaren.logistics.bean.OrderBatch;
 import com.huaren.logistics.bean.OrderDetail;
+import com.huaren.logistics.bean.RecycleInput;
+import com.huaren.logistics.bean.RecycleScan;
 import com.huaren.logistics.bean.SysDic;
 import com.huaren.logistics.bean.SysDicValue;
 import com.huaren.logistics.dao.CustomerDao;
+import com.huaren.logistics.dao.DownBatchInfoDao;
+import com.huaren.logistics.dao.OrderBatchDao;
 import com.huaren.logistics.dao.OrderDetailDao;
+import com.huaren.logistics.dao.RecycleInputDao;
+import com.huaren.logistics.dao.RecycleScanDao;
 import com.huaren.logistics.dao.SysDicDao;
 import com.huaren.logistics.dao.SysDicValueDao;
 import com.huaren.logistics.util.DateUtil;
 import com.huaren.logistics.util.webservice.WebServiceConnect;
 import com.huaren.logistics.util.webservice.WebServiceHandler;
 import com.huaren.logistics.util.webservice.WebServiceParam;
-import de.greenrobot.dao.query.QueryBuilder;
 import java.io.IOException;
 import java.io.StringReader;
 import java.util.ArrayList;
@@ -213,44 +220,61 @@ public class DownCargoPresenter {
     sysDicDao.insertOrReplaceInTx(sysDicList);
   }
 
-  private void insertCustomer(Map<String, Customer> customerMap) {
+  private void insertCustomer(List<Customer> customerList) {
     CustomerDao customerDao = LogisticsApplication.getInstance().getCustomerDao();
-    int customerNum = 0;
-    for (Map.Entry<String, Customer> customerEntry : customerMap.entrySet()) {
-      Customer customer = customerEntry.getValue();
-      customer.setAddTime(new Date());
-      QueryBuilder qb = customerDao.queryBuilder();
-      List<Customer> customerList =
-          qb.where(CustomerDao.Properties.CooperateId.eq(customer.getCooperateId())).list();
-      if (customerList == null || customerList.isEmpty()) {
-        customerNum++;
-        customerDao.insert(customer);
-      }
+    int customerNum = customerList.size();
+    for (int i = 0; i < customerList.size(); i++) {
+      Customer customer = customerList.get(i);
+      customer.setId(customer.getCooperateId() + customer.getLPdtgBatch());
+      customerDao.insertOrReplace(customer);
     }
     buffer.append(customerNum).append("条客户信息");
   }
 
   private void insertOrderDetail(List<OrderDetail> orderDetailList) {
     OrderDetailDao orderDetailDao = LogisticsApplication.getInstance().getOrderDetailDao();
-    int detailNum = 0;
     for (OrderDetail orderDetail : orderDetailList) {
       orderDetail.setAddTime(new Date());
       orderDetail.setDetailStatus("1");
-      QueryBuilder qb = orderDetailDao.queryBuilder();
-      List<OrderDetail> queryList =
-          qb.where(OrderDetailDao.Properties.Lpn.eq(orderDetail.getLpn())).list();
-      if (queryList == null || queryList.isEmpty()) {
-        detailNum++;
-        orderDetailDao.insert(orderDetail);
-      }
+      orderDetail.setStatus("1");
+      orderDetail.setCustomerId(orderDetail.getCooperateId() + orderDetail.getLPdtgBatch());
+      orderDetailDao.insertOrReplace(orderDetail);
     }
-    buffer.append(",").append(detailNum).append("条明细");
+    buffer.append(",").append(orderDetailList.size()).append("条明细");
   }
 
   private void parseOrderXml(Object detail) {
-    Map<String, Customer> map = new HashMap<>();
+    //批量信息
+    SoapObject soapObject = (SoapObject) detail;
+    String xml = soapObject.getPropertyAsString("GetdingdanResult");
+    parseBatchOrder(xml);
+    List<Customer> customerList = parseCustomer(xml);
+    List<OrderBatch> orderBatchList = parseOrderBatch(xml);
+    List<OrderDetail> orderDetailList = parseOrderDetail(xml);
+    insertCustomer(customerList);
+    insertOrderBatch(orderBatchList);
+    insertOrderDetail(orderDetailList);
+  }
+
+  /**
+   * 插入批量订单信息
+   */
+  private void insertOrderBatch(List<OrderBatch> orderBatchList) {
+    OrderBatchDao dao = LogisticsApplication.getInstance().getOrderBatchDao();
+    for (int i = 0; i < orderBatchList.size(); i++) {
+      OrderBatch orderBatch = orderBatchList.get(i);
+      orderBatch.setId(
+          orderBatch.getCooperateId() + orderBatch.getLPdtgBatch() + orderBatch.getDriversID());
+      orderBatch.setCanEvalutaion("0");
+      dao.insertOrReplace(orderBatch);
+    }
+  }
+
+  /**
+   * 解析明细
+   */
+  private List<OrderDetail> parseOrderDetail(String xml) {
     List<OrderDetail> orderDetailList = null;
-    Customer customer = null;
     OrderDetail orderDetail = null;
     String cooperateId = null;
     String dispatchCreatTime = null;
@@ -262,9 +286,7 @@ public class DownCargoPresenter {
     String sPdtgEmplname3 = null;
     String sPdtgVehicleno = null;
     String countPieces = null;
-    String lPdtgBatch = null;
-    SoapObject soapObject = (SoapObject) detail;
-    String xml = soapObject.getPropertyAsString("GetdingdanResult");
+    int lPdtgBatch = 0;
     try {
       XmlPullParser parser = Xml.newPullParser();
       parser.setInput(new StringReader(xml));
@@ -295,26 +317,10 @@ public class DownCargoPresenter {
               sPdtgEmplname3 = "";
               sPdtgVehicleno = "";
               countPieces = "";
-              lPdtgBatch = "";
+              lPdtgBatch = 0;
             }
             if ("CooperateID".equals(name)) {
               cooperateId = parser.nextText();
-              if (map.containsKey(cooperateId)) {
-                customer = map.get(cooperateId);
-              } else {
-                customer = new Customer();
-                // 获得当前节点名的第一个属性的值
-                customer.setCooperateId(cooperateId);
-                map.put(cooperateId, customer);
-              }
-            }
-            if ("CoopPWD".equals(name)) {
-              // 获取当前节点名的文本节点的值
-              customer.setCoopPwd(parser.nextText());
-            }
-            if ("S_PDTG_CUSTFULLNAME".equals(name)) {
-              // 获取当前节点名的文本节点的值
-              customer.setSPdtgCustfullname(parser.nextText());
             }
             if ("DispatchCreatTime".equals(name)) {
               dispatchCreatTime = parser.nextText();
@@ -344,7 +350,7 @@ public class DownCargoPresenter {
               countPieces = parser.nextText();
             }
             if ("L_PDTG_BATCH".equals(name)) {
-              lPdtgBatch = parser.nextText();
+              lPdtgBatch = Integer.valueOf(parser.nextText());
             }
             if ("Item".equals(name)) {
               orderDetail = new OrderDetail();
@@ -403,7 +409,7 @@ public class DownCargoPresenter {
               sPdtgEmplname3 = null;
               sPdtgVehicleno = null;
               countPieces = null;
-              lPdtgBatch = null;
+              lPdtgBatch = 0;
             }
             break;
         }
@@ -415,15 +421,276 @@ public class DownCargoPresenter {
     } catch (XmlPullParserException e) {
       e.printStackTrace();
     }
-    insertCustomer(map);
-    insertOrderDetail(orderDetailList);
+    return orderDetailList;
+  }
+
+  /**
+   * 解析批次、司机、客户
+   */
+  private List<OrderBatch> parseOrderBatch(String xml) {
+    List<OrderBatch> orderBatchList = null;
+    OrderBatch orderBatch = null;
+    try {
+      XmlPullParser parser = Xml.newPullParser();
+      parser.setInput(new StringReader(xml));
+      //  产生第一个事件
+      int eventType = parser.getEventType();
+      //  当文档结束事件时退出循环
+      while (eventType != XmlPullParser.END_DOCUMENT) {
+        switch (eventType) {
+          // 开始文档
+          case XmlPullParser.START_DOCUMENT:
+            // new 集合，方便于添加元素
+            break;
+          // 开始标记
+          case XmlPullParser.START_TAG:
+            // 获得当前节点名（标记名）
+            String name = parser.getName();
+            if ("Data".equals(name)) {
+              orderBatchList = new ArrayList<>();
+            }
+            if ("ItemHeader".equals(name)) {
+              orderBatch = new OrderBatch();
+              orderBatch.setAddTime(new Date());
+              orderBatch.setStatus("1");
+            }
+            if ("CooperateID".equals(name)) {
+              orderBatch.setCooperateId(parser.nextText());
+            }
+            if ("DriversID".equals(name)) {
+              orderBatch.setDriversID(parser.nextText());
+            }
+            if ("L_PDTG_BATCH".equals(name)) {
+              orderBatch.setLPdtgBatch(Integer.valueOf(parser.nextText()));
+            }
+            if ("S_PDTG_CUSTFULLNAME".equals(name)) {
+              orderBatch.setSPdtgCustfullname(parser.nextText());
+            }
+            break;
+          // 结束标记
+          case XmlPullParser.END_TAG:
+            String endName = parser.getName();
+            if ("ItemHeader".equals(endName)) {
+              orderBatchList.add(orderBatch);
+              orderBatch = null;
+            }
+            break;
+        }
+        // 获得解析器中的下一个事件
+        eventType = parser.next();
+      }
+    } catch (IOException e) {
+      e.printStackTrace();
+    } catch (XmlPullParserException e) {
+      e.printStackTrace();
+    }
+    return orderBatchList;
+  }
+
+  /**
+   * 解析批量数据
+   */
+  private void parseBatchOrder(String xml) {
+    DownBatchInfoDao downBatchInfoDao = LogisticsApplication.getInstance().getDownBatchInfoDao();
+    List<DownBatchInfo> downBatchInfoList = downBatchInfoDao.queryBuilder().list();
+    long lPdtgBatch = 0;
+    try {
+      XmlPullParser parser = Xml.newPullParser();
+      parser.setInput(new StringReader(xml));
+      //  产生第一个事件
+      int eventType = parser.getEventType();
+      //  当文档结束事件时退出循环
+      while (eventType != XmlPullParser.END_DOCUMENT) {
+        switch (eventType) {
+          // 开始文档
+          case XmlPullParser.START_DOCUMENT:
+            // new 集合，方便于添加元素
+            break;
+          // 开始标记
+          case XmlPullParser.START_TAG:
+            // 获得当前节点名（标记名）
+            String name = parser.getName();
+            if ("L_PDTG_BATCH".equals(name)) {
+              lPdtgBatch = Long.valueOf(parser.nextText());
+            }
+        }
+        // 获得解析器中的下一个事件
+        eventType = parser.next();
+      }
+    } catch (IOException e) {
+      e.printStackTrace();
+    } catch (XmlPullParserException e) {
+      e.printStackTrace();
+    }
+
+    if (downBatchInfoList == null || downBatchInfoList.isEmpty()) {
+      DownBatchInfo downBatchInfo = new DownBatchInfo();
+      downBatchInfo.setLPdtgBatch(lPdtgBatch);
+      downBatchInfo.setAddTime(new Date());
+      downBatchInfoDao.insert(downBatchInfo);
+    } else {
+      DownBatchInfo downBatchInfo = downBatchInfoList.get(0);
+      if (lPdtgBatch > downBatchInfo.getLPdtgBatch()) {
+        updateCustomerStatus(downBatchInfo.getLPdtgBatch());
+        updateOrderBatchStatus(downBatchInfo.getLPdtgBatch());
+        updateOrderDetailStatus(downBatchInfo.getLPdtgBatch());
+        updateRecycleInputStatus(downBatchInfo.getLPdtgBatch());
+        updateRecycleScanStatus(downBatchInfo.getLPdtgBatch());
+        updateDownBatchInfo(lPdtgBatch);
+      }
+    }
+  }
+
+    /**
+     * 删除下载批次记录
+     */
+
+  private void updateDownBatchInfo(long newlPdtgBatch) {
+    DownBatchInfoDao dao = LogisticsApplication.getInstance().getDownBatchInfoDao();
+    dao.deleteAll();
+    DownBatchInfo downBatchInfo = new DownBatchInfo();
+    downBatchInfo.setLPdtgBatch(newlPdtgBatch);
+    downBatchInfo.setAddTime(new Date());
+    dao.insert(downBatchInfo);
+  }
+
+  /**
+   * 根据批次号隐藏回收扫描信息
+   */
+  private void updateRecycleScanStatus(long lPdtgBatch) {
+    RecycleScanDao dao = LogisticsApplication.getInstance().getRecycleScanDao();
+    List<RecycleScan> recycleScanList =
+        dao.queryBuilder().where(RecycleScanDao.Properties.LPdtgBatch.eq(lPdtgBatch)).list();
+    for (int i = 0; i < recycleScanList.size(); i++) {
+      RecycleScan recycleScan = recycleScanList.get(i);
+      recycleScan.setStatus("0");
+    }
+    dao.updateInTx(recycleScanList);
+  }
+
+  /**
+   * 根据批次号隐藏回收录入信息
+   */
+  private void updateRecycleInputStatus(long lPdtgBatch) {
+    RecycleInputDao dao = LogisticsApplication.getInstance().getRecycleInputDao();
+    List<RecycleInput> recycleInputList =
+        dao.queryBuilder().where(RecycleInputDao.Properties.LPdtgBatch.eq(lPdtgBatch)).list();
+    for (int i = 0; i < recycleInputList.size(); i++) {
+      RecycleInput recycleInput = recycleInputList.get(i);
+      recycleInput.setStatus("0");
+    }
+    dao.updateInTx(recycleInputList);
+  }
+
+  /**
+   * 根据批次号隐藏订单详情
+   */
+  private void updateOrderDetailStatus(long lPdtgBatch) {
+    OrderDetailDao dao = LogisticsApplication.getInstance().getOrderDetailDao();
+    List<OrderDetail> orderDetailList =
+        dao.queryBuilder().where(OrderDetailDao.Properties.LPdtgBatch.eq(lPdtgBatch)).list();
+    for (int i = 0; i < orderDetailList.size(); i++) {
+      OrderDetail orderDetail = orderDetailList.get(i);
+      orderDetail.setStatus("0");
+    }
+    dao.updateInTx(orderDetailList);
+  }
+
+  /**
+   * 根据批次号隐藏订单批次
+   */
+  private void updateOrderBatchStatus(long lPdtgBatch) {
+    OrderBatchDao dao = LogisticsApplication.getInstance().getOrderBatchDao();
+    List<OrderBatch> orderBatchList =
+        dao.queryBuilder().where(OrderBatchDao.Properties.LPdtgBatch.eq(lPdtgBatch)).list();
+    for (int i = 0; i < orderBatchList.size(); i++) {
+      OrderBatch orderBatch = orderBatchList.get(i);
+      orderBatch.setStatus("0");
+    }
+    dao.updateInTx(orderBatchList);
+  }
+
+  /**
+   * 根据批次号隐藏客户信息
+   */
+  private void updateCustomerStatus(long lPdtgBatch) {
+    CustomerDao dao = LogisticsApplication.getInstance().getCustomerDao();
+    List<Customer> customerList =
+        dao.queryBuilder().where(CustomerDao.Properties.LPdtgBatch.eq(lPdtgBatch)).list();
+    for (int i = 0; i < customerList.size(); i++) {
+      Customer customer = customerList.get(i);
+      customer.setStatus("0");
+    }
+    dao.updateInTx(customerList);
+  }
+
+  /**
+   * 解析客户数据
+   */
+  private List<Customer> parseCustomer(String xml) {
+    List<Customer> customerList = null;
+    Customer customer = null;
+    try {
+      XmlPullParser parser = Xml.newPullParser();
+      parser.setInput(new StringReader(xml));
+      //  产生第一个事件
+      int eventType = parser.getEventType();
+      //  当文档结束事件时退出循环
+      while (eventType != XmlPullParser.END_DOCUMENT) {
+        switch (eventType) {
+          // 开始文档
+          case XmlPullParser.START_DOCUMENT:
+            // new 集合，方便于添加元素
+            break;
+          // 开始标记
+          case XmlPullParser.START_TAG:
+            // 获得当前节点名（标记名）
+            String name = parser.getName();
+            if ("Data".equals(name)) {
+              customerList = new ArrayList<>();
+            }
+            if ("ItemHeader".equals(name)) {
+              customer = new Customer();
+              customer.setAddTime(new Date());
+              customer.setStatus("1");
+            }
+            if ("CooperateID".equals(name)) {
+              String cooperateId = parser.nextText();
+              customer.setCooperateId(cooperateId);
+            }
+            if ("CoopPWD".equals(name)) {
+              customer.setCoopPwd(parser.nextText());
+            }
+            if ("S_PDTG_CUSTFULLNAME".equals(name)) {
+              customer.setSPdtgCustfullname(parser.nextText());
+            }
+            if ("L_PDTG_BATCH".equals(name)) {
+              customer.setLPdtgBatch(Integer.valueOf(parser.nextText()));
+            }
+            break;
+          // 结束标记
+          case XmlPullParser.END_TAG:
+            String endName = parser.getName();
+            if ("ItemHeader".equals(endName)) {
+              customerList.add(customer);
+              customer = null;
+            }
+            break;
+        }
+        // 获得解析器中的下一个事件
+        eventType = parser.next();
+      }
+    } catch (IOException e) {
+      e.printStackTrace();
+    } catch (XmlPullParserException e) {
+      e.printStackTrace();
+    }
+    return customerList;
   }
 
   public void downloadOrderData() {
     Map params = new HashMap();
-    params.put("S_PDTG_EMPLOPCODE", "admin");
-    params.put("date", "2010");
-    params.put("S_PDTG_EMPLOPCODE", "314");
+    params.put("parDriversID", "341");
     String method = "Getdingdan";
     String action = "http://tempuri.org/Getdingdan";
     WebServiceParam webServiceParam =

@@ -8,6 +8,8 @@ public class OrderDetail implements java.io.Serializable {
 
     private String detailId;
     /** Not-null value. */
+    private String customerId;
+    /** Not-null value. */
     private String cooperateId;
     /** Not-null value. */
     private String dispatchNumber;
@@ -29,8 +31,7 @@ public class OrderDetail implements java.io.Serializable {
     private String sPdtgVehicleno;
     /** Not-null value. */
     private String countPieces;
-    /** Not-null value. */
-    private String lPdtgBatch;
+    private int lPdtgBatch;
     /** Not-null value. */
     private String ordered;
     /** Not-null value. */
@@ -45,7 +46,8 @@ public class OrderDetail implements java.io.Serializable {
     private String uom;
     /** Not-null value. */
     private String detailStatus;
-    private String evaluation;
+    /** Not-null value. */
+    private String status;
     /** Not-null value. */
     private java.util.Date addTime;
     private java.util.Date editTime;
@@ -57,8 +59,9 @@ public class OrderDetail implements java.io.Serializable {
         this.detailId = detailId;
     }
 
-    public OrderDetail(String detailId, String cooperateId, String dispatchNumber, String dispatchCreatTime, String driversID, String sPdtgEmplname, String sPdtgEmplname2, String suicherenyuanID, String suicherenyuanID2, String sPdtgEmplname3, String sPdtgVehicleno, String countPieces, String lPdtgBatch, String ordered, String orderId, String waveKey, String lpn, String mtype, String uom, String detailStatus, String evaluation, java.util.Date addTime, java.util.Date editTime) {
+    public OrderDetail(String detailId, String customerId, String cooperateId, String dispatchNumber, String dispatchCreatTime, String driversID, String sPdtgEmplname, String sPdtgEmplname2, String suicherenyuanID, String suicherenyuanID2, String sPdtgEmplname3, String sPdtgVehicleno, String countPieces, int lPdtgBatch, String ordered, String orderId, String waveKey, String lpn, String mtype, String uom, String detailStatus, String status, java.util.Date addTime, java.util.Date editTime) {
         this.detailId = detailId;
+        this.customerId = customerId;
         this.cooperateId = cooperateId;
         this.dispatchNumber = dispatchNumber;
         this.dispatchCreatTime = dispatchCreatTime;
@@ -78,7 +81,7 @@ public class OrderDetail implements java.io.Serializable {
         this.mtype = mtype;
         this.uom = uom;
         this.detailStatus = detailStatus;
-        this.evaluation = evaluation;
+        this.status = status;
         this.addTime = addTime;
         this.editTime = editTime;
     }
@@ -89,6 +92,16 @@ public class OrderDetail implements java.io.Serializable {
 
     public void setDetailId(String detailId) {
         this.detailId = detailId;
+    }
+
+    /** Not-null value. */
+    public String getCustomerId() {
+        return customerId;
+    }
+
+    /** Not-null value; ensure this value is available before it is saved to the database. */
+    public void setCustomerId(String customerId) {
+        this.customerId = customerId;
     }
 
     /** Not-null value. */
@@ -201,13 +214,11 @@ public class OrderDetail implements java.io.Serializable {
         this.countPieces = countPieces;
     }
 
-    /** Not-null value. */
-    public String getLPdtgBatch() {
+    public int getLPdtgBatch() {
         return lPdtgBatch;
     }
 
-    /** Not-null value; ensure this value is available before it is saved to the database. */
-    public void setLPdtgBatch(String lPdtgBatch) {
+    public void setLPdtgBatch(int lPdtgBatch) {
         this.lPdtgBatch = lPdtgBatch;
     }
 
@@ -281,12 +292,14 @@ public class OrderDetail implements java.io.Serializable {
         this.detailStatus = detailStatus;
     }
 
-    public String getEvaluation() {
-        return evaluation;
+    /** Not-null value. */
+    public String getStatus() {
+        return status;
     }
 
-    public void setEvaluation(String evaluation) {
-        this.evaluation = evaluation;
+    /** Not-null value; ensure this value is available before it is saved to the database. */
+    public void setStatus(String status) {
+        this.status = status;
     }
 
     /** Not-null value. */

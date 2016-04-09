@@ -12,6 +12,8 @@ import com.huaren.logistics.dao.LogisticsUserDao;
 import com.huaren.logistics.dao.SysDicDao;
 import com.huaren.logistics.dao.SysDicValueDao;
 import com.huaren.logistics.dao.CustomerDao;
+import com.huaren.logistics.dao.DownBatchInfoDao;
+import com.huaren.logistics.dao.OrderBatchDao;
 import com.huaren.logistics.dao.OrderDetailDao;
 import com.huaren.logistics.dao.RecycleInputDao;
 import com.huaren.logistics.dao.RecycleScanDao;
@@ -21,7 +23,7 @@ import com.huaren.logistics.dao.RecycleScanDao;
  * Master of DAO (schema version 1): knows all DAOs.
 */
 public class DaoMaster extends AbstractDaoMaster {
-    public static final int SCHEMA_VERSION = 1;
+    public static final int SCHEMA_VERSION = 2;
 
     /** Creates underlying database table using DAOs. */
     public static void createAllTables(SQLiteDatabase db, boolean ifNotExists) {
@@ -29,6 +31,8 @@ public class DaoMaster extends AbstractDaoMaster {
         SysDicDao.createTable(db, ifNotExists);
         SysDicValueDao.createTable(db, ifNotExists);
         CustomerDao.createTable(db, ifNotExists);
+        DownBatchInfoDao.createTable(db, ifNotExists);
+        OrderBatchDao.createTable(db, ifNotExists);
         OrderDetailDao.createTable(db, ifNotExists);
         RecycleInputDao.createTable(db, ifNotExists);
         RecycleScanDao.createTable(db, ifNotExists);
@@ -40,6 +44,8 @@ public class DaoMaster extends AbstractDaoMaster {
         SysDicDao.dropTable(db, ifExists);
         SysDicValueDao.dropTable(db, ifExists);
         CustomerDao.dropTable(db, ifExists);
+        DownBatchInfoDao.dropTable(db, ifExists);
+        OrderBatchDao.dropTable(db, ifExists);
         OrderDetailDao.dropTable(db, ifExists);
         RecycleInputDao.dropTable(db, ifExists);
         RecycleScanDao.dropTable(db, ifExists);
@@ -78,6 +84,8 @@ public class DaoMaster extends AbstractDaoMaster {
         registerDaoClass(SysDicDao.class);
         registerDaoClass(SysDicValueDao.class);
         registerDaoClass(CustomerDao.class);
+        registerDaoClass(DownBatchInfoDao.class);
+        registerDaoClass(OrderBatchDao.class);
         registerDaoClass(OrderDetailDao.class);
         registerDaoClass(RecycleInputDao.class);
         registerDaoClass(RecycleScanDao.class);

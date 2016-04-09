@@ -3,18 +3,15 @@ package com.huaren.logistics.uncargo;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
-import android.util.Log;
 import android.view.View;
 import android.widget.TextView;
 import com.afollestad.materialdialogs.DialogAction;
 import com.afollestad.materialdialogs.MaterialDialog;
 import com.dexafree.materialList.card.Card;
-import com.dexafree.materialList.listeners.RecyclerItemClickListener;
 import com.dexafree.materialList.view.MaterialListView;
 import com.gc.materialdesign.views.ButtonRectangle;
 import com.huaren.logistics.BaseActivity;
 import com.huaren.logistics.R;
-import com.huaren.logistics.evaluation.EvaluationOrderActivity;
 import com.huaren.logistics.util.UiTool;
 import com.rengwuxian.materialedittext.MaterialEditText;
 
@@ -76,8 +73,8 @@ public class UnCargoOrderActivity extends BaseActivity implements IUnCargoOrderV
     presenter.initCargoOrder(customerId);
   }
 
-  @Override public void enterApprovalView(String customerId, String orderId) {
-    EvaluationOrderActivity.actionStart(UnCargoOrderActivity.this, customerId, orderId);
+  @Override public void finishActivity() {
+    finish();
   }
 
   private class LoadButtonClick implements View.OnClickListener {

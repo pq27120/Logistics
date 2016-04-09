@@ -61,7 +61,7 @@ public class CargoOrderActivity extends BaseActivity implements ICargoOrderView 
         .onPositive(new MaterialDialog.SingleButtonCallback() {
           @Override
           public void onClick(@NonNull MaterialDialog dialog, @NonNull DialogAction which) {
-            presenter.updateOrderCargo(customerId, loadEt.getText().toString());
+            presenter.updateOrderCargo(loadEt.getText().toString());
           }
         })
         .negativeText("取消")

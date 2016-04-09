@@ -6,11 +6,16 @@ package com.huaren.logistics.bean;
  */
 public class Customer implements java.io.Serializable {
 
+    private String id;
+    /** Not-null value. */
     private String cooperateId;
+    private int lPdtgBatch;
     /** Not-null value. */
     private String sPdtgCustfullname;
     /** Not-null value. */
     private String coopPwd;
+    /** Not-null value. */
+    private String status;
     /** Not-null value. */
     private java.util.Date addTime;
     private java.util.Date editTime;
@@ -18,24 +23,45 @@ public class Customer implements java.io.Serializable {
     public Customer() {
     }
 
-    public Customer(String cooperateId) {
-        this.cooperateId = cooperateId;
+    public Customer(String id) {
+        this.id = id;
     }
 
-    public Customer(String cooperateId, String sPdtgCustfullname, String coopPwd, java.util.Date addTime, java.util.Date editTime) {
+    public Customer(String id, String cooperateId, int lPdtgBatch, String sPdtgCustfullname, String coopPwd, String status, java.util.Date addTime, java.util.Date editTime) {
+        this.id = id;
         this.cooperateId = cooperateId;
+        this.lPdtgBatch = lPdtgBatch;
         this.sPdtgCustfullname = sPdtgCustfullname;
         this.coopPwd = coopPwd;
+        this.status = status;
         this.addTime = addTime;
         this.editTime = editTime;
     }
 
+    public String getId() {
+        return id;
+    }
+
+    public void setId(String id) {
+        this.id = id;
+    }
+
+    /** Not-null value. */
     public String getCooperateId() {
         return cooperateId;
     }
 
+    /** Not-null value; ensure this value is available before it is saved to the database. */
     public void setCooperateId(String cooperateId) {
         this.cooperateId = cooperateId;
+    }
+
+    public int getLPdtgBatch() {
+        return lPdtgBatch;
+    }
+
+    public void setLPdtgBatch(int lPdtgBatch) {
+        this.lPdtgBatch = lPdtgBatch;
     }
 
     /** Not-null value. */
@@ -56,6 +82,16 @@ public class Customer implements java.io.Serializable {
     /** Not-null value; ensure this value is available before it is saved to the database. */
     public void setCoopPwd(String coopPwd) {
         this.coopPwd = coopPwd;
+    }
+
+    /** Not-null value. */
+    public String getStatus() {
+        return status;
+    }
+
+    /** Not-null value; ensure this value is available before it is saved to the database. */
+    public void setStatus(String status) {
+        this.status = status;
     }
 
     /** Not-null value. */

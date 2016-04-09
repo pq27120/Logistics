@@ -7,10 +7,13 @@ package com.huaren.logistics.bean;
 public class RecycleScan {
 
     private Long id;
+    private int lPdtgBatch;
     /** Not-null value. */
     private java.util.Date recycleScanTime;
     /** Not-null value. */
     private String scanCode;
+    /** Not-null value. */
+    private String status;
     private java.util.Date editTime;
 
     public RecycleScan() {
@@ -20,10 +23,12 @@ public class RecycleScan {
         this.id = id;
     }
 
-    public RecycleScan(Long id, java.util.Date recycleScanTime, String scanCode, java.util.Date editTime) {
+    public RecycleScan(Long id, int lPdtgBatch, java.util.Date recycleScanTime, String scanCode, String status, java.util.Date editTime) {
         this.id = id;
+        this.lPdtgBatch = lPdtgBatch;
         this.recycleScanTime = recycleScanTime;
         this.scanCode = scanCode;
+        this.status = status;
         this.editTime = editTime;
     }
 
@@ -33,6 +38,14 @@ public class RecycleScan {
 
     public void setId(Long id) {
         this.id = id;
+    }
+
+    public int getLPdtgBatch() {
+        return lPdtgBatch;
+    }
+
+    public void setLPdtgBatch(int lPdtgBatch) {
+        this.lPdtgBatch = lPdtgBatch;
     }
 
     /** Not-null value. */
@@ -53,6 +66,16 @@ public class RecycleScan {
     /** Not-null value; ensure this value is available before it is saved to the database. */
     public void setScanCode(String scanCode) {
         this.scanCode = scanCode;
+    }
+
+    /** Not-null value. */
+    public String getStatus() {
+        return status;
+    }
+
+    /** Not-null value; ensure this value is available before it is saved to the database. */
+    public void setStatus(String status) {
+        this.status = status;
     }
 
     public java.util.Date getEditTime() {

@@ -1,12 +1,14 @@
 package com.huaren.logistics.evaluation;
 
+import android.content.Context;
+import android.text.TextUtils;
+import com.dexafree.materialList.card.Card;
+import com.dexafree.materialList.card.provider.SmallImageCardProvider;
 import com.huaren.logistics.LogisticsApplication;
 import com.huaren.logistics.R;
-import com.huaren.logistics.bean.Customer;
-import com.huaren.logistics.dao.CustomerDao;
-import java.util.HashMap;
+import com.huaren.logistics.bean.OrderBatch;
+import com.huaren.logistics.dao.OrderBatchDao;
 import java.util.List;
-import java.util.Map;
 
 public class EvaluationPresenter {
   private IEvaluationView evaluationView;
@@ -16,56 +18,25 @@ public class EvaluationPresenter {
   }
 
   public void initCargoList() {
-    CustomerDao customerDao = LogisticsApplication.getInstance().getCustomerDao();
-    List<Customer> customerList = customerDao.loadAll();
-    for (int i = 0; i < customerList.size(); i++) {
-      Customer customer = customerList.get(i);
-      Map<String, Integer> countMap = countLoadOrder(customer);
-      String desc = "订单总数："
-          + countMap.get("total")
-          + "，未评价订单："
-          + countMap.get("unLoadCount")
-          + "，已评价订单："
-          + countMap.get("loadCount");
+    OrderBatchDao orderBatchDao = LogisticsApplication.getInstance().getOrderBatchDao();
+    List<OrderBatch> orderBatchList =
+        orderBatchDao.queryBuilder().where(OrderBatchDao.Properties.Status.eq("1")).list();
+    for (int i = 0; i < orderBatchList.size(); i++) {
+      OrderBatch orderBatch = orderBatchList.get(i);
+      String desc = "未评价";
       int drawable = R.drawable.star_do;
-      if (countMap.get("unLoadCount") == 0) {
+      if (!TextUtils.isEmpty(orderBatch.getEvaluation())) {
         drawable = R.drawable.star_finish;
+        desc = "已评价";
       }
-      //Card card = new Card.Builder((Context) evaluationView).setTag(customer.getCooperateId())
-      //    .withProvider(SmallImageCardProvider.class)
-      //    .setTitle(customer.getCooperateName() + "(" + customer.getCooperateId() + ")")
-      //    .setDescription(desc)
-      //    .setDrawable(drawable)
-      //    .endConfig()
-      //    .build();
-      //evaluationView.addCard(card);
+      Card card = new Card.Builder((Context) evaluationView).setTag(orderBatch.getId())
+          .withProvider(SmallImageCardProvider.class)
+          .setTitle(orderBatch.getSPdtgCustfullname() + "(" + orderBatch.getCooperateId() + ")")
+          .setDescription(desc)
+          .setDrawable(drawable)
+          .endConfig()
+          .build();
+      evaluationView.addCard(card);
     }
-  }
-
-  /**
-   * 计算总货物、装车主订单数量、未装车主订单数量
-   */
-  private Map<String, Integer> countLoadOrder(Customer customer) {
-    //LogisticsOrderDao logisticsOrderDao = LogisticsApplication.getInstance().getLogisticsOrderDao();
-    //int total = 0, loadCount = 0, unLoadCount = 0;
-    //List<LogisticsOrder> logisticsOrderList = logisticsOrderDao.queryBuilder()
-    //    .where(LogisticsOrderDao.Properties.CooperateID.eq(customer.getCooperateId()))
-    //    .list();
-    //if (logisticsOrderList != null && !logisticsOrderList.isEmpty()) {
-    //  total = logisticsOrderList.size();
-    //  for (int i = 0; i < logisticsOrderList.size(); i++) {
-    //    LogisticsOrder logisticsOrder = logisticsOrderList.get(i);
-    //    if (OrderStatusEnum.UNCARGO.getStatus().equals(logisticsOrder.getOrderStatus())) {
-    //      unLoadCount++;
-    //    } else if (OrderStatusEnum.EVALUATION.getStatus().equals(logisticsOrder.getOrderStatus())) {
-    //      loadCount++;
-    //    }
-    //  }
-    //}
-    Map<String, Integer> map = new HashMap<>();
-    //map.put("total", total);
-    //map.put("unLoadCount", unLoadCount);
-    //map.put("loadCount", loadCount);
-    return map;
   }
 }

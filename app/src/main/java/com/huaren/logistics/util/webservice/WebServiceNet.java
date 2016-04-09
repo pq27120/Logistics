@@ -4,10 +4,10 @@ import android.os.Handler;
 import android.os.Message;
 import com.huaren.logistics.common.Constant;
 import com.huaren.logistics.util.CommonTool;
-import com.huaren.logistics.util.StringTool;
 import com.huaren.logistics.util.http.NetConnect;
 import java.util.Map;
 import org.ksoap2.SoapEnvelope;
+import org.ksoap2.SoapFault;
 import org.ksoap2.serialization.SoapObject;
 import org.ksoap2.serialization.SoapSerializationEnvelope;
 import org.ksoap2.transport.HttpTransportSE;
@@ -76,8 +76,12 @@ public class WebServiceNet extends Thread {
   private boolean getNetContent() {
     boolean getNetDataFlag = false;
     try {
-      SoapObject soapObject = (SoapObject)envelope.bodyIn;
-      content = soapObject;
+      if (envelope.bodyIn instanceof SoapFault) {
+        CommonTool.showLog(envelope.bodyIn.toString());
+      } else {
+        SoapObject soapObject = (SoapObject) envelope.bodyIn;
+        content = soapObject;
+      }
       getNetDataFlag = true;
     } catch (Exception e) {
       CommonTool.showLog(e.getMessage());

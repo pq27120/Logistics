@@ -24,7 +24,7 @@ public class CargoPresenter {
 
   public void initCargoList() {
     CustomerDao customerDao = LogisticsApplication.getInstance().getCustomerDao();
-    List<Customer> customerList = customerDao.loadAll();
+    List<Customer> customerList = customerDao.queryBuilder().where(CustomerDao.Properties.Status.eq("1")).list();
     for (int i = 0; i < customerList.size(); i++) {
       Customer customer = customerList.get(i);
       Map<String, Integer> countMap = countLoadOrder(customer);
@@ -38,7 +38,7 @@ public class CargoPresenter {
       if (countMap.get("unLoadCount") == 0) {
         drawable = R.drawable.star_finish;
       }
-      Card card = new Card.Builder((Context) cargoView).setTag(customer.getCooperateId())
+      Card card = new Card.Builder((Context) cargoView).setTag(customer.getId())
           .withProvider(SmallImageCardProvider.class)
           .setTitle(customer.getSPdtgCustfullname() + "(" + customer.getCooperateId() + ")")
           .setDescription(desc)
@@ -56,7 +56,8 @@ public class CargoPresenter {
     OrderDetailDao orderDetailDao = LogisticsApplication.getInstance().getOrderDetailDao();
     int total = 0, loadCount = 0, unLoadCount = 0;
     List<OrderDetail> orderDetailList = orderDetailDao.queryBuilder()
-        .where(OrderDetailDao.Properties.CooperateId.eq(customer.getCooperateId()))
+        .where(OrderDetailDao.Properties.CustomerId.eq(customer.getId())
+            , OrderDetailDao.Properties.Status.eq("1"))
         .list();
     if (orderDetailList != null && !orderDetailList.isEmpty()) {
       total = orderDetailList.size();

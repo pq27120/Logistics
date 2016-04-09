@@ -6,7 +6,9 @@ import android.database.sqlite.SQLiteDatabase;
 import com.huaren.logistics.dao.CustomerDao;
 import com.huaren.logistics.dao.DaoMaster;
 import com.huaren.logistics.dao.DaoSession;
+import com.huaren.logistics.dao.DownBatchInfoDao;
 import com.huaren.logistics.dao.LogisticsUserDao;
+import com.huaren.logistics.dao.OrderBatchDao;
 import com.huaren.logistics.dao.OrderDetailDao;
 import com.huaren.logistics.dao.RecycleInputDao;
 import com.huaren.logistics.dao.RecycleScanDao;
@@ -26,6 +28,8 @@ public class LogisticsApplication extends Application {
   private RecycleInputDao recycleInputDao;
   private RecycleScanDao recycleScanDao;
   private LogisticsUserDao logisticsUserDao;
+  private DownBatchInfoDao downBatchInfoDao;
+  private OrderBatchDao orderBatchDao;
   private static LogisticsApplication INSTANCE;
   private static Context context;
   private SoundPoolUtil soundPoolUtil;
@@ -69,6 +73,8 @@ public class LogisticsApplication extends Application {
     recycleInputDao = daoSession.getRecycleInputDao();
     recycleScanDao = daoSession.getRecycleScanDao();
     logisticsUserDao = daoSession.getLogisticsUserDao();
+    downBatchInfoDao = daoSession.getDownBatchInfoDao();
+    orderBatchDao = daoSession.getOrderBatchDao();
   }
 
   public DaoSession getDaoSession() {
@@ -105,6 +111,14 @@ public class LogisticsApplication extends Application {
 
   public LogisticsUserDao getLogisticsUserDao() {
     return logisticsUserDao;
+  }
+
+  public DownBatchInfoDao getDownBatchInfoDao() {
+    return downBatchInfoDao;
+  }
+
+  public OrderBatchDao getOrderBatchDao() {
+    return orderBatchDao;
   }
 
   public SoundPoolUtil getSoundPoolUtil() {

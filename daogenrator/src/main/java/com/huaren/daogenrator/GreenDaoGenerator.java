@@ -53,17 +53,37 @@ public class GreenDaoGenerator {
     customer.implementsSerializable();
     // greenDAO 会自动根据实体类的属性值来创建表字段，并赋予默认值
     // 接下来你便可以设置表中的字段：
-    customer.addStringProperty("cooperateId").primaryKey();
-    // 与在 Java 中使用驼峰命名法不同，默认数据库中的命名是使用大写和下划线来分割单词的。
-    // For example, a property called “creationDate” will become a database column “CREATION_DATE”.
+    customer.addStringProperty("id").primaryKey();
+    customer.addStringProperty("cooperateId").notNull();
+    customer.addIntProperty("lPdtgBatch").notNull();//当前批次
     customer.addStringProperty("sPdtgCustfullname").notNull();//客户姓名
     customer.addStringProperty("coopPwd").notNull();
+    customer.addStringProperty("status").notNull();//0 停用 1 启用
     customer.addDateProperty("addTime").notNull();
     customer.addDateProperty("editTime");
+
+    Entity downBatchInfo = schema.addEntity("DownBatchInfo");
+    downBatchInfo.implementsSerializable();
+    downBatchInfo.addLongProperty("lPdtgBatch").primaryKey();//当前批次
+    downBatchInfo.addDateProperty("addTime").notNull();
+
+    Entity batchInfo = schema.addEntity("OrderBatch");
+    batchInfo.implementsSerializable();
+    batchInfo.addStringProperty("id").primaryKey();
+    batchInfo.addStringProperty("cooperateId").notNull();//客户编码
+    batchInfo.addStringProperty("sPdtgCustfullname");//客户名称
+    batchInfo.addIntProperty("lPdtgBatch").notNull();//批次
+    batchInfo.addStringProperty("driversID").notNull();//司机编码
+    batchInfo.addStringProperty("evaluation");//评价
+    batchInfo.addStringProperty("canEvalutaion");//是否可以评价 0 不可以 1 可以
+    batchInfo.addStringProperty("status").notNull();//0 停用 1 启用
+    batchInfo.addDateProperty("addTime").notNull();
+    batchInfo.addDateProperty("editTime");
 
     Entity orderDetail = schema.addEntity("OrderDetail");//订单详情
     orderDetail.implementsSerializable();
     orderDetail.addStringProperty("detailId").primaryKey();//明细ID
+    orderDetail.addStringProperty("customerId").notNull(); //客户主表
     orderDetail.addStringProperty("cooperateId").notNull(); //客户ID
     orderDetail.addStringProperty("dispatchNumber").notNull(); //调度单号
     orderDetail.addStringProperty("dispatchCreatTime").notNull(); //调度时间
@@ -75,7 +95,7 @@ public class GreenDaoGenerator {
     orderDetail.addStringProperty("sPdtgEmplname3").notNull(); //随行人员2名称
     orderDetail.addStringProperty("sPdtgVehicleno").notNull(); //运输车辆
     orderDetail.addStringProperty("countPieces").notNull(); //件数
-    orderDetail.addStringProperty("lPdtgBatch").notNull(); //件数
+    orderDetail.addIntProperty("lPdtgBatch").notNull(); //批次
     orderDetail.addStringProperty("ordered").notNull();//订单ID
     orderDetail.addStringProperty("orderId").notNull();
     orderDetail.addStringProperty("waveKey").notNull();//波次
@@ -83,20 +103,25 @@ public class GreenDaoGenerator {
     orderDetail.addStringProperty("mtype").notNull();//类型
     orderDetail.addStringProperty("uom").notNull();//
     orderDetail.addStringProperty("detailStatus").notNull();
-    orderDetail.addStringProperty("evaluation");//评价
+    orderDetail.addStringProperty("status").notNull();//0 停用 1 启用
     orderDetail.addDateProperty("addTime").notNull();
     orderDetail.addDateProperty("editTime");
 
     Entity recycleInput = schema.addEntity("RecycleInput"); //回收录入信息
     recycleInput.addIdProperty();
+    recycleInput.addIntProperty("cooperateId").notNull();//客户编码
+    recycleInput.addIntProperty("lPdtgBatch").notNull();//批次
     recycleInput.addIntProperty("recycleNum").notNull();
+    recycleInput.addStringProperty("status").notNull();//0 停用 1 启用
     recycleInput.addDateProperty("recycleTime").notNull();//回收录入时间
     recycleInput.addDateProperty("editTime");
 
     Entity recycleScan = schema.addEntity("RecycleScan"); //回收扫描信息
     recycleScan.addIdProperty();
+    recycleScan.addIntProperty("lPdtgBatch").notNull();//批次
     recycleScan.addDateProperty("recycleScanTime").notNull();
     recycleScan.addStringProperty("scanCode").notNull();
+    recycleScan.addStringProperty("status").notNull();//0 停用 1 启用
     recycleScan.addDateProperty("editTime");
   }
 }
