@@ -43,4 +43,6 @@
     <string name="recycle_scan_hint">条码</string>
     <string name="recycle_scan_btn">回收扫描</string>
     <string name="activity_recycle_scan_title">回收扫描</string>
+    <string name="upload">上传</string>
+    <string name="upload_cargo">上传</string>
 </resources>

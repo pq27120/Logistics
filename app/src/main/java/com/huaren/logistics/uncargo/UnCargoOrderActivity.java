@@ -3,6 +3,7 @@ package com.huaren.logistics.uncargo;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
+import android.view.KeyEvent;
 import android.view.View;
 import android.widget.TextView;
 import com.afollestad.materialdialogs.DialogAction;
@@ -12,6 +13,7 @@ import com.dexafree.materialList.view.MaterialListView;
 import com.gc.materialdesign.views.ButtonRectangle;
 import com.huaren.logistics.BaseActivity;
 import com.huaren.logistics.R;
+import com.huaren.logistics.util.CommonTool;
 import com.huaren.logistics.util.UiTool;
 import com.rengwuxian.materialedittext.MaterialEditText;
 
@@ -30,6 +32,7 @@ public class UnCargoOrderActivity extends BaseActivity implements IUnCargoOrderV
     setContentView(R.layout.activity_uncargo_order);
     initUserInfo();
     unRemoveEt = (MaterialEditText) findViewById(R.id.load_et);
+    unRemoveEt.setOnKeyListener(onKey);
     UiTool.hideSoftInputMethod(UnCargoOrderActivity.this, unRemoveEt);
     unRemoveBtn = (ButtonRectangle) findViewById(R.id.remove_btn);
     mListView = (MaterialListView) findViewById(R.id.material_listview);
@@ -83,4 +86,14 @@ public class UnCargoOrderActivity extends BaseActivity implements IUnCargoOrderV
       presenter.loadDetailCargo(customerId, unRemoveEt.getText().toString());
     }
   }
+
+  View.OnKeyListener onKey = new View.OnKeyListener() {
+    @Override public boolean onKey(View v, int keyCode, KeyEvent event) {
+      if (keyCode == KeyEvent.KEYCODE_ENTER) {
+        presenter.loadDetailCargo(customerId, unRemoveEt.getText().toString());
+        return true;
+      }
+      return false;
+    }
+  };
 }

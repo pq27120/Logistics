@@ -44,7 +44,6 @@
         app:met_iconPadding="0dp"
         android:layout_weight="2"
         android:layout_marginLeft="10dp"
-        android:maxLength="8"
         />
 
     <com.gc.materialdesign.views.ButtonRectangle

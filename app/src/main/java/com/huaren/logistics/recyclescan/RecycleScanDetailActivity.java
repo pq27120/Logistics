@@ -1,6 +1,7 @@
 package com.huaren.logistics.recyclescan;
 
 import android.os.Bundle;
+import android.view.KeyEvent;
 import android.view.View;
 import android.widget.TextView;
 import com.dexafree.materialList.card.Card;
@@ -46,5 +47,16 @@ public class RecycleScanDetailActivity extends BaseActivity implements IRecycleS
     recycleScanDetailPresent = new RecycleScanDetailPresent(this);
     recycleScanDetailPresent.initRecycleScanList();
     scanBtn.setOnClickListener(new ScanBtnClick());
+    scanEt.setOnKeyListener(onKey);
   }
+
+  View.OnKeyListener onKey = new View.OnKeyListener() {
+    @Override public boolean onKey(View v, int keyCode, KeyEvent event) {
+      if (keyCode == KeyEvent.KEYCODE_ENTER) {
+        recycleScanDetailPresent.recycleGoods(scanEt.getText().toString());
+        return true;
+      }
+      return false;
+    }
+  };
 }

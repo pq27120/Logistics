@@ -1,4 +1,4 @@
-package com.huaren.logistics.downcargo;
+package com.huaren.logistics.uploadcargo;
 
 import android.content.Context;
 import android.util.Xml;
@@ -20,6 +20,7 @@ import com.huaren.logistics.dao.RecycleInputDao;
 import com.huaren.logistics.dao.RecycleScanDao;
 import com.huaren.logistics.dao.SysDicDao;
 import com.huaren.logistics.dao.SysDicValueDao;
+import com.huaren.logistics.downcargo.IDownCargoView;
 import com.huaren.logistics.util.CommonTool;
 import com.huaren.logistics.util.DateUtil;
 import com.huaren.logistics.util.webservice.WebServiceConnect;
@@ -36,20 +37,20 @@ import org.ksoap2.serialization.SoapObject;
 import org.xmlpull.v1.XmlPullParser;
 import org.xmlpull.v1.XmlPullParserException;
 
-public class DownCargoPresenter {
+public class UploadCargoPresenter {
 
-  private IDownCargoView downCargoView;
+  private IUploadCargoView uploadCargoView;
 
   public WebServiceHandler handler;
   public WebServiceHandler dictHandler;
   public WebServiceHandler dictValueHandler;
   protected WebServiceConnect webServiceConnect = new WebServiceConnect();
-  private StringBuffer buffer = new StringBuffer("更新完成，更新了");
+  private StringBuffer buffer = new StringBuffer("上传完成，更新了");
 
-  public DownCargoPresenter(final IDownCargoView downCargoView) {
-    this.downCargoView = downCargoView;
+  public UploadCargoPresenter(final IUploadCargoView uploadCargoView) {
+    this.uploadCargoView = uploadCargoView;
 
-    handler = new WebServiceHandler((Context) downCargoView) {
+    handler = new WebServiceHandler((Context) uploadCargoView) {
       @Override public void handleFirst() {
 
       }
@@ -63,7 +64,7 @@ public class DownCargoPresenter {
       }
     };
 
-    dictHandler = new WebServiceHandler((Context) downCargoView) {
+    dictHandler = new WebServiceHandler((Context) uploadCargoView) {
       @Override public void handleFirst() {
 
       }
@@ -77,7 +78,7 @@ public class DownCargoPresenter {
       }
     };
 
-    dictValueHandler = new WebServiceHandler((Context) downCargoView) {
+    dictValueHandler = new WebServiceHandler((Context) uploadCargoView) {
       @Override public void handleFirst() {
 
       }
@@ -158,7 +159,7 @@ public class DownCargoPresenter {
   private void parseOrderInfo(Object detail) {
     parseOrderXml(detail);
     String time = DateUtil.parseCurrDateToString("yyyy-MM-dd HH:mm:ss");
-    downCargoView.showUpdateView(time, buffer.toString());
+    uploadCargoView.showUpdateView(time, buffer.toString());
   }
 
   private void parseDictInfo(Object detail) {
@@ -732,12 +733,12 @@ public class DownCargoPresenter {
 
   public void downloadOrderData() {
     Map params = new HashMap();
-    String driverId = CommonTool.getSharePreference((Context) downCargoView, "driverId");
+    String driverId = CommonTool.getSharePreference((Context) uploadCargoView, "driverId");
     params.put("parDriversID", driverId);
     String method = "Getdingdan";
     String action = "http://tempuri.org/Getdingdan";
     WebServiceParam webServiceParam =
-        new WebServiceParam((Context) downCargoView, params, method, action, handler, 1);
+        new WebServiceParam((Context) uploadCargoView, params, method, action, handler, 1);
     webServiceConnect.addNet(webServiceParam);
   }
 
@@ -748,7 +749,7 @@ public class DownCargoPresenter {
     String method = "GetDictionaryTable";
     String action = "http://tempuri.org/GetDictionaryTable";
     WebServiceParam webServiceParam =
-        new WebServiceParam((Context) downCargoView, params, method, action, dictHandler, 1);
+        new WebServiceParam((Context) uploadCargoView, params, method, action, dictHandler, 1);
     webServiceConnect.addNet(webServiceParam);
   }
 
@@ -759,7 +760,18 @@ public class DownCargoPresenter {
     String method = "GetDictionaryValue";
     String action = "http://tempuri.org/GetDictionaryValue";
     WebServiceParam webServiceParam =
-        new WebServiceParam((Context) downCargoView, params, method, action, dictValueHandler, 1);
+        new WebServiceParam((Context) uploadCargoView, params, method, action, dictValueHandler, 1);
+    webServiceConnect.addNet(webServiceParam);
+  }
+
+  public void uploadOrderData() {
+    Map params = new HashMap();
+    String driverId = CommonTool.getSharePreference((Context) uploadCargoView, "driverId");
+    params.put("parDriversID", driverId);
+    String method = "Getdingdan";
+    String action = "http://tempuri.org/Getdingdan";
+    WebServiceParam webServiceParam =
+        new WebServiceParam((Context) uploadCargoView, params, method, action, handler, 1);
     webServiceConnect.addNet(webServiceParam);
   }
 }

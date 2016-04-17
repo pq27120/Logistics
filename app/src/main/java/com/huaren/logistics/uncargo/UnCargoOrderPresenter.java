@@ -93,6 +93,15 @@ public class UnCargoOrderPresenter {
       orderDetail.setEditTime(new Date());
       orderDetailDao.insertOrReplaceInTx(orderDetail);
       LogisticsApplication.getInstance().getSoundPoolUtil().playRight();
+      OrderBatchDao orderBatchDao = LogisticsApplication.getInstance().getOrderBatchDao();
+      OrderBatch orderBatch = orderBatchDao.queryBuilder()
+          .where(OrderBatchDao.Properties.Id.eq(orderDetail.getCooperateId()
+              + orderDetail.getLPdtgBatch()
+              + orderDetail.getDriversID()), OrderBatchDao.Properties.Status.eq("1"))
+          .unique();
+      orderBatch.setCanEvalutaion("1");
+      orderBatch.setEditTime(new Date());
+      orderBatchDao.update(orderBatch);
       List<OrderDetail> evaluationDetailList = orderDetailDao.queryBuilder()
           .where(OrderDetailDao.Properties.CooperateId.eq(orderDetail.getCooperateId()),
               OrderDetailDao.Properties.DriversID.eq(orderDetail.getDriversID()),
@@ -102,15 +111,6 @@ public class UnCargoOrderPresenter {
               OrderDetailDao.Properties.Status.eq("1"))
           .list();
       if (evaluationDetailList == null || evaluationDetailList.isEmpty()) {
-        OrderBatchDao orderBatchDao = LogisticsApplication.getInstance().getOrderBatchDao();
-        OrderBatch orderBatch = orderBatchDao.queryBuilder()
-            .where(OrderBatchDao.Properties.Id.eq(orderDetail.getCooperateId()
-                + orderDetail.getLPdtgBatch()
-                + orderDetail.getDriversID()), OrderBatchDao.Properties.Status.eq("1"))
-            .unique();
-        orderBatch.setCanEvalutaion("1");
-        orderBatch.setEditTime(new Date());
-        orderBatchDao.update(orderBatch);
         EvaluationDetailActivity.actionStart((Context) cargoOrderView, orderDetail.getCooperateId()
             + orderDetail.getLPdtgBatch()
             + orderDetail.getDriversID());

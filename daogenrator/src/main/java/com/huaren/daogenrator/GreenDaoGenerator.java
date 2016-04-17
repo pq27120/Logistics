@@ -32,6 +32,7 @@ public class GreenDaoGenerator {
     userEntity.addLongProperty("id").primaryKey();
     userEntity.addStringProperty("userName").notNull();
     userEntity.addStringProperty("pwd").notNull();
+    userEntity.addStringProperty("driverId"); //司机ID，有可能为空
 
     Entity sysDicEntity = schema.addEntity("SysDic"); //字典表
     sysDicEntity.addLongProperty("id").primaryKey();

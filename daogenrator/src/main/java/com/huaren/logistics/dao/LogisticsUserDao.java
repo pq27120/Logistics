@@ -26,6 +26,7 @@ public class LogisticsUserDao extends AbstractDao<LogisticsUser, Long> {
         public final static Property Id = new Property(0, Long.class, "id", true, "ID");
         public final static Property UserName = new Property(1, String.class, "userName", false, "USER_NAME");
         public final static Property Pwd = new Property(2, String.class, "pwd", false, "PWD");
+        public final static Property DriverId = new Property(3, String.class, "driverId", false, "DRIVER_ID");
     };
 
 
@@ -43,7 +44,8 @@ public class LogisticsUserDao extends AbstractDao<LogisticsUser, Long> {
         db.execSQL("CREATE TABLE " + constraint + "'LOGISTICS_USER' (" + //
                 "'ID' INTEGER PRIMARY KEY ," + // 0: id
                 "'USER_NAME' TEXT NOT NULL ," + // 1: userName
-                "'PWD' TEXT NOT NULL );"); // 2: pwd
+                "'PWD' TEXT NOT NULL ," + // 2: pwd
+                "'DRIVER_ID' TEXT NOT NULL );"); // 3: driverId
     }
 
     /** Drops the underlying database table. */
@@ -63,6 +65,7 @@ public class LogisticsUserDao extends AbstractDao<LogisticsUser, Long> {
         }
         stmt.bindString(2, entity.getUserName());
         stmt.bindString(3, entity.getPwd());
+        stmt.bindString(4, entity.getDriverId());
     }
 
     /** @inheritdoc */
@@ -77,7 +80,8 @@ public class LogisticsUserDao extends AbstractDao<LogisticsUser, Long> {
         LogisticsUser entity = new LogisticsUser( //
             cursor.isNull(offset + 0) ? null : cursor.getLong(offset + 0), // id
             cursor.getString(offset + 1), // userName
-            cursor.getString(offset + 2) // pwd
+            cursor.getString(offset + 2), // pwd
+            cursor.getString(offset + 3) // driverId
         );
         return entity;
     }
@@ -88,6 +92,7 @@ public class LogisticsUserDao extends AbstractDao<LogisticsUser, Long> {
         entity.setId(cursor.isNull(offset + 0) ? null : cursor.getLong(offset + 0));
         entity.setUserName(cursor.getString(offset + 1));
         entity.setPwd(cursor.getString(offset + 2));
+        entity.setDriverId(cursor.getString(offset + 3));
      }
     
     /** @inheritdoc */

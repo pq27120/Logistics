@@ -111,6 +111,10 @@ public class SplashPresenter {
                 // 获取当前节点名的文本节点的值
                 logisticsUser.setPwd(parser.nextText());
               }
+              if ("ID".equals(name)) {
+                // 获取当前节点名的文本节点的值
+                logisticsUser.setDriverId(parser.nextText());
+              }
             }
             break;
           // 结束标记
@@ -137,8 +141,6 @@ public class SplashPresenter {
 
   public void fetchUserData() {
     Map params = new HashMap();
-    params.put("S_PDTG_EMPLOPCODE", "admin");
-    params.put("date", "2010");
     String method = "GetUsers";
     String action = "http://tempuri.org/GetUsers";
     WebServiceParam webServiceParam =

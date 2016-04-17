@@ -62,8 +62,10 @@ public class CargoOrderPresenter {
           LogisticsApplication.getInstance().getSoundPoolUtil().playRight();
           updateOrderCargo(detailCode);
         } else {
-          cargoOrderView.showLoadDialog("装车",
-              "当前客户" + customerId + "，是否切换到客户" + orderDetail.getCustomerId());
+          LogisticsApplication.getInstance().getSoundPoolUtil().playWrong();
+          UiTool.showToast((Context) cargoOrderView, "该货物不属于当前客户！");
+          //cargoOrderView.showLoadDialog("装车",
+          //    "当前客户" + customerId + "，是否切换到客户" + orderDetail.getCustomerId());
         }
       } else {
         LogisticsApplication.getInstance().getSoundPoolUtil().playWrong();

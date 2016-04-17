@@ -43,11 +43,14 @@ public class LoginPresenter {
     LogisticsUserDao userDao = LogisticsApplication.getInstance().getLogisticsUserDao();
     String md5Pass = MD5Util.MD5(password);
     List<LogisticsUser> list = userDao.queryBuilder()
-        .where(LogisticsUserDao.Properties.UserName.eq(username),
-            LogisticsUserDao.Properties.Pwd.eq(md5Pass))
+        .where(LogisticsUserDao.Properties.UserName.eq(username)
+            ,LogisticsUserDao.Properties.Pwd.eq(md5Pass)
+        )
         .list();
     if (list != null && !list.isEmpty()) {
+      LogisticsUser logisticsUser = list.get(0);
       CommonTool.setSharePreference((Context) loginView, "curUserName", username);
+      CommonTool.setSharePreference((Context) loginView, "driverId", logisticsUser.getDriverId());
       loginView.navigateToHome();
     }else{
       LogisticsApplication.getInstance().getSoundPoolUtil().playWrong();

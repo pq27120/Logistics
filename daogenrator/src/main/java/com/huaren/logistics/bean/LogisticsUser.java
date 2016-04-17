@@ -11,6 +11,8 @@ public class LogisticsUser {
     private String userName;
     /** Not-null value. */
     private String pwd;
+    /** Not-null value. */
+    private String driverId;
 
     public LogisticsUser() {
     }
@@ -19,10 +21,11 @@ public class LogisticsUser {
         this.id = id;
     }
 
-    public LogisticsUser(Long id, String userName, String pwd) {
+    public LogisticsUser(Long id, String userName, String pwd, String driverId) {
         this.id = id;
         this.userName = userName;
         this.pwd = pwd;
+        this.driverId = driverId;
     }
 
     public Long getId() {
@@ -51,6 +54,16 @@ public class LogisticsUser {
     /** Not-null value; ensure this value is available before it is saved to the database. */
     public void setPwd(String pwd) {
         this.pwd = pwd;
+    }
+
+    /** Not-null value. */
+    public String getDriverId() {
+        return driverId;
+    }
+
+    /** Not-null value; ensure this value is available before it is saved to the database. */
+    public void setDriverId(String driverId) {
+        this.driverId = driverId;
     }
 
 }

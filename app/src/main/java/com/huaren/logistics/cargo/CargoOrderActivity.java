@@ -5,6 +5,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.util.Log;
+import android.view.KeyEvent;
 import android.view.View;
 import android.widget.TextView;
 import com.afollestad.materialdialogs.DialogAction;
@@ -15,6 +16,7 @@ import com.dexafree.materialList.view.MaterialListView;
 import com.gc.materialdesign.views.ButtonRectangle;
 import com.huaren.logistics.BaseActivity;
 import com.huaren.logistics.R;
+import com.huaren.logistics.util.CommonTool;
 import com.huaren.logistics.util.UiTool;
 import com.rengwuxian.materialedittext.MaterialEditText;
 
@@ -33,6 +35,7 @@ public class CargoOrderActivity extends BaseActivity implements ICargoOrderView 
     setContentView(R.layout.activity_cargo_order);
     initUserInfo();
     loadEt = (MaterialEditText) findViewById(R.id.load_et);
+    loadEt.setOnKeyListener(onKey);
     UiTool.hideSoftInputMethod(CargoOrderActivity.this, loadEt);
     loadBtn = (ButtonRectangle) findViewById(R.id.load_btn);
     mListView = (MaterialListView) findViewById(R.id.material_listview);
@@ -80,6 +83,7 @@ public class CargoOrderActivity extends BaseActivity implements ICargoOrderView 
     initUserInfo();
     mListView.clearAll();
     loadEt.setText("");
+    loadEt.setOnKeyListener(onKey);
     presenter.initCargoOrder(customerId);
   }
 
@@ -88,4 +92,14 @@ public class CargoOrderActivity extends BaseActivity implements ICargoOrderView 
       presenter.loadDetailCargo(customerId, loadEt.getText().toString());
     }
   }
+
+  View.OnKeyListener onKey = new View.OnKeyListener() {
+    @Override public boolean onKey(View v, int keyCode, KeyEvent event) {
+      if (keyCode == KeyEvent.KEYCODE_ENTER) {
+        presenter.loadDetailCargo(customerId, loadEt.getText().toString());
+        return true;
+      }
+      return false;
+    }
+  };
 }
