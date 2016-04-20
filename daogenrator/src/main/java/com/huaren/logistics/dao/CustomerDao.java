@@ -31,6 +31,7 @@ public class CustomerDao extends AbstractDao<Customer, String> {
         public final static Property Status = new Property(5, String.class, "status", false, "STATUS");
         public final static Property AddTime = new Property(6, java.util.Date.class, "addTime", false, "ADD_TIME");
         public final static Property EditTime = new Property(7, java.util.Date.class, "editTime", false, "EDIT_TIME");
+        public final static Property UserName = new Property(8, String.class, "userName", false, "USER_NAME");
     };
 
 
@@ -53,7 +54,8 @@ public class CustomerDao extends AbstractDao<Customer, String> {
                 "'COOP_PWD' TEXT NOT NULL ," + // 4: coopPwd
                 "'STATUS' TEXT NOT NULL ," + // 5: status
                 "'ADD_TIME' INTEGER NOT NULL ," + // 6: addTime
-                "'EDIT_TIME' INTEGER);"); // 7: editTime
+                "'EDIT_TIME' INTEGER," + // 7: editTime
+                "'USER_NAME' TEXT NOT NULL );"); // 8: userName
     }
 
     /** Drops the underlying database table. */
@@ -82,6 +84,7 @@ public class CustomerDao extends AbstractDao<Customer, String> {
         if (editTime != null) {
             stmt.bindLong(8, editTime.getTime());
         }
+        stmt.bindString(9, entity.getUserName());
     }
 
     /** @inheritdoc */
@@ -101,7 +104,8 @@ public class CustomerDao extends AbstractDao<Customer, String> {
             cursor.getString(offset + 4), // coopPwd
             cursor.getString(offset + 5), // status
             new java.util.Date(cursor.getLong(offset + 6)), // addTime
-            cursor.isNull(offset + 7) ? null : new java.util.Date(cursor.getLong(offset + 7)) // editTime
+            cursor.isNull(offset + 7) ? null : new java.util.Date(cursor.getLong(offset + 7)), // editTime
+            cursor.getString(offset + 8) // userName
         );
         return entity;
     }
@@ -117,6 +121,7 @@ public class CustomerDao extends AbstractDao<Customer, String> {
         entity.setStatus(cursor.getString(offset + 5));
         entity.setAddTime(new java.util.Date(cursor.getLong(offset + 6)));
         entity.setEditTime(cursor.isNull(offset + 7) ? null : new java.util.Date(cursor.getLong(offset + 7)));
+        entity.setUserName(cursor.getString(offset + 8));
      }
     
     /** @inheritdoc */

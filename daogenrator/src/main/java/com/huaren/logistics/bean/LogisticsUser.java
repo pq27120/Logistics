@@ -11,7 +11,6 @@ public class LogisticsUser {
     private String userName;
     /** Not-null value. */
     private String pwd;
-    /** Not-null value. */
     private String driverId;
 
     public LogisticsUser() {
@@ -56,12 +55,10 @@ public class LogisticsUser {
         this.pwd = pwd;
     }
 
-    /** Not-null value. */
     public String getDriverId() {
         return driverId;
     }
 
-    /** Not-null value; ensure this value is available before it is saved to the database. */
     public void setDriverId(String driverId) {
         this.driverId = driverId;
     }

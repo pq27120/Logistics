@@ -36,6 +36,8 @@ import com.huaren.logistics.info.InfoActivity;
 import com.huaren.logistics.recycleinput.RecycleInputActivity;
 import com.huaren.logistics.recyclescan.RecycleScanDetailActivity;
 import com.huaren.logistics.uncargo.UnCargoActivity;
+import com.huaren.logistics.uploadcargo.UploadCargoActivity;
+
 import java.util.List;
 
 public class MainActivity extends BaseActivity implements MainView, AdapterView.OnItemClickListener {
@@ -126,6 +128,11 @@ public class MainActivity extends BaseActivity implements MainView, AdapterView.
 
     @Override public void enterRecycleScan() {
         startActivity(new Intent(this, RecycleScanDetailActivity.class));
+    }
+
+    @Override
+    public void enterUploadRecord() {
+        startActivity(new Intent(this, UploadCargoActivity.class));
     }
 
     @Override public void onItemClick(AdapterView<?> parent, View view, int position, long id) {

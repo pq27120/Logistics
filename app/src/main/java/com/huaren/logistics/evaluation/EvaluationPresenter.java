@@ -8,6 +8,8 @@ import com.huaren.logistics.LogisticsApplication;
 import com.huaren.logistics.R;
 import com.huaren.logistics.bean.OrderBatch;
 import com.huaren.logistics.dao.OrderBatchDao;
+import com.huaren.logistics.util.CommonTool;
+
 import java.util.List;
 
 public class EvaluationPresenter {
@@ -19,9 +21,10 @@ public class EvaluationPresenter {
 
   public void initCargoList() {
     OrderBatchDao orderBatchDao = LogisticsApplication.getInstance().getOrderBatchDao();
+    String userName = CommonTool.getSharePreference((Context) evaluationView, "userName");
     List<OrderBatch> orderBatchList =
         orderBatchDao.queryBuilder().where(OrderBatchDao.Properties.Status.eq("1"),
-            OrderBatchDao.Properties.CanEvalutaion.eq("1")).list();
+            OrderBatchDao.Properties.CanEvalutaion.eq("1"), OrderBatchDao.Properties.UserName.eq(userName)).list();
     for (int i = 0; i < orderBatchList.size(); i++) {
       OrderBatch orderBatch = orderBatchList.get(i);
       String desc = "未评价";

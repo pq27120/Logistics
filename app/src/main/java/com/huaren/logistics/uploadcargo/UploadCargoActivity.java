@@ -27,7 +27,6 @@ public class UploadCargoActivity extends BaseActivity implements IUploadCargoVie
     ((TextView) findViewById(R.id.tv_common_title)).setText(R.string.upload_cargo);
     presenter = new UploadCargoPresenter(this);
     presenter.uploadOrderData();
-    presenter.uploadEvaluationData();
     uploadButton.setOnClickListener(new UpdateButtonClick());
   }
 
@@ -58,7 +57,6 @@ public class UploadCargoActivity extends BaseActivity implements IUploadCargoVie
   private class UpdateButtonClick implements View.OnClickListener {
     @Override public void onClick(View v) {
       presenter.uploadOrderData();
-      presenter.uploadEvaluationData();
     }
   }
 }

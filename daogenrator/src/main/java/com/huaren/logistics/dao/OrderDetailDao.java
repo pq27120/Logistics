@@ -45,8 +45,12 @@ public class OrderDetailDao extends AbstractDao<OrderDetail, String> {
         public final static Property Uom = new Property(19, String.class, "uom", false, "UOM");
         public final static Property DetailStatus = new Property(20, String.class, "detailStatus", false, "DETAIL_STATUS");
         public final static Property Status = new Property(21, String.class, "status", false, "STATUS");
-        public final static Property AddTime = new Property(22, java.util.Date.class, "addTime", false, "ADD_TIME");
-        public final static Property EditTime = new Property(23, java.util.Date.class, "editTime", false, "EDIT_TIME");
+        public final static Property RecordUpload = new Property(22, String.class, "recordUpload", false, "RECORD_UPLOAD");
+        public final static Property EvaluationUpload = new Property(23, String.class, "evaluationUpload", false, "EVALUATION_UPLOAD");
+        public final static Property AddTime = new Property(24, java.util.Date.class, "addTime", false, "ADD_TIME");
+        public final static Property EditTime = new Property(25, java.util.Date.class, "editTime", false, "EDIT_TIME");
+        public final static Property UserName = new Property(26, String.class, "userName", false, "USER_NAME");
+        public final static Property Evaluation = new Property(27, String.class, "evaluation", false, "EVALUATION");
     };
 
 
@@ -84,8 +88,12 @@ public class OrderDetailDao extends AbstractDao<OrderDetail, String> {
                 "'UOM' TEXT NOT NULL ," + // 19: uom
                 "'DETAIL_STATUS' TEXT NOT NULL ," + // 20: detailStatus
                 "'STATUS' TEXT NOT NULL ," + // 21: status
-                "'ADD_TIME' INTEGER NOT NULL ," + // 22: addTime
-                "'EDIT_TIME' INTEGER);"); // 23: editTime
+                "'RECORD_UPLOAD' TEXT," + // 22: recordUpload
+                "'EVALUATION_UPLOAD' TEXT," + // 23: evaluationUpload
+                "'ADD_TIME' INTEGER NOT NULL ," + // 24: addTime
+                "'EDIT_TIME' INTEGER," + // 25: editTime
+                "'USER_NAME' TEXT NOT NULL ," + // 26: userName
+                "'EVALUATION' TEXT);"); // 27: evaluation
     }
 
     /** Drops the underlying database table. */
@@ -124,11 +132,27 @@ public class OrderDetailDao extends AbstractDao<OrderDetail, String> {
         stmt.bindString(20, entity.getUom());
         stmt.bindString(21, entity.getDetailStatus());
         stmt.bindString(22, entity.getStatus());
-        stmt.bindLong(23, entity.getAddTime().getTime());
+ 
+        String recordUpload = entity.getRecordUpload();
+        if (recordUpload != null) {
+            stmt.bindString(23, recordUpload);
+        }
+ 
+        String evaluationUpload = entity.getEvaluationUpload();
+        if (evaluationUpload != null) {
+            stmt.bindString(24, evaluationUpload);
+        }
+        stmt.bindLong(25, entity.getAddTime().getTime());
  
         java.util.Date editTime = entity.getEditTime();
         if (editTime != null) {
-            stmt.bindLong(24, editTime.getTime());
+            stmt.bindLong(26, editTime.getTime());
+        }
+        stmt.bindString(27, entity.getUserName());
+ 
+        String evaluation = entity.getEvaluation();
+        if (evaluation != null) {
+            stmt.bindString(28, evaluation);
         }
     }
 
@@ -164,8 +188,12 @@ public class OrderDetailDao extends AbstractDao<OrderDetail, String> {
             cursor.getString(offset + 19), // uom
             cursor.getString(offset + 20), // detailStatus
             cursor.getString(offset + 21), // status
-            new java.util.Date(cursor.getLong(offset + 22)), // addTime
-            cursor.isNull(offset + 23) ? null : new java.util.Date(cursor.getLong(offset + 23)) // editTime
+            cursor.isNull(offset + 22) ? null : cursor.getString(offset + 22), // recordUpload
+            cursor.isNull(offset + 23) ? null : cursor.getString(offset + 23), // evaluationUpload
+            new java.util.Date(cursor.getLong(offset + 24)), // addTime
+            cursor.isNull(offset + 25) ? null : new java.util.Date(cursor.getLong(offset + 25)), // editTime
+            cursor.getString(offset + 26), // userName
+            cursor.isNull(offset + 27) ? null : cursor.getString(offset + 27) // evaluation
         );
         return entity;
     }
@@ -195,8 +223,12 @@ public class OrderDetailDao extends AbstractDao<OrderDetail, String> {
         entity.setUom(cursor.getString(offset + 19));
         entity.setDetailStatus(cursor.getString(offset + 20));
         entity.setStatus(cursor.getString(offset + 21));
-        entity.setAddTime(new java.util.Date(cursor.getLong(offset + 22)));
-        entity.setEditTime(cursor.isNull(offset + 23) ? null : new java.util.Date(cursor.getLong(offset + 23)));
+        entity.setRecordUpload(cursor.isNull(offset + 22) ? null : cursor.getString(offset + 22));
+        entity.setEvaluationUpload(cursor.isNull(offset + 23) ? null : cursor.getString(offset + 23));
+        entity.setAddTime(new java.util.Date(cursor.getLong(offset + 24)));
+        entity.setEditTime(cursor.isNull(offset + 25) ? null : new java.util.Date(cursor.getLong(offset + 25)));
+        entity.setUserName(cursor.getString(offset + 26));
+        entity.setEvaluation(cursor.isNull(offset + 27) ? null : cursor.getString(offset + 27));
      }
     
     /** @inheritdoc */

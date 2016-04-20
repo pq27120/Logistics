@@ -9,6 +9,8 @@ public class DownBatchInfo implements java.io.Serializable {
     private Long lPdtgBatch;
     /** Not-null value. */
     private java.util.Date addTime;
+    /** Not-null value. */
+    private String userName;
 
     public DownBatchInfo() {
     }
@@ -17,9 +19,10 @@ public class DownBatchInfo implements java.io.Serializable {
         this.lPdtgBatch = lPdtgBatch;
     }
 
-    public DownBatchInfo(Long lPdtgBatch, java.util.Date addTime) {
+    public DownBatchInfo(Long lPdtgBatch, java.util.Date addTime, String userName) {
         this.lPdtgBatch = lPdtgBatch;
         this.addTime = addTime;
+        this.userName = userName;
     }
 
     public Long getLPdtgBatch() {
@@ -38,6 +41,16 @@ public class DownBatchInfo implements java.io.Serializable {
     /** Not-null value; ensure this value is available before it is saved to the database. */
     public void setAddTime(java.util.Date addTime) {
         this.addTime = addTime;
+    }
+
+    /** Not-null value. */
+    public String getUserName() {
+        return userName;
+    }
+
+    /** Not-null value; ensure this value is available before it is saved to the database. */
+    public void setUserName(String userName) {
+        this.userName = userName;
     }
 
 }

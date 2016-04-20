@@ -117,6 +117,7 @@ public class MainPresenter implements OnFinishedListener {
         mainView.enterRecycleScan();
         break;
       case 7:
+        mainView.enterUploadRecord();
         break;
       case 8:
         mainView.enterInfo();

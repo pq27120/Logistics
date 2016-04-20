@@ -45,4 +45,6 @@ public interface MainView {
     void enterRecycle();
 
     void enterRecycleScan();
+
+    void enterUploadRecord();
 }

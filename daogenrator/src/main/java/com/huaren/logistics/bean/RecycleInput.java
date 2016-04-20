@@ -23,6 +23,8 @@ public class RecycleInput {
     /** Not-null value. */
     private java.util.Date recycleTime;
     private java.util.Date editTime;
+    /** Not-null value. */
+    private String userName;
 
     public RecycleInput() {
     }
@@ -31,7 +33,7 @@ public class RecycleInput {
         this.id = id;
     }
 
-    public RecycleInput(Long id, String orderBatchId, String cooperateId, int lPdtgBatch, String driversID, int recycleNum, long recycleType, String recycleTypeValue, String status, java.util.Date recycleTime, java.util.Date editTime) {
+    public RecycleInput(Long id, String orderBatchId, String cooperateId, int lPdtgBatch, String driversID, int recycleNum, long recycleType, String recycleTypeValue, String status, java.util.Date recycleTime, java.util.Date editTime, String userName) {
         this.id = id;
         this.orderBatchId = orderBatchId;
         this.cooperateId = cooperateId;
@@ -43,6 +45,7 @@ public class RecycleInput {
         this.status = status;
         this.recycleTime = recycleTime;
         this.editTime = editTime;
+        this.userName = userName;
     }
 
     public Long getId() {
@@ -143,6 +146,16 @@ public class RecycleInput {
 
     public void setEditTime(java.util.Date editTime) {
         this.editTime = editTime;
+    }
+
+    /** Not-null value. */
+    public String getUserName() {
+        return userName;
+    }
+
+    /** Not-null value; ensure this value is available before it is saved to the database. */
+    public void setUserName(String userName) {
+        this.userName = userName;
     }
 
 }

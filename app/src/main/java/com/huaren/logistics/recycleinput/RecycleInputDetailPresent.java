@@ -11,6 +11,7 @@ import com.huaren.logistics.bean.SysDicValue;
 import com.huaren.logistics.dao.OrderBatchDao;
 import com.huaren.logistics.dao.RecycleInputDao;
 import com.huaren.logistics.dao.SysDicValueDao;
+import com.huaren.logistics.util.CommonTool;
 import com.huaren.logistics.util.UiTool;
 import de.greenrobot.dao.query.QueryBuilder;
 import java.util.Date;
@@ -39,10 +40,11 @@ public class RecycleInputDetailPresent {
       UiTool.showToast((Context) recycleInputDetailInputView, "货物件数必须为整数！");
       return;
     }
+    String userName = CommonTool.getSharePreference((Context) recycleInputDetailInputView, "userName");
     RecycleInput recycleInput = recycleInputDao.queryBuilder()
         .where(RecycleInputDao.Properties.OrderBatchId.eq(orderBatchId),
             RecycleInputDao.Properties.RecycleType.eq(sysDicValue.getId()),
-            RecycleInputDao.Properties.Status.eq("1")).unique();
+            RecycleInputDao.Properties.Status.eq("1"), RecycleInputDao.Properties.UserName.eq(userName)).unique();
     if (recycleInput != null) {
       recycleInputDetailInputView.showDialog("回收录入", "已经录入过回收数据，确认覆盖？", recycleInput);
     } else {
@@ -54,15 +56,17 @@ public class RecycleInputDetailPresent {
   }
 
   private void insertRecycleInput(String orderBatchId, SysDicValue sysDicValue, String inputNum) {
+    String userName = CommonTool.getSharePreference((Context) recycleInputDetailInputView, "userName");
     RecycleInput recycleInput = new RecycleInput();
     recycleInput.setRecycleNum(Integer.valueOf(inputNum));
     recycleInput.setRecycleTime(new Date());
     recycleInput.setStatus("1");
+    recycleInput.setUserName(userName);
     recycleInput.setOrderBatchId(orderBatchId);
     recycleInput.setRecycleType(sysDicValue.getId());
     recycleInput.setRecycleTypeValue(sysDicValue.getMyDisplayValue());
     OrderBatch orderBatch = LogisticsApplication.getInstance().getOrderBatchDao().queryBuilder().where(
-        OrderBatchDao.Properties.Id.eq(orderBatchId), OrderBatchDao.Properties.Status.eq("1")).unique();
+        OrderBatchDao.Properties.Id.eq(orderBatchId), OrderBatchDao.Properties.Status.eq("1"), OrderBatchDao.Properties.UserName.eq(userName)).unique();
     if (orderBatch != null) {
       recycleInput.setCooperateId(orderBatch.getCooperateId());
       recycleInput.setDriversID(orderBatch.getDriversID());
@@ -87,9 +91,10 @@ public class RecycleInputDetailPresent {
 
   public void initRecycleInputList(String orderBatchId) {
     RecycleInputDao recycleInputDao = LogisticsApplication.getInstance().getRecycleInputDao();
+    String userName = CommonTool.getSharePreference((Context) recycleInputDetailInputView, "userName");
     List<RecycleInput> recycleInputList = recycleInputDao.queryBuilder()
         .where(RecycleInputDao.Properties.OrderBatchId.eq(orderBatchId),
-            RecycleInputDao.Properties.Status.eq("1"))
+            RecycleInputDao.Properties.Status.eq("1"), RecycleInputDao.Properties.UserName.eq(userName))
         .list();
     for (int i = 0; i < recycleInputList.size(); i++) {
       RecycleInput recycleInput = recycleInputList.get(i);

@@ -85,6 +85,7 @@
           android:layout_weight="2"
           android:layout_marginLeft="10dp"
           android:maxLength="8"
+          android:inputType="textPassword"
           />
 
       <com.gc.materialdesign.views.ButtonRectangle

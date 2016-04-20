@@ -33,6 +33,7 @@ public class OrderBatchDao extends AbstractDao<OrderBatch, String> {
         public final static Property Status = new Property(7, String.class, "status", false, "STATUS");
         public final static Property AddTime = new Property(8, java.util.Date.class, "addTime", false, "ADD_TIME");
         public final static Property EditTime = new Property(9, java.util.Date.class, "editTime", false, "EDIT_TIME");
+        public final static Property UserName = new Property(10, String.class, "userName", false, "USER_NAME");
     };
 
 
@@ -57,7 +58,8 @@ public class OrderBatchDao extends AbstractDao<OrderBatch, String> {
                 "'CAN_EVALUTAION' TEXT," + // 6: canEvalutaion
                 "'STATUS' TEXT NOT NULL ," + // 7: status
                 "'ADD_TIME' INTEGER NOT NULL ," + // 8: addTime
-                "'EDIT_TIME' INTEGER);"); // 9: editTime
+                "'EDIT_TIME' INTEGER," + // 9: editTime
+                "'USER_NAME' TEXT NOT NULL );"); // 10: userName
     }
 
     /** Drops the underlying database table. */
@@ -100,6 +102,7 @@ public class OrderBatchDao extends AbstractDao<OrderBatch, String> {
         if (editTime != null) {
             stmt.bindLong(10, editTime.getTime());
         }
+        stmt.bindString(11, entity.getUserName());
     }
 
     /** @inheritdoc */
@@ -121,7 +124,8 @@ public class OrderBatchDao extends AbstractDao<OrderBatch, String> {
             cursor.isNull(offset + 6) ? null : cursor.getString(offset + 6), // canEvalutaion
             cursor.getString(offset + 7), // status
             new java.util.Date(cursor.getLong(offset + 8)), // addTime
-            cursor.isNull(offset + 9) ? null : new java.util.Date(cursor.getLong(offset + 9)) // editTime
+            cursor.isNull(offset + 9) ? null : new java.util.Date(cursor.getLong(offset + 9)), // editTime
+            cursor.getString(offset + 10) // userName
         );
         return entity;
     }
@@ -139,6 +143,7 @@ public class OrderBatchDao extends AbstractDao<OrderBatch, String> {
         entity.setStatus(cursor.getString(offset + 7));
         entity.setAddTime(new java.util.Date(cursor.getLong(offset + 8)));
         entity.setEditTime(cursor.isNull(offset + 9) ? null : new java.util.Date(cursor.getLong(offset + 9)));
+        entity.setUserName(cursor.getString(offset + 10));
      }
     
     /** @inheritdoc */

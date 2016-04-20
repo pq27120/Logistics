@@ -62,11 +62,13 @@ public class GreenDaoGenerator {
     customer.addStringProperty("status").notNull();//0 停用 1 启用
     customer.addDateProperty("addTime").notNull();
     customer.addDateProperty("editTime");
+    customer.addStringProperty("userName").notNull();
 
     Entity downBatchInfo = schema.addEntity("DownBatchInfo");
     downBatchInfo.implementsSerializable();
     downBatchInfo.addLongProperty("lPdtgBatch").primaryKey();//当前批次
     downBatchInfo.addDateProperty("addTime").notNull();
+    downBatchInfo.addStringProperty("userName").notNull();
 
     Entity batchInfo = schema.addEntity("OrderBatch");
     batchInfo.implementsSerializable();
@@ -80,6 +82,7 @@ public class GreenDaoGenerator {
     batchInfo.addStringProperty("status").notNull();//0 停用 1 启用
     batchInfo.addDateProperty("addTime").notNull();
     batchInfo.addDateProperty("editTime");
+    batchInfo.addStringProperty("userName").notNull();
 
     Entity orderDetail = schema.addEntity("OrderDetail");//订单详情
     orderDetail.implementsSerializable();
@@ -105,8 +108,12 @@ public class GreenDaoGenerator {
     orderDetail.addStringProperty("uom").notNull();//
     orderDetail.addStringProperty("detailStatus").notNull();
     orderDetail.addStringProperty("status").notNull();//0 停用 1 启用
+    orderDetail.addStringProperty("recordUpload");//0 未上传 1 已上传
+    orderDetail.addStringProperty("evaluationUpload");//0 未上传 1 已上传
     orderDetail.addDateProperty("addTime").notNull();
     orderDetail.addDateProperty("editTime");
+    orderDetail.addStringProperty("userName").notNull();
+    orderDetail.addStringProperty("evaluation"); //评价信息冗余
 
     Entity recycleInput = schema.addEntity("RecycleInput"); //回收录入信息
     recycleInput.addIdProperty();
@@ -120,6 +127,7 @@ public class GreenDaoGenerator {
     recycleInput.addStringProperty("status").notNull();//0 停用 1 启用
     recycleInput.addDateProperty("recycleTime").notNull();//回收录入时间
     recycleInput.addDateProperty("editTime");
+    recycleInput.addStringProperty("userName").notNull();
 
     Entity recycleScan = schema.addEntity("RecycleScan"); //回收扫描信息
     recycleScan.addIdProperty();
@@ -128,5 +136,21 @@ public class GreenDaoGenerator {
     recycleScan.addStringProperty("scanCode").notNull();
     recycleScan.addStringProperty("status").notNull();//0 停用 1 启用
     recycleScan.addDateProperty("editTime");
+    recycleScan.addStringProperty("userName").notNull();
+
+    Entity OperatorLog = schema.addEntity("OperatorLog"); //操作日志信息
+    OperatorLog.addIdProperty();
+    OperatorLog.addStringProperty("userName").notNull();//用户名
+    OperatorLog.addStringProperty("myType").notNull();//操作状态
+    OperatorLog.addFloatProperty("longitude").notNull();//经度
+    OperatorLog.addFloatProperty("latitude").notNull();//纬度
+    OperatorLog.addIntProperty("lPdtgBatch").notNull();//批次
+    OperatorLog.addStringProperty("myNote");//备注
+    OperatorLog.addStringProperty("dispatchNumber").notNull(); //调度单号
+    OperatorLog.addStringProperty("orderId").notNull(); //订单号
+    OperatorLog.addDateProperty("editTime");
+    OperatorLog.addStringProperty("operType").notNull(); // 1 操作 2 评价
+    OperatorLog.addStringProperty("pingjianeirong"); // 评价内容
+    OperatorLog.addStringProperty("detailId"); // 明细ID
   }
 }

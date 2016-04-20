@@ -48,9 +48,14 @@ public class OrderDetail implements java.io.Serializable {
     private String detailStatus;
     /** Not-null value. */
     private String status;
+    private String recordUpload;
+    private String evaluationUpload;
     /** Not-null value. */
     private java.util.Date addTime;
     private java.util.Date editTime;
+    /** Not-null value. */
+    private String userName;
+    private String evaluation;
 
     public OrderDetail() {
     }
@@ -59,7 +64,7 @@ public class OrderDetail implements java.io.Serializable {
         this.detailId = detailId;
     }
 
-    public OrderDetail(String detailId, String customerId, String cooperateId, String dispatchNumber, String dispatchCreatTime, String driversID, String sPdtgEmplname, String sPdtgEmplname2, String suicherenyuanID, String suicherenyuanID2, String sPdtgEmplname3, String sPdtgVehicleno, String countPieces, int lPdtgBatch, String ordered, String orderId, String waveKey, String lpn, String mtype, String uom, String detailStatus, String status, java.util.Date addTime, java.util.Date editTime) {
+    public OrderDetail(String detailId, String customerId, String cooperateId, String dispatchNumber, String dispatchCreatTime, String driversID, String sPdtgEmplname, String sPdtgEmplname2, String suicherenyuanID, String suicherenyuanID2, String sPdtgEmplname3, String sPdtgVehicleno, String countPieces, int lPdtgBatch, String ordered, String orderId, String waveKey, String lpn, String mtype, String uom, String detailStatus, String status, String recordUpload, String evaluationUpload, java.util.Date addTime, java.util.Date editTime, String userName, String evaluation) {
         this.detailId = detailId;
         this.customerId = customerId;
         this.cooperateId = cooperateId;
@@ -82,8 +87,12 @@ public class OrderDetail implements java.io.Serializable {
         this.uom = uom;
         this.detailStatus = detailStatus;
         this.status = status;
+        this.recordUpload = recordUpload;
+        this.evaluationUpload = evaluationUpload;
         this.addTime = addTime;
         this.editTime = editTime;
+        this.userName = userName;
+        this.evaluation = evaluation;
     }
 
     public String getDetailId() {
@@ -302,6 +311,22 @@ public class OrderDetail implements java.io.Serializable {
         this.status = status;
     }
 
+    public String getRecordUpload() {
+        return recordUpload;
+    }
+
+    public void setRecordUpload(String recordUpload) {
+        this.recordUpload = recordUpload;
+    }
+
+    public String getEvaluationUpload() {
+        return evaluationUpload;
+    }
+
+    public void setEvaluationUpload(String evaluationUpload) {
+        this.evaluationUpload = evaluationUpload;
+    }
+
     /** Not-null value. */
     public java.util.Date getAddTime() {
         return addTime;
@@ -318,6 +343,24 @@ public class OrderDetail implements java.io.Serializable {
 
     public void setEditTime(java.util.Date editTime) {
         this.editTime = editTime;
+    }
+
+    /** Not-null value. */
+    public String getUserName() {
+        return userName;
+    }
+
+    /** Not-null value; ensure this value is available before it is saved to the database. */
+    public void setUserName(String userName) {
+        this.userName = userName;
+    }
+
+    public String getEvaluation() {
+        return evaluation;
+    }
+
+    public void setEvaluation(String evaluation) {
+        this.evaluation = evaluation;
     }
 
 }

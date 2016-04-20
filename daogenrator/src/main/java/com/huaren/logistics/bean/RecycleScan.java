@@ -15,6 +15,8 @@ public class RecycleScan {
     /** Not-null value. */
     private String status;
     private java.util.Date editTime;
+    /** Not-null value. */
+    private String userName;
 
     public RecycleScan() {
     }
@@ -23,13 +25,14 @@ public class RecycleScan {
         this.id = id;
     }
 
-    public RecycleScan(Long id, int lPdtgBatch, java.util.Date recycleScanTime, String scanCode, String status, java.util.Date editTime) {
+    public RecycleScan(Long id, int lPdtgBatch, java.util.Date recycleScanTime, String scanCode, String status, java.util.Date editTime, String userName) {
         this.id = id;
         this.lPdtgBatch = lPdtgBatch;
         this.recycleScanTime = recycleScanTime;
         this.scanCode = scanCode;
         this.status = status;
         this.editTime = editTime;
+        this.userName = userName;
     }
 
     public Long getId() {
@@ -84,6 +87,16 @@ public class RecycleScan {
 
     public void setEditTime(java.util.Date editTime) {
         this.editTime = editTime;
+    }
+
+    /** Not-null value. */
+    public String getUserName() {
+        return userName;
+    }
+
+    /** Not-null value; ensure this value is available before it is saved to the database. */
+    public void setUserName(String userName) {
+        this.userName = userName;
     }
 
 }

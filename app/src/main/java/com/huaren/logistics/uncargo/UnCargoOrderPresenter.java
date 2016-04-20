@@ -5,9 +5,11 @@ import com.dexafree.materialList.card.Card;
 import com.dexafree.materialList.card.provider.SmallImageCardProvider;
 import com.huaren.logistics.LogisticsApplication;
 import com.huaren.logistics.R;
+import com.huaren.logistics.bean.OperatorLog;
 import com.huaren.logistics.bean.OrderBatch;
 import com.huaren.logistics.bean.OrderDetail;
 import com.huaren.logistics.common.OrderStatusEnum;
+import com.huaren.logistics.dao.OperatorLogDao;
 import com.huaren.logistics.dao.OrderBatchDao;
 import com.huaren.logistics.dao.OrderDetailDao;
 import com.huaren.logistics.evaluation.EvaluationDetailActivity;
@@ -28,10 +30,11 @@ public class UnCargoOrderPresenter {
 
   public void initCargoOrder(String customerId) {
     OrderDetailDao logisticsOrderDao = LogisticsApplication.getInstance().getOrderDetailDao();
+    String userName = CommonTool.getSharePreference((Context) cargoOrderView, "userName");
     List<OrderDetail> logisticsOrderList = logisticsOrderDao.queryBuilder()
         .where(OrderDetailDao.Properties.CustomerId.eq(customerId),
             OrderDetailDao.Properties.DetailStatus.eq(OrderStatusEnum.CARGO.getStatus()),
-            OrderDetailDao.Properties.Status.eq("1"))
+            OrderDetailDao.Properties.Status.eq("1"), OrderDetailDao.Properties.UserName.eq(userName))
         .list();
     for (int i = 0; i < logisticsOrderList.size(); i++) {
       OrderDetail orderDetail = logisticsOrderList.get(i);
@@ -52,8 +55,9 @@ public class UnCargoOrderPresenter {
     if (StringTool.isNotNull(detailCode)) {
       OrderDetailDao orderDetailDao = LogisticsApplication.getInstance().getOrderDetailDao();
       QueryBuilder qb = orderDetailDao.queryBuilder();
+      String userName = CommonTool.getSharePreference((Context) cargoOrderView, "userName");
       qb.where(OrderDetailDao.Properties.Lpn.eq(detailCode),
-          OrderDetailDao.Properties.Status.eq("1"));
+          OrderDetailDao.Properties.Status.eq("1"), OrderDetailDao.Properties.UserName.eq(userName));
       List<OrderDetail> orderDetailList = qb.list();
       if (orderDetailList != null && !orderDetailList.isEmpty()) {
         OrderDetail orderDetail = orderDetailList.get(0);
@@ -85,19 +89,34 @@ public class UnCargoOrderPresenter {
   public void updateOrderCargo(String detailId) {
     OrderDetailDao orderDetailDao = LogisticsApplication.getInstance().getOrderDetailDao();
     QueryBuilder qb = orderDetailDao.queryBuilder();
-    qb.where(OrderDetailDao.Properties.Lpn.eq(detailId), OrderDetailDao.Properties.Status.eq("1"));
+    String userName = CommonTool.getSharePreference((Context) cargoOrderView, "userName");
+    qb.where(OrderDetailDao.Properties.Lpn.eq(detailId), OrderDetailDao.Properties.Status.eq("1"), OrderDetailDao.Properties.UserName.eq(userName));
     List<OrderDetail> orderDetailList = qb.list();
     if (orderDetailList != null && !orderDetailList.isEmpty()) {
       OrderDetail orderDetail = orderDetailList.get(0);
       orderDetail.setDetailStatus(OrderStatusEnum.UNCARGO.getStatus());
       orderDetail.setEditTime(new Date());
       orderDetailDao.insertOrReplaceInTx(orderDetail);
+
+      OperatorLogDao operatorLogDao = LogisticsApplication.getInstance().getOperatorLogDao();
+      OperatorLog operatorLog = new OperatorLog();
+      operatorLog.setOperType("1");
+      operatorLog.setUserName(userName);
+      operatorLog.setDispatchNumber(orderDetail.getDispatchNumber());
+      operatorLog.setEditTime(new Date());
+      operatorLog.setLatitude(0);
+      operatorLog.setLongitude(0);
+      operatorLog.setLPdtgBatch(orderDetail.getLPdtgBatch());
+      operatorLog.setMyType("1");
+      operatorLog.setOrderId(orderDetail.getOrderId());
+      operatorLogDao.insert(operatorLog);
+
       LogisticsApplication.getInstance().getSoundPoolUtil().playRight();
       OrderBatchDao orderBatchDao = LogisticsApplication.getInstance().getOrderBatchDao();
       OrderBatch orderBatch = orderBatchDao.queryBuilder()
           .where(OrderBatchDao.Properties.Id.eq(orderDetail.getCooperateId()
               + orderDetail.getLPdtgBatch()
-              + orderDetail.getDriversID()), OrderBatchDao.Properties.Status.eq("1"))
+              + orderDetail.getDriversID()), OrderBatchDao.Properties.Status.eq("1"), OrderBatchDao.Properties.UserName.eq(userName))
           .unique();
       orderBatch.setCanEvalutaion("1");
       orderBatch.setEditTime(new Date());
@@ -108,7 +127,7 @@ public class UnCargoOrderPresenter {
               OrderDetailDao.Properties.LPdtgBatch.eq(orderDetail.getLPdtgBatch()),
               OrderDetailDao.Properties.DetailId.notEq(orderDetail.getDetailId()),
               OrderDetailDao.Properties.DetailStatus.notEq(OrderStatusEnum.UNCARGO.getStatus()),
-              OrderDetailDao.Properties.Status.eq("1"))
+              OrderDetailDao.Properties.Status.eq("1"), OrderDetailDao.Properties.UserName.eq(userName))
           .list();
       if (evaluationDetailList == null || evaluationDetailList.isEmpty()) {
         EvaluationDetailActivity.actionStart((Context) cargoOrderView, orderDetail.getCooperateId()

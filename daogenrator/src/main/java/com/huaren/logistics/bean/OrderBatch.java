@@ -20,6 +20,8 @@ public class OrderBatch implements java.io.Serializable {
     /** Not-null value. */
     private java.util.Date addTime;
     private java.util.Date editTime;
+    /** Not-null value. */
+    private String userName;
 
     public OrderBatch() {
     }
@@ -28,7 +30,7 @@ public class OrderBatch implements java.io.Serializable {
         this.id = id;
     }
 
-    public OrderBatch(String id, String cooperateId, String sPdtgCustfullname, int lPdtgBatch, String driversID, String evaluation, String canEvalutaion, String status, java.util.Date addTime, java.util.Date editTime) {
+    public OrderBatch(String id, String cooperateId, String sPdtgCustfullname, int lPdtgBatch, String driversID, String evaluation, String canEvalutaion, String status, java.util.Date addTime, java.util.Date editTime, String userName) {
         this.id = id;
         this.cooperateId = cooperateId;
         this.sPdtgCustfullname = sPdtgCustfullname;
@@ -39,6 +41,7 @@ public class OrderBatch implements java.io.Serializable {
         this.status = status;
         this.addTime = addTime;
         this.editTime = editTime;
+        this.userName = userName;
     }
 
     public String getId() {
@@ -127,6 +130,16 @@ public class OrderBatch implements java.io.Serializable {
 
     public void setEditTime(java.util.Date editTime) {
         this.editTime = editTime;
+    }
+
+    /** Not-null value. */
+    public String getUserName() {
+        return userName;
+    }
+
+    /** Not-null value; ensure this value is available before it is saved to the database. */
+    public void setUserName(String userName) {
+        this.userName = userName;
     }
 
 }

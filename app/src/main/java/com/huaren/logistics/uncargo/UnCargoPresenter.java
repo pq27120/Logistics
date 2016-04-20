@@ -10,6 +10,8 @@ import com.huaren.logistics.bean.OrderDetail;
 import com.huaren.logistics.common.OrderStatusEnum;
 import com.huaren.logistics.dao.CustomerDao;
 import com.huaren.logistics.dao.OrderDetailDao;
+import com.huaren.logistics.util.CommonTool;
+
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -24,8 +26,9 @@ public class UnCargoPresenter {
 
   public void initCargoList() {
     CustomerDao customerDao = LogisticsApplication.getInstance().getCustomerDao();
+    String userName = CommonTool.getSharePreference((Context) unCargoView, "userName");
     List<Customer> customerList =
-        customerDao.queryBuilder().where(CustomerDao.Properties.Status.eq("1")).list();
+        customerDao.queryBuilder().where(CustomerDao.Properties.Status.eq("1"), CustomerDao.Properties.UserName.eq(userName)).list();
     for (int i = 0; i < customerList.size(); i++) {
       Customer customer = customerList.get(i);
       Map<String, Integer> countMap = countLoadOrder(customer);
@@ -56,9 +59,10 @@ public class UnCargoPresenter {
   private Map<String, Integer> countLoadOrder(Customer customer) {
     OrderDetailDao orderDetailDao = LogisticsApplication.getInstance().getOrderDetailDao();
     int total = 0, loadCount = 0, unLoadCount = 0;
+    String userName = CommonTool.getSharePreference((Context) unCargoView, "userName");
     List<OrderDetail> orderDetailList = orderDetailDao.queryBuilder()
         .where(OrderDetailDao.Properties.CustomerId.eq(customer.getId()),
-            OrderDetailDao.Properties.Status.eq("1"))
+            OrderDetailDao.Properties.Status.eq("1"), OrderDetailDao.Properties.UserName.eq(userName))
         .list();
     if (orderDetailList != null && !orderDetailList.isEmpty()) {
       total = orderDetailList.size();

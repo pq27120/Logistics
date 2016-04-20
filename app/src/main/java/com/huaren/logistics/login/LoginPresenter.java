@@ -19,6 +19,7 @@
 package com.huaren.logistics.login;
 
 import android.content.Context;
+
 import com.huaren.logistics.LogisticsApplication;
 import com.huaren.logistics.bean.LogisticsUser;
 import com.huaren.logistics.dao.LogisticsUserDao;
@@ -26,61 +27,63 @@ import com.huaren.logistics.util.CommonTool;
 import com.huaren.logistics.util.MD5Util;
 import com.huaren.logistics.util.StringTool;
 import com.huaren.logistics.util.UiTool;
+
 import java.util.List;
 
 public class LoginPresenter {
 
-  private LoginView loginView;
+    private LoginView loginView;
 
-  public LoginPresenter(final LoginView loginView) {
-    this.loginView = loginView;
-  }
-
-  public void validateCredentials(String username, String password) {
-    if (loginView != null) {
-      loginView.showProgress();
+    public LoginPresenter(final LoginView loginView) {
+        this.loginView = loginView;
     }
-    LogisticsUserDao userDao = LogisticsApplication.getInstance().getLogisticsUserDao();
-    String md5Pass = MD5Util.MD5(password);
-    List<LogisticsUser> list = userDao.queryBuilder()
-        .where(LogisticsUserDao.Properties.UserName.eq(username)
-            ,LogisticsUserDao.Properties.Pwd.eq(md5Pass)
-        )
-        .list();
-    if (list != null && !list.isEmpty()) {
-      LogisticsUser logisticsUser = list.get(0);
-      CommonTool.setSharePreference((Context) loginView, "curUserName", username);
-      CommonTool.setSharePreference((Context) loginView, "driverId", logisticsUser.getDriverId());
-      loginView.navigateToHome();
-    }else{
-      LogisticsApplication.getInstance().getSoundPoolUtil().playWrong();
-      UiTool.showToast((Context)loginView, "用户名或密码错误，请重新输入！");
-      loginView.clearPasswordEt();
-    }
-  }
 
-  public void remmemberUserName(String userName, boolean isCheck) {
-    if (isCheck) {
-      CommonTool.setSharePreference((Context) loginView, "userName", userName);
-      CommonTool.setSharePreference((Context) loginView, "rememberUser", "true");
-    } else {
-      CommonTool.setSharePreference((Context) loginView, "userName", "");
-      CommonTool.setSharePreference((Context) loginView, "rememberUser", "false");
+    public void validateCredentials(String username, String password) {
+        if (loginView != null) {
+            loginView.showProgress();
+        }
+        LogisticsUserDao userDao = LogisticsApplication.getInstance().getLogisticsUserDao();
+        String md5Pass = MD5Util.MD5(password);
+        CommonTool.showLog(md5Pass);
+        List<LogisticsUser> list = userDao.queryBuilder()
+                .where(LogisticsUserDao.Properties.UserName.eq(username)
+                        , LogisticsUserDao.Properties.Pwd.eq(md5Pass)
+                )
+                .list();
+        if (list != null && !list.isEmpty()) {
+            LogisticsUser logisticsUser = list.get(0);
+            CommonTool.setSharePreference((Context) loginView, "curUserName", username);
+            CommonTool.setSharePreference((Context) loginView, "driverId", logisticsUser.getDriverId());
+            loginView.navigateToHome();
+        } else {
+            LogisticsApplication.getInstance().getSoundPoolUtil().playWrong();
+            UiTool.showToast((Context) loginView, "用户名或密码错误，请重新输入！");
+            loginView.clearPasswordEt();
+        }
     }
-  }
 
-  public void onDestroy() {
-    loginView = null;
-  }
-
-  public void initUsername() {
-    String isCheck = CommonTool.getSharePreference((Context) loginView, "rememberUser");
-    if (StringTool.isNotNull(isCheck) && Boolean.valueOf(isCheck)) {
-      String userName = CommonTool.getSharePreference((Context) loginView, "userName");
-      loginView.setRememberCheck(true);
-      loginView.fillRememberUserName(userName);
-    } else {
-      loginView.setRememberCheck(false);
+    public void remmemberUserName(String userName, boolean isCheck) {
+        if (isCheck) {
+            CommonTool.setSharePreference((Context) loginView, "userName", userName);
+            CommonTool.setSharePreference((Context) loginView, "rememberUser", "true");
+        } else {
+            CommonTool.setSharePreference((Context) loginView, "userName", "");
+            CommonTool.setSharePreference((Context) loginView, "rememberUser", "false");
+        }
     }
-  }
+
+    public void onDestroy() {
+        loginView = null;
+    }
+
+    public void initUsername() {
+        String isCheck = CommonTool.getSharePreference((Context) loginView, "rememberUser");
+        if (StringTool.isNotNull(isCheck) && Boolean.valueOf(isCheck)) {
+            String userName = CommonTool.getSharePreference((Context) loginView, "userName");
+            loginView.setRememberCheck(true);
+            loginView.fillRememberUserName(userName);
+        } else {
+            loginView.setRememberCheck(false);
+        }
+    }
 }

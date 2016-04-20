@@ -1,15 +1,16 @@
 package com.huaren.logistics.recycleinput;
 
 import android.content.Context;
-import android.text.TextUtils;
+
 import com.dexafree.materialList.card.Card;
 import com.dexafree.materialList.card.provider.SmallImageCardProvider;
 import com.huaren.logistics.LogisticsApplication;
-import com.huaren.logistics.R;
 import com.huaren.logistics.bean.OrderBatch;
 import com.huaren.logistics.bean.RecycleInput;
 import com.huaren.logistics.dao.OrderBatchDao;
 import com.huaren.logistics.dao.RecycleInputDao;
+import com.huaren.logistics.util.CommonTool;
+
 import java.util.List;
 
 public class RecycleInputPresenter {
@@ -21,16 +22,17 @@ public class RecycleInputPresenter {
 
   public void initCargoList() {
     OrderBatchDao orderBatchDao = LogisticsApplication.getInstance().getOrderBatchDao();
+    String userName = CommonTool.getSharePreference((Context) evaluationView, "userName");
     List<OrderBatch> orderBatchList = orderBatchDao.queryBuilder()
         .where(OrderBatchDao.Properties.Status.eq("1"),
-            OrderBatchDao.Properties.Evaluation.notEq(""))
+            OrderBatchDao.Properties.Evaluation.notEq(""), OrderBatchDao.Properties.UserName.eq(userName))
         .list();
     for (int i = 0; i < orderBatchList.size(); i++) {
       OrderBatch orderBatch = orderBatchList.get(i);
       String desc = "回收货物";
       RecycleInputDao recycleInputDao = LogisticsApplication.getInstance().getRecycleInputDao();
       List<RecycleInput> recycleInputList = recycleInputDao.queryBuilder()
-          .where(RecycleInputDao.Properties.OrderBatchId.eq(orderBatch.getId()))
+          .where(RecycleInputDao.Properties.OrderBatchId.eq(orderBatch.getId()), RecycleInputDao.Properties.UserName.eq(userName))
           .list();
       int num = 0;
       if (recycleInputList != null && !recycleInputList.isEmpty()) {

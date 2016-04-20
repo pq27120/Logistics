@@ -120,6 +120,13 @@
         android:label="@string/activity_recycle_scan_title"
         />
     <activity
+        android:name=".uploadcargo.UploadCargoActivity"
+        android:configChanges="orientation|keyboardHidden|navigation"
+        android:launchMode="singleTask"
+        android:screenOrientation="portrait"
+        android:label="@string/activity_upload_cargo_title"
+        />
+    <activity
         android:name=".info.InfoActivity"
         android:configChanges="orientation|keyboardHidden|navigation"
         android:launchMode="singleTask"

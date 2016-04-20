@@ -3,6 +3,7 @@ package com.huaren.logistics.recycleinput;
 import com.dexafree.materialList.card.Card;
 import com.huaren.logistics.bean.RecycleInput;
 import com.huaren.logistics.bean.SysDicValue;
+
 import java.util.List;
 
 public interface IRecycleInputDetailInputView {

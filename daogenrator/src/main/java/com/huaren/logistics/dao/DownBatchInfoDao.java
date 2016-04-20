@@ -25,6 +25,7 @@ public class DownBatchInfoDao extends AbstractDao<DownBatchInfo, Long> {
     public static class Properties {
         public final static Property LPdtgBatch = new Property(0, Long.class, "lPdtgBatch", true, "L_PDTG_BATCH");
         public final static Property AddTime = new Property(1, java.util.Date.class, "addTime", false, "ADD_TIME");
+        public final static Property UserName = new Property(2, String.class, "userName", false, "USER_NAME");
     };
 
 
@@ -41,7 +42,8 @@ public class DownBatchInfoDao extends AbstractDao<DownBatchInfo, Long> {
         String constraint = ifNotExists? "IF NOT EXISTS ": "";
         db.execSQL("CREATE TABLE " + constraint + "'DOWN_BATCH_INFO' (" + //
                 "'L_PDTG_BATCH' INTEGER PRIMARY KEY ," + // 0: lPdtgBatch
-                "'ADD_TIME' INTEGER NOT NULL );"); // 1: addTime
+                "'ADD_TIME' INTEGER NOT NULL ," + // 1: addTime
+                "'USER_NAME' TEXT NOT NULL );"); // 2: userName
     }
 
     /** Drops the underlying database table. */
@@ -60,6 +62,7 @@ public class DownBatchInfoDao extends AbstractDao<DownBatchInfo, Long> {
             stmt.bindLong(1, lPdtgBatch);
         }
         stmt.bindLong(2, entity.getAddTime().getTime());
+        stmt.bindString(3, entity.getUserName());
     }
 
     /** @inheritdoc */
@@ -73,7 +76,8 @@ public class DownBatchInfoDao extends AbstractDao<DownBatchInfo, Long> {
     public DownBatchInfo readEntity(Cursor cursor, int offset) {
         DownBatchInfo entity = new DownBatchInfo( //
             cursor.isNull(offset + 0) ? null : cursor.getLong(offset + 0), // lPdtgBatch
-            new java.util.Date(cursor.getLong(offset + 1)) // addTime
+            new java.util.Date(cursor.getLong(offset + 1)), // addTime
+            cursor.getString(offset + 2) // userName
         );
         return entity;
     }
@@ -83,6 +87,7 @@ public class DownBatchInfoDao extends AbstractDao<DownBatchInfo, Long> {
     public void readEntity(Cursor cursor, DownBatchInfo entity, int offset) {
         entity.setLPdtgBatch(cursor.isNull(offset + 0) ? null : cursor.getLong(offset + 0));
         entity.setAddTime(new java.util.Date(cursor.getLong(offset + 1)));
+        entity.setUserName(cursor.getString(offset + 2));
      }
     
     /** @inheritdoc */

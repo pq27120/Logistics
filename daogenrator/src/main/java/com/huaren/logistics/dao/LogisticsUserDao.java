@@ -45,7 +45,7 @@ public class LogisticsUserDao extends AbstractDao<LogisticsUser, Long> {
                 "'ID' INTEGER PRIMARY KEY ," + // 0: id
                 "'USER_NAME' TEXT NOT NULL ," + // 1: userName
                 "'PWD' TEXT NOT NULL ," + // 2: pwd
-                "'DRIVER_ID' TEXT NOT NULL );"); // 3: driverId
+                "'DRIVER_ID' TEXT);"); // 3: driverId
     }
 
     /** Drops the underlying database table. */
@@ -65,7 +65,11 @@ public class LogisticsUserDao extends AbstractDao<LogisticsUser, Long> {
         }
         stmt.bindString(2, entity.getUserName());
         stmt.bindString(3, entity.getPwd());
-        stmt.bindString(4, entity.getDriverId());
+ 
+        String driverId = entity.getDriverId();
+        if (driverId != null) {
+            stmt.bindString(4, driverId);
+        }
     }
 
     /** @inheritdoc */
@@ -81,7 +85,7 @@ public class LogisticsUserDao extends AbstractDao<LogisticsUser, Long> {
             cursor.isNull(offset + 0) ? null : cursor.getLong(offset + 0), // id
             cursor.getString(offset + 1), // userName
             cursor.getString(offset + 2), // pwd
-            cursor.getString(offset + 3) // driverId
+            cursor.isNull(offset + 3) ? null : cursor.getString(offset + 3) // driverId
         );
         return entity;
     }
@@ -92,7 +96,7 @@ public class LogisticsUserDao extends AbstractDao<LogisticsUser, Long> {
         entity.setId(cursor.isNull(offset + 0) ? null : cursor.getLong(offset + 0));
         entity.setUserName(cursor.getString(offset + 1));
         entity.setPwd(cursor.getString(offset + 2));
-        entity.setDriverId(cursor.getString(offset + 3));
+        entity.setDriverId(cursor.isNull(offset + 3) ? null : cursor.getString(offset + 3));
      }
     
     /** @inheritdoc */

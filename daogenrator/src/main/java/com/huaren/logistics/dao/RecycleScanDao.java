@@ -29,6 +29,7 @@ public class RecycleScanDao extends AbstractDao<RecycleScan, Long> {
         public final static Property ScanCode = new Property(3, String.class, "scanCode", false, "SCAN_CODE");
         public final static Property Status = new Property(4, String.class, "status", false, "STATUS");
         public final static Property EditTime = new Property(5, java.util.Date.class, "editTime", false, "EDIT_TIME");
+        public final static Property UserName = new Property(6, String.class, "userName", false, "USER_NAME");
     };
 
 
@@ -49,7 +50,8 @@ public class RecycleScanDao extends AbstractDao<RecycleScan, Long> {
                 "'RECYCLE_SCAN_TIME' INTEGER NOT NULL ," + // 2: recycleScanTime
                 "'SCAN_CODE' TEXT NOT NULL ," + // 3: scanCode
                 "'STATUS' TEXT NOT NULL ," + // 4: status
-                "'EDIT_TIME' INTEGER);"); // 5: editTime
+                "'EDIT_TIME' INTEGER," + // 5: editTime
+                "'USER_NAME' TEXT NOT NULL );"); // 6: userName
     }
 
     /** Drops the underlying database table. */
@@ -76,6 +78,7 @@ public class RecycleScanDao extends AbstractDao<RecycleScan, Long> {
         if (editTime != null) {
             stmt.bindLong(6, editTime.getTime());
         }
+        stmt.bindString(7, entity.getUserName());
     }
 
     /** @inheritdoc */
@@ -93,7 +96,8 @@ public class RecycleScanDao extends AbstractDao<RecycleScan, Long> {
             new java.util.Date(cursor.getLong(offset + 2)), // recycleScanTime
             cursor.getString(offset + 3), // scanCode
             cursor.getString(offset + 4), // status
-            cursor.isNull(offset + 5) ? null : new java.util.Date(cursor.getLong(offset + 5)) // editTime
+            cursor.isNull(offset + 5) ? null : new java.util.Date(cursor.getLong(offset + 5)), // editTime
+            cursor.getString(offset + 6) // userName
         );
         return entity;
     }
@@ -107,6 +111,7 @@ public class RecycleScanDao extends AbstractDao<RecycleScan, Long> {
         entity.setScanCode(cursor.getString(offset + 3));
         entity.setStatus(cursor.getString(offset + 4));
         entity.setEditTime(cursor.isNull(offset + 5) ? null : new java.util.Date(cursor.getLong(offset + 5)));
+        entity.setUserName(cursor.getString(offset + 6));
      }
     
     /** @inheritdoc */
