@@ -137,6 +137,8 @@ public class GreenDaoGenerator {
     recycleScan.addStringProperty("status").notNull();//0 停用 1 启用
     recycleScan.addDateProperty("editTime");
     recycleScan.addStringProperty("userName").notNull();
+    recycleScan.addLongProperty("recycleType").notNull();//回收类型
+    recycleScan.addStringProperty("recycleTypeValue").notNull();//回收类型名称
 
     Entity OperatorLog = schema.addEntity("OperatorLog"); //操作日志信息
     OperatorLog.addIdProperty();

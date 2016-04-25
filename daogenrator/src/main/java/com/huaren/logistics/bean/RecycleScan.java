@@ -17,6 +17,9 @@ public class RecycleScan {
     private java.util.Date editTime;
     /** Not-null value. */
     private String userName;
+    private long recycleType;
+    /** Not-null value. */
+    private String recycleTypeValue;
 
     public RecycleScan() {
     }
@@ -25,7 +28,7 @@ public class RecycleScan {
         this.id = id;
     }
 
-    public RecycleScan(Long id, int lPdtgBatch, java.util.Date recycleScanTime, String scanCode, String status, java.util.Date editTime, String userName) {
+    public RecycleScan(Long id, int lPdtgBatch, java.util.Date recycleScanTime, String scanCode, String status, java.util.Date editTime, String userName, long recycleType, String recycleTypeValue) {
         this.id = id;
         this.lPdtgBatch = lPdtgBatch;
         this.recycleScanTime = recycleScanTime;
@@ -33,6 +36,8 @@ public class RecycleScan {
         this.status = status;
         this.editTime = editTime;
         this.userName = userName;
+        this.recycleType = recycleType;
+        this.recycleTypeValue = recycleTypeValue;
     }
 
     public Long getId() {
@@ -97,6 +102,24 @@ public class RecycleScan {
     /** Not-null value; ensure this value is available before it is saved to the database. */
     public void setUserName(String userName) {
         this.userName = userName;
+    }
+
+    public long getRecycleType() {
+        return recycleType;
+    }
+
+    public void setRecycleType(long recycleType) {
+        this.recycleType = recycleType;
+    }
+
+    /** Not-null value. */
+    public String getRecycleTypeValue() {
+        return recycleTypeValue;
+    }
+
+    /** Not-null value; ensure this value is available before it is saved to the database. */
+    public void setRecycleTypeValue(String recycleTypeValue) {
+        this.recycleTypeValue = recycleTypeValue;
     }
 
 }

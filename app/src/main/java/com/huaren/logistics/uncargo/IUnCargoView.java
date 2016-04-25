@@ -4,4 +4,6 @@ import com.dexafree.materialList.card.Card;
 
 public interface IUnCargoView {
   void addCard(Card card);
+
+  void addStartCard(Card card);
 }

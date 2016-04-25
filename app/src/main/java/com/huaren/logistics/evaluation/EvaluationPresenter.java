@@ -3,6 +3,7 @@ package com.huaren.logistics.evaluation;
 import android.content.Context;
 import android.text.TextUtils;
 import com.dexafree.materialList.card.Card;
+import com.dexafree.materialList.card.provider.CargoOrderCardProvider;
 import com.dexafree.materialList.card.provider.SmallImageCardProvider;
 import com.huaren.logistics.LogisticsApplication;
 import com.huaren.logistics.R;
@@ -21,7 +22,7 @@ public class EvaluationPresenter {
 
   public void initCargoList() {
     OrderBatchDao orderBatchDao = LogisticsApplication.getInstance().getOrderBatchDao();
-    String userName = CommonTool.getSharePreference((Context) evaluationView, "userName");
+    String userName = CommonTool.getSharePreference((Context) evaluationView, "curUserName");
     List<OrderBatch> orderBatchList =
         orderBatchDao.queryBuilder().where(OrderBatchDao.Properties.Status.eq("1"),
             OrderBatchDao.Properties.CanEvalutaion.eq("1"), OrderBatchDao.Properties.UserName.eq(userName)).list();
@@ -34,7 +35,7 @@ public class EvaluationPresenter {
         desc = "已评价";
       }
       Card card = new Card.Builder((Context) evaluationView).setTag(orderBatch.getId())
-          .withProvider(SmallImageCardProvider.class)
+          .withProvider(CargoOrderCardProvider.class)
           .setTitle(orderBatch.getSPdtgCustfullname() + "(" + orderBatch.getCooperateId() + ")")
           .setDescription(desc)
           .setDrawable(drawable)

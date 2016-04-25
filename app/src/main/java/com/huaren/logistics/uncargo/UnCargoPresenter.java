@@ -2,6 +2,7 @@ package com.huaren.logistics.uncargo;
 
 import android.content.Context;
 import com.dexafree.materialList.card.Card;
+import com.dexafree.materialList.card.provider.CargoOrderCardProvider;
 import com.dexafree.materialList.card.provider.SmallImageCardProvider;
 import com.huaren.logistics.LogisticsApplication;
 import com.huaren.logistics.R;
@@ -26,7 +27,7 @@ public class UnCargoPresenter {
 
   public void initCargoList() {
     CustomerDao customerDao = LogisticsApplication.getInstance().getCustomerDao();
-    String userName = CommonTool.getSharePreference((Context) unCargoView, "userName");
+    String userName = CommonTool.getSharePreference((Context) unCargoView, "curUserName");
     List<Customer> customerList =
         customerDao.queryBuilder().where(CustomerDao.Properties.Status.eq("1"), CustomerDao.Properties.UserName.eq(userName)).list();
     for (int i = 0; i < customerList.size(); i++) {
@@ -43,13 +44,17 @@ public class UnCargoPresenter {
         drawable = R.drawable.star_finish;
       }
       Card card = new Card.Builder((Context) unCargoView).setTag(customer.getId())
-          .withProvider(SmallImageCardProvider.class)
+          .withProvider(CargoOrderCardProvider.class)
           .setTitle(customer.getSPdtgCustfullname() + "(" + customer.getCooperateId() + ")")
           .setDescription(desc)
           .setDrawable(drawable)
           .endConfig()
           .build();
-      unCargoView.addCard(card);
+        if (Integer.valueOf(countMap.get("unLoadCount")) > 0) {
+            unCargoView.addStartCard(card);
+        } else {
+            unCargoView.addCard(card);
+        }
     }
   }
 
@@ -59,7 +64,7 @@ public class UnCargoPresenter {
   private Map<String, Integer> countLoadOrder(Customer customer) {
     OrderDetailDao orderDetailDao = LogisticsApplication.getInstance().getOrderDetailDao();
     int total = 0, loadCount = 0, unLoadCount = 0;
-    String userName = CommonTool.getSharePreference((Context) unCargoView, "userName");
+    String userName = CommonTool.getSharePreference((Context) unCargoView, "curUserName");
     List<OrderDetail> orderDetailList = orderDetailDao.queryBuilder()
         .where(OrderDetailDao.Properties.CustomerId.eq(customer.getId()),
             OrderDetailDao.Properties.Status.eq("1"), OrderDetailDao.Properties.UserName.eq(userName))

@@ -22,9 +22,12 @@ import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
+import android.widget.TextView;
+
 import com.gc.materialdesign.views.CheckBox;
 import com.huaren.logistics.R;
 import com.huaren.logistics.main.MainActivity;
+import com.huaren.logistics.util.CommonTool;
 import com.huaren.logistics.util.UiTool;
 import com.rengwuxian.materialedittext.MaterialEditText;
 
@@ -34,6 +37,7 @@ public class LoginActivity extends Activity implements LoginView, View.OnClickLi
   private MaterialEditText password;
   private LoginPresenter presenter;
   private CheckBox rememverCb;
+  private TextView logisticsTv;
 
   @Override protected void onCreate(Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
@@ -44,6 +48,8 @@ public class LoginActivity extends Activity implements LoginView, View.OnClickLi
     password = (MaterialEditText) findViewById(R.id.password);
     UiTool.hideSoftInputMethod(LoginActivity.this, password);
     rememverCb = (CheckBox) findViewById(R.id.remember_cb);
+    logisticsTv = (TextView)findViewById(R.id.logistics);
+    logisticsTv.setText(getResources().getString(R.string.app_name_desc) + "(V" + CommonTool.getVersionName(this) + ")");
     findViewById(R.id.btn_login).setOnClickListener(this);
     presenter = new LoginPresenter(this);
     presenter.initUsername();

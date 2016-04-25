@@ -39,6 +39,9 @@ import org.ksoap2.serialization.SoapObject;
 import org.xmlpull.v1.XmlPullParser;
 import org.xmlpull.v1.XmlPullParserException;
 
+import de.greenrobot.dao.query.DeleteQuery;
+import de.greenrobot.dao.query.QueryBuilder;
+
 public class DownCargoPresenter {
 
     private IDownCargoView downCargoView;
@@ -232,6 +235,7 @@ public class DownCargoPresenter {
     }
 
     private void insertCustomer(List<Customer> customerList) {
+        List<Customer> insertCustomerList = new ArrayList<>();
         CustomerDao customerDao = LogisticsApplication.getInstance().getCustomerDao();
         List<Customer> existCustomerList =
                 customerDao.queryBuilder().where(CustomerDao.Properties.Status.eq("1")).list();
@@ -247,18 +251,21 @@ public class DownCargoPresenter {
             }
             if (!existFlag) {
                 customerNum++;
-                String userName = CommonTool.getSharePreference((Context) downCargoView, "userName");
+                String userName = CommonTool.getSharePreference((Context) downCargoView, "curUserName");
                 customer.setUserName(userName);
                 customer.setId(customer.getCooperateId() + customer.getLPdtgBatch());
                 customer.setAddTime(new Date());
                 customer.setStatus("1");
-                customerDao.insert(customer);
+                insertCustomerList.add(customer);
             }
         }
+        customerDao.insertInTx(insertCustomerList);
+        insertCustomerList.clear();
         buffer.append(customerNum).append("条客户信息");
     }
 
     private void insertOrderDetail(List<OrderDetail> orderDetailList) {
+        List<OrderDetail> insertDetailList = new ArrayList<>();
         OrderDetailDao orderDetailDao = LogisticsApplication.getInstance().getOrderDetailDao();
         List<OrderDetail> existDetailList =
                 orderDetailDao.queryBuilder().where(OrderDetailDao.Properties.Status.eq("1")).list();
@@ -273,15 +280,17 @@ public class DownCargoPresenter {
             }
             if (!existFlag) {
                 detailCount++;
-                String userName = CommonTool.getSharePreference((Context) downCargoView, "userName");
+                String userName = CommonTool.getSharePreference((Context) downCargoView, "curUserName");
                 orderDetail.setUserName(userName);
                 orderDetail.setAddTime(new Date());
                 orderDetail.setStatus("1");
                 orderDetail.setDetailStatus(OrderStatusEnum.READEY_CARGO.getStatus());
                 orderDetail.setCustomerId(orderDetail.getCooperateId() + orderDetail.getLPdtgBatch());
-                orderDetailDao.insert(orderDetail);
+                insertDetailList.add(orderDetail);
             }
         }
+        orderDetailDao.insertInTx(insertDetailList);
+        insertDetailList.clear();
         buffer.append(",").append(detailCount).append("条明细");
     }
 
@@ -302,6 +311,7 @@ public class DownCargoPresenter {
      * 插入批量订单信息
      */
     private void insertOrderBatch(List<OrderBatch> orderBatchList) {
+        List<OrderBatch> insertOrderBatchList = new ArrayList<>();
         OrderBatchDao dao = LogisticsApplication.getInstance().getOrderBatchDao();
         List<OrderBatch> existOrderBatchList = dao.loadAll();
         for (int i = 0; i < orderBatchList.size(); i++) {
@@ -320,11 +330,12 @@ public class DownCargoPresenter {
                 }
             }
             if (!existFlag) {
-                String userName = CommonTool.getSharePreference((Context) downCargoView, "userName");
+                String userName = CommonTool.getSharePreference((Context) downCargoView, "curUserName");
                 orderBatch.setUserName(userName);
-                dao.insert(orderBatch);
+                insertOrderBatchList.add(orderBatch);
             }
         }
+        dao.insertInTx(insertOrderBatchList);
     }
 
     /**
@@ -549,7 +560,7 @@ public class DownCargoPresenter {
      */
     private void parseBatchOrder(String xml) {
         DownBatchInfoDao downBatchInfoDao = LogisticsApplication.getInstance().getDownBatchInfoDao();
-        String userName = CommonTool.getSharePreference((Context) downCargoView, "userName");
+        String userName = CommonTool.getSharePreference((Context) downCargoView, "curUserName");
         List<DownBatchInfo> downBatchInfoList = downBatchInfoDao.queryBuilder().where(DownBatchInfoDao.Properties.UserName.eq(userName)).list();
         long lPdtgBatch = 0;
         try {
@@ -609,9 +620,9 @@ public class DownCargoPresenter {
 
     private void updateDownBatchInfo(long newlPdtgBatch, String userName) {
         DownBatchInfoDao dao = LogisticsApplication.getInstance().getDownBatchInfoDao();
-        DownBatchInfo delBatch = new DownBatchInfo();
-        delBatch.setUserName(userName);
-        dao.delete(delBatch);
+        QueryBuilder<DownBatchInfo> qb = dao.queryBuilder();
+        DeleteQuery<DownBatchInfo> bd = qb.where(DownBatchInfoDao.Properties.UserName.eq(userName)).buildDelete();
+        bd.executeDeleteWithoutDetachingEntities();
         DownBatchInfo downBatchInfo = new DownBatchInfo();
         downBatchInfo.setLPdtgBatch(newlPdtgBatch);
         downBatchInfo.setAddTime(new Date());
@@ -666,10 +677,9 @@ public class DownCargoPresenter {
      */
     private void delOrderDetail(long lPdtgBatch, String userName) {
         OrderDetailDao dao = LogisticsApplication.getInstance().getOrderDetailDao();
-        OrderDetail orderDetail = new OrderDetail();
-        orderDetail.setLPdtgBatch((int) lPdtgBatch);
-        orderDetail.setUserName(userName);
-        dao.delete(orderDetail);
+        QueryBuilder<OrderDetail> qb = dao.queryBuilder();
+        DeleteQuery<OrderDetail> bd = qb.where(OrderDetailDao.Properties.LPdtgBatch.eq(lPdtgBatch), OrderDetailDao.Properties.UserName.eq(userName)).buildDelete();
+        bd.executeDeleteWithoutDetachingEntities();
     }
 
     /**
@@ -691,10 +701,10 @@ public class DownCargoPresenter {
      */
     private void delOrderBatch(long lPdtgBatch, String userName) {
         OrderBatchDao dao = LogisticsApplication.getInstance().getOrderBatchDao();
-        OrderBatch orderBatch = new OrderBatch();
-        orderBatch.setLPdtgBatch((int) lPdtgBatch);
-        orderBatch.setUserName(userName);
-        dao.delete(orderBatch);
+        QueryBuilder<OrderBatch> qb = dao.queryBuilder();
+        DeleteQuery<OrderBatch> bd = qb.where(OrderBatchDao.Properties.LPdtgBatch.eq(lPdtgBatch), OrderBatchDao.Properties.UserName.eq(userName)).buildDelete();
+        bd.executeDeleteWithoutDetachingEntities();
+
     }
 
     /**
@@ -716,10 +726,9 @@ public class DownCargoPresenter {
      */
     private void delCustomer(long lPdtgBatch, String userName) {
         CustomerDao dao = LogisticsApplication.getInstance().getCustomerDao();
-        Customer customer = new Customer();
-        customer.setLPdtgBatch((int) lPdtgBatch);
-        customer.setUserName(userName);
-        dao.delete(customer);
+        QueryBuilder<Customer> qb = dao.queryBuilder();
+        DeleteQuery<Customer> bd = qb.where(CustomerDao.Properties.LPdtgBatch.eq(lPdtgBatch), CustomerDao.Properties.UserName.eq(userName)).buildDelete();
+        bd.executeDeleteWithoutDetachingEntities();
     }
 
     /**

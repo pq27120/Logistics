@@ -2,8 +2,9 @@ package com.huaren.logistics.recycleinput;
 
 import android.content.Context;
 import android.text.TextUtils;
+
 import com.dexafree.materialList.card.Card;
-import com.dexafree.materialList.card.provider.SmallImageCardProvider;
+import com.dexafree.materialList.card.provider.CargoSingleCardProvider;
 import com.huaren.logistics.LogisticsApplication;
 import com.huaren.logistics.bean.OrderBatch;
 import com.huaren.logistics.bean.RecycleInput;
@@ -13,9 +14,11 @@ import com.huaren.logistics.dao.RecycleInputDao;
 import com.huaren.logistics.dao.SysDicValueDao;
 import com.huaren.logistics.util.CommonTool;
 import com.huaren.logistics.util.UiTool;
-import de.greenrobot.dao.query.QueryBuilder;
+
 import java.util.Date;
 import java.util.List;
+
+import de.greenrobot.dao.query.QueryBuilder;
 
 public class RecycleInputDetailPresent {
   private IRecycleInputDetailInputView recycleInputDetailInputView;
@@ -40,7 +43,7 @@ public class RecycleInputDetailPresent {
       UiTool.showToast((Context) recycleInputDetailInputView, "货物件数必须为整数！");
       return;
     }
-    String userName = CommonTool.getSharePreference((Context) recycleInputDetailInputView, "userName");
+    String userName = CommonTool.getSharePreference((Context) recycleInputDetailInputView, "curUserName");
     RecycleInput recycleInput = recycleInputDao.queryBuilder()
         .where(RecycleInputDao.Properties.OrderBatchId.eq(orderBatchId),
             RecycleInputDao.Properties.RecycleType.eq(sysDicValue.getId()),
@@ -56,7 +59,7 @@ public class RecycleInputDetailPresent {
   }
 
   private void insertRecycleInput(String orderBatchId, SysDicValue sysDicValue, String inputNum) {
-    String userName = CommonTool.getSharePreference((Context) recycleInputDetailInputView, "userName");
+    String userName = CommonTool.getSharePreference((Context) recycleInputDetailInputView, "curUserName");
     RecycleInput recycleInput = new RecycleInput();
     recycleInput.setRecycleNum(Integer.valueOf(inputNum));
     recycleInput.setRecycleTime(new Date());
@@ -91,7 +94,7 @@ public class RecycleInputDetailPresent {
 
   public void initRecycleInputList(String orderBatchId) {
     RecycleInputDao recycleInputDao = LogisticsApplication.getInstance().getRecycleInputDao();
-    String userName = CommonTool.getSharePreference((Context) recycleInputDetailInputView, "userName");
+    String userName = CommonTool.getSharePreference((Context) recycleInputDetailInputView, "curUserName");
     List<RecycleInput> recycleInputList = recycleInputDao.queryBuilder()
         .where(RecycleInputDao.Properties.OrderBatchId.eq(orderBatchId),
             RecycleInputDao.Properties.Status.eq("1"), RecycleInputDao.Properties.UserName.eq(userName))
@@ -100,9 +103,9 @@ public class RecycleInputDetailPresent {
       RecycleInput recycleInput = recycleInputList.get(i);
       Card card =
           new Card.Builder((Context) recycleInputDetailInputView).setTag("" + recycleInput.getId())
-              .withProvider(SmallImageCardProvider.class)
-              .setTitle("货物类型：" + recycleInput.getRecycleTypeValue())
-              .setDescription("回收数量：" + recycleInput.getRecycleNum() + "件")
+              .withProvider(CargoSingleCardProvider.class)
+              .setTitle(recycleInput.getRecycleTypeValue() + "(回收：" + recycleInput.getRecycleNum() + "件)")
+              .setDescription("")
               .endConfig()
               .build();
       recycleInputDetailInputView.addCard(card);
@@ -112,7 +115,7 @@ public class RecycleInputDetailPresent {
   public void initRecycleInputRadio() {
     SysDicValueDao sysDicValueDao = LogisticsApplication.getInstance().getSysDicValueDao();
     QueryBuilder qb = sysDicValueDao.queryBuilder();
-    List<SysDicValue> list = qb.where(SysDicValueDao.Properties.DicId.eq(20)).list();
+    List<SysDicValue> list = qb.where(SysDicValueDao.Properties.DicId.eq(23)).list();
     recycleInputDetailInputView.initRadio(list);
   }
 }

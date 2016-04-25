@@ -1,59 +1,61 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:orientation="vertical"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@android:color/white"
-    >
-  <include
-      android:id="@+id/layout_title"
-      layout="@layout/layout_common_title"
-      />
+    android:orientation="vertical">
 
-  <include layout="@layout/layout_comm_user"/>
+    <include
+        android:id="@+id/layout_title"
+        layout="@layout/layout_common_title" />
 
-  <LinearLayout
-      android:layout_width="match_parent"
-      android:layout_height="50dp"
-      android:orientation="horizontal"
-      >
-    <com.rengwuxian.materialedittext.MaterialEditText
-        android:id="@+id/input_et"
-        android:layout_width="wrap_content"
-        android:layout_height="match_parent"
-        android:layout_gravity="center"
-        android:background="@null"
-        android:gravity="center"
-        android:hint="@string/recycle_scan_hint"
-        android:maxLines="1"
-        android:singleLine="true"
-        android:textSize="@dimen/text_size_middle"
-        app:met_baseColor="@android:color/darker_gray"
-        app:met_primaryColor="@color/blue_two"
-        app:met_textColor="@android:color/black"
-        android:focusableInTouchMode="true"
-        app:met_iconPadding="0dp"
-        android:layout_weight="2"
-        android:layout_marginLeft="10dp"
-        />
+    <include layout="@layout/layout_comm_user" />
 
-    <com.gc.materialdesign.views.ButtonRectangle
-        android:id="@+id/input_btn"
-        android:layout_width="40dp"
+    <LinearLayout
+        android:id="@+id/radio_ll"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="@color/blue_two"
-        android:text="@string/recycle_scan_btn"
-        android:layout_gravity="center_horizontal"
-        android:layout_weight="1"
-        />
-  </LinearLayout>
+        android:orientation="horizontal"></LinearLayout>
 
-  <com.dexafree.materialList.view.MaterialListView
-      android:layout_width="fill_parent"
-      android:layout_height="fill_parent"
-      app:column_count="1"
-      android:id="@+id/material_listview"
-      />
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="50dp"
+        android:orientation="horizontal">
+
+        <com.rengwuxian.materialedittext.MaterialEditText
+            android:id="@+id/input_et"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:layout_gravity="center"
+            android:layout_marginLeft="10dp"
+            android:layout_weight="2"
+            android:background="@null"
+            android:focusableInTouchMode="true"
+            android:gravity="center"
+            android:hint="@string/recycle_scan_hint"
+            android:maxLines="1"
+            android:singleLine="true"
+            android:textSize="@dimen/text_size_middle"
+            app:met_baseColor="@android:color/darker_gray"
+            app:met_iconPadding="0dp"
+            app:met_primaryColor="@color/blue_two"
+            app:met_textColor="@android:color/black" />
+
+        <com.gc.materialdesign.views.ButtonRectangle
+            android:id="@+id/input_btn"
+            android:layout_width="40dp"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_horizontal"
+            android:layout_weight="1"
+            android:background="@color/blue_two"
+            android:text="@string/recycle_scan_btn" />
+    </LinearLayout>
+
+    <com.dexafree.materialList.view.MaterialListView
+        android:id="@+id/material_listview"
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent"
+        app:column_count="1" />
 
 </LinearLayout>

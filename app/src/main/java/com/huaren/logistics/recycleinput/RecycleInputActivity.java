@@ -34,7 +34,7 @@ public class RecycleInputActivity extends BaseActivity implements IRecycleInputV
         Log.d("LONG_CLICK", card.getTag().toString());
       }
     });
-    ((TextView) findViewById(R.id.tv_common_title)).setText(R.string.evaluation);
+    ((TextView) findViewById(R.id.tv_common_title)).setText(R.string.activity_recycle_input_title);
     presenter = new RecycleInputPresenter(this);
     presenter.initCargoList();
   }

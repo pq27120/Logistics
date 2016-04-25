@@ -1,9 +1,13 @@
 package com.huaren.logistics.uploadcargo;
 
+import android.app.ProgressDialog;
 import android.content.res.AssetManager;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Message;
 import android.view.View;
 import android.widget.TextView;
+
 import com.dexafree.materialList.card.Card;
 import com.dexafree.materialList.card.provider.BasicButtonsCardProvider;
 import com.dexafree.materialList.view.MaterialListView;
@@ -19,6 +23,8 @@ public class UploadCargoActivity extends BaseActivity implements IUploadCargoVie
 
   private MaterialListView mListView;
 
+  private ProgressDialog pd;    //进度条对话框
+
   @Override protected void onCreate(Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
     setContentView(R.layout.activity_uploadcargo);
@@ -26,9 +32,22 @@ public class UploadCargoActivity extends BaseActivity implements IUploadCargoVie
     uploadButton = (ButtonRectangle) findViewById(R.id.btn_upload);
     ((TextView) findViewById(R.id.tv_common_title)).setText(R.string.upload_cargo);
     presenter = new UploadCargoPresenter(this);
+    pd = ProgressDialog.show(UploadCargoActivity.this, "上传...", "请稍候...", true, false);
     presenter.uploadOrderData();
     uploadButton.setOnClickListener(new UpdateButtonClick());
   }
+
+  /**
+   * 用Handler来更新UI
+   */
+  private Handler handler = new Handler(){
+    @Override
+    public void handleMessage(Message msg) {
+      //关闭ProgressDialog
+      pd.dismiss();
+      mListView.setVisibility(View.VISIBLE);
+      uploadButton.setVisibility(View.VISIBLE);
+    }};
 
   @Override public void showProgress() {
 
@@ -48,6 +67,9 @@ public class UploadCargoActivity extends BaseActivity implements IUploadCargoVie
         .setDescription("上传时间：" + time + "," + info)
         .endConfig().build();
     mListView.add(card);
+    handler.sendEmptyMessage(0);
+    mListView.setVisibility(View.VISIBLE);
+    uploadButton.setVisibility(View.VISIBLE);
   }
 
   @Override public AssetManager getAssetManager() {
@@ -56,6 +78,9 @@ public class UploadCargoActivity extends BaseActivity implements IUploadCargoVie
 
   private class UpdateButtonClick implements View.OnClickListener {
     @Override public void onClick(View v) {
+      mListView.setVisibility(View.GONE);
+      uploadButton.setVisibility(View.GONE);
+      pd = ProgressDialog.show(UploadCargoActivity.this, "上传...", "请稍候...", true, false);
       presenter.uploadOrderData();
     }
   }

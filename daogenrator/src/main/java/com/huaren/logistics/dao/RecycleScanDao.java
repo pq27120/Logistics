@@ -30,6 +30,8 @@ public class RecycleScanDao extends AbstractDao<RecycleScan, Long> {
         public final static Property Status = new Property(4, String.class, "status", false, "STATUS");
         public final static Property EditTime = new Property(5, java.util.Date.class, "editTime", false, "EDIT_TIME");
         public final static Property UserName = new Property(6, String.class, "userName", false, "USER_NAME");
+        public final static Property RecycleType = new Property(7, long.class, "recycleType", false, "RECYCLE_TYPE");
+        public final static Property RecycleTypeValue = new Property(8, String.class, "recycleTypeValue", false, "RECYCLE_TYPE_VALUE");
     };
 
 
@@ -51,7 +53,9 @@ public class RecycleScanDao extends AbstractDao<RecycleScan, Long> {
                 "'SCAN_CODE' TEXT NOT NULL ," + // 3: scanCode
                 "'STATUS' TEXT NOT NULL ," + // 4: status
                 "'EDIT_TIME' INTEGER," + // 5: editTime
-                "'USER_NAME' TEXT NOT NULL );"); // 6: userName
+                "'USER_NAME' TEXT NOT NULL ," + // 6: userName
+                "'RECYCLE_TYPE' INTEGER NOT NULL ," + // 7: recycleType
+                "'RECYCLE_TYPE_VALUE' TEXT NOT NULL );"); // 8: recycleTypeValue
     }
 
     /** Drops the underlying database table. */
@@ -79,6 +83,8 @@ public class RecycleScanDao extends AbstractDao<RecycleScan, Long> {
             stmt.bindLong(6, editTime.getTime());
         }
         stmt.bindString(7, entity.getUserName());
+        stmt.bindLong(8, entity.getRecycleType());
+        stmt.bindString(9, entity.getRecycleTypeValue());
     }
 
     /** @inheritdoc */
@@ -97,7 +103,9 @@ public class RecycleScanDao extends AbstractDao<RecycleScan, Long> {
             cursor.getString(offset + 3), // scanCode
             cursor.getString(offset + 4), // status
             cursor.isNull(offset + 5) ? null : new java.util.Date(cursor.getLong(offset + 5)), // editTime
-            cursor.getString(offset + 6) // userName
+            cursor.getString(offset + 6), // userName
+            cursor.getLong(offset + 7), // recycleType
+            cursor.getString(offset + 8) // recycleTypeValue
         );
         return entity;
     }
@@ -112,6 +120,8 @@ public class RecycleScanDao extends AbstractDao<RecycleScan, Long> {
         entity.setStatus(cursor.getString(offset + 4));
         entity.setEditTime(cursor.isNull(offset + 5) ? null : new java.util.Date(cursor.getLong(offset + 5)));
         entity.setUserName(cursor.getString(offset + 6));
+        entity.setRecycleType(cursor.getLong(offset + 7));
+        entity.setRecycleTypeValue(cursor.getString(offset + 8));
      }
     
     /** @inheritdoc */

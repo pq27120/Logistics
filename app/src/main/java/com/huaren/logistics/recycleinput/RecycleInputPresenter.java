@@ -3,6 +3,7 @@ package com.huaren.logistics.recycleinput;
 import android.content.Context;
 
 import com.dexafree.materialList.card.Card;
+import com.dexafree.materialList.card.provider.CargoOrderCardProvider;
 import com.dexafree.materialList.card.provider.SmallImageCardProvider;
 import com.huaren.logistics.LogisticsApplication;
 import com.huaren.logistics.bean.OrderBatch;
@@ -22,10 +23,10 @@ public class RecycleInputPresenter {
 
   public void initCargoList() {
     OrderBatchDao orderBatchDao = LogisticsApplication.getInstance().getOrderBatchDao();
-    String userName = CommonTool.getSharePreference((Context) evaluationView, "userName");
+    String userName = CommonTool.getSharePreference((Context) evaluationView, "curUserName");
     List<OrderBatch> orderBatchList = orderBatchDao.queryBuilder()
         .where(OrderBatchDao.Properties.Status.eq("1"),
-            OrderBatchDao.Properties.Evaluation.notEq(""), OrderBatchDao.Properties.UserName.eq(userName))
+            OrderBatchDao.Properties.CanEvalutaion.eq("1"), OrderBatchDao.Properties.UserName.eq(userName))
         .list();
     for (int i = 0; i < orderBatchList.size(); i++) {
       OrderBatch orderBatch = orderBatchList.get(i);
@@ -43,7 +44,7 @@ public class RecycleInputPresenter {
       }
       desc += num + "件";
       Card card = new Card.Builder((Context) evaluationView).setTag(orderBatch.getId())
-          .withProvider(SmallImageCardProvider.class)
+          .withProvider(CargoOrderCardProvider.class)
           .setTitle(orderBatch.getSPdtgCustfullname() + "(" + orderBatch.getCooperateId() + ")")
           .setDescription(desc)
           .endConfig()

@@ -4,10 +4,14 @@ import android.content.Context;
 import android.text.TextUtils;
 
 import com.dexafree.materialList.card.Card;
+import com.dexafree.materialList.card.provider.CargoOrderCardProvider;
+import com.dexafree.materialList.card.provider.CargoSingleCardProvider;
 import com.dexafree.materialList.card.provider.SmallImageCardProvider;
 import com.huaren.logistics.LogisticsApplication;
 import com.huaren.logistics.bean.RecycleScan;
+import com.huaren.logistics.bean.SysDicValue;
 import com.huaren.logistics.dao.RecycleScanDao;
+import com.huaren.logistics.dao.SysDicValueDao;
 import com.huaren.logistics.util.CommonTool;
 import com.huaren.logistics.util.UiTool;
 
@@ -24,7 +28,12 @@ public class RecycleScanDetailPresent {
         this.recycleScanDetailView = recycleScanDetailView;
     }
 
-    public void recycleGoods(String scanCode) {
+    public void recycleGoods(SysDicValue sysDicValue, String scanCode) {
+        if (sysDicValue == null) {
+            LogisticsApplication.getInstance().getSoundPoolUtil().playWrong();
+            UiTool.showToast((Context) recycleScanDetailView, "请选择回收类型！");
+            return;
+        }
         if (TextUtils.isEmpty(scanCode)) {
             LogisticsApplication.getInstance().getSoundPoolUtil().playWrong();
             UiTool.showToast((Context) recycleScanDetailView, "请输入条码！");
@@ -36,26 +45,28 @@ public class RecycleScanDetailPresent {
             UiTool.showToast((Context) recycleScanDetailView, "条码只能为8位！");
         } else {
             QueryBuilder qb = recycleScanDao.queryBuilder();
-            String userName = CommonTool.getSharePreference((Context) recycleScanDetailView, "userName");
+            String userName = CommonTool.getSharePreference((Context) recycleScanDetailView, "curUserName");
             qb.where(RecycleScanDao.Properties.ScanCode.eq(scanCode), RecycleScanDao.Properties.UserName.eq(userName));
             List<RecycleScan> recycleScanList = qb.list();
             if (recycleScanList != null && !recycleScanList.isEmpty()) {
                 LogisticsApplication.getInstance().getSoundPoolUtil().playWrong();
                 UiTool.showToast((Context) recycleScanDetailView, "已经扫描过该货物！");
             } else {
-                insertRecycleScan(scanCode);
+                insertRecycleScan(sysDicValue, scanCode);
                 recycleScanDetailView.init();
             }
         }
     }
 
-    private void insertRecycleScan(String scanCode) {
-        String userName = CommonTool.getSharePreference((Context) recycleScanDetailView, "userName");
+    private void insertRecycleScan(SysDicValue sysDicValue, String scanCode) {
+        String userName = CommonTool.getSharePreference((Context) recycleScanDetailView, "curUserName");
         RecycleScan recycleScan = new RecycleScan();
         recycleScan.setStatus("1");
         recycleScan.setUserName(userName);
         recycleScan.setScanCode(scanCode);
         recycleScan.setRecycleScanTime(new Date());
+        recycleScan.setRecycleType(sysDicValue.getId());
+        recycleScan.setRecycleTypeValue(sysDicValue.getMyDisplayValue());
         recycleScanDao.insert(recycleScan);
         LogisticsApplication.getInstance().getSoundPoolUtil().playRight();
         UiTool.showToast((Context) recycleScanDetailView, "回收录入扫描完成！");
@@ -63,18 +74,25 @@ public class RecycleScanDetailPresent {
 
     public void initRecycleScanList() {
         RecycleScanDao recycleScanDao = LogisticsApplication.getInstance().getRecycleScanDao();
-        String userName = CommonTool.getSharePreference((Context) recycleScanDetailView, "userName");
+        String userName = CommonTool.getSharePreference((Context) recycleScanDetailView, "curUserName");
         List<RecycleScan> recycleScanList = recycleScanDao.queryBuilder().where(RecycleScanDao.Properties.UserName.eq(userName)).orderDesc(RecycleScanDao.Properties.RecycleScanTime).list();
         for (int i = 0; i < recycleScanList.size(); i++) {
             RecycleScan recycleScan = recycleScanList.get(i);
             Card card =
                     new Card.Builder((Context) recycleScanDetailView).setTag(recycleScan.getScanCode())
-                            .withProvider(SmallImageCardProvider.class)
-                            .setTitle(recycleScan.getScanCode())
+                            .withProvider(CargoSingleCardProvider.class)
+                            .setTitle(recycleScan.getScanCode() + "(" + recycleScan.getRecycleTypeValue() + ")")
                             .setDescription("")
                             .endConfig()
                             .build();
             recycleScanDetailView.addCard(card);
         }
+    }
+
+    public void initRecycleInputRadio() {
+        SysDicValueDao sysDicValueDao = LogisticsApplication.getInstance().getSysDicValueDao();
+        QueryBuilder qb = sysDicValueDao.queryBuilder();
+        List<SysDicValue> list = qb.where(SysDicValueDao.Properties.DicId.eq(23)).list();
+        recycleScanDetailView.initRadio(list);
     }
 }

@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="app_name">物流调度</string>
+    <string name="app_name_desc">物流调度系统</string>
     <string name="action_settings">设置</string>
     <string name="user_name">用户名</string>
     <string name="cur_user_name">当前登录用户：</string>
@@ -46,4 +47,6 @@
     <string name="upload">上传</string>
     <string name="upload_cargo">上传</string>
     <string name="activity_upload_cargo_title">上传</string>
+    <string name="progress_dialog">进度</string>
+    <string name="please_wait">加载中...</string>
 </resources>

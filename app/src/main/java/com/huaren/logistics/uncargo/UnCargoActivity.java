@@ -41,4 +41,9 @@ public class UnCargoActivity extends BaseActivity implements IUnCargoView {
   @Override public void addCard(Card card) {
     mListView.add(card);
   }
+
+  @Override
+  public void addStartCard(Card card) {
+    mListView.addAtStart(card);
+  }
 }

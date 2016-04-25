@@ -3,14 +3,21 @@ package com.huaren.logistics.recyclescan;
 import android.os.Bundle;
 import android.view.KeyEvent;
 import android.view.View;
+import android.widget.LinearLayout;
+import android.widget.RadioButton;
+import android.widget.RadioGroup;
 import android.widget.TextView;
+
 import com.dexafree.materialList.card.Card;
 import com.dexafree.materialList.view.MaterialListView;
 import com.gc.materialdesign.views.ButtonRectangle;
 import com.huaren.logistics.BaseActivity;
 import com.huaren.logistics.R;
+import com.huaren.logistics.bean.SysDicValue;
 import com.huaren.logistics.util.UiTool;
 import com.rengwuxian.materialedittext.MaterialEditText;
+
+import java.util.List;
 
 public class RecycleScanDetailActivity extends BaseActivity implements IRecycleScanDetailView {
 
@@ -18,6 +25,11 @@ public class RecycleScanDetailActivity extends BaseActivity implements IRecycleS
   private ButtonRectangle scanBtn;
   private RecycleScanDetailPresent recycleScanDetailPresent;
   private MaterialListView mListView;
+
+  private RadioGroup radioGroup;
+  private List<SysDicValue> list;
+  private String checkRadioName;
+  private LinearLayout radioLl;
 
   @Override protected void onCreate(Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
@@ -27,7 +39,12 @@ public class RecycleScanDetailActivity extends BaseActivity implements IRecycleS
 
   private class ScanBtnClick implements View.OnClickListener {
     @Override public void onClick(View v) {
-      recycleScanDetailPresent.recycleGoods(scanEt.getText().toString());
+      for (int i = 0; i < list.size(); i++) {
+        SysDicValue sysDicValue = list.get(i);
+        if (sysDicValue.getMyDisplayValue().equals(checkRadioName)) {
+          recycleScanDetailPresent.recycleGoods(sysDicValue, scanEt.getText().toString());
+        }
+      }
     }
   }
 
@@ -41,19 +58,57 @@ public class RecycleScanDetailActivity extends BaseActivity implements IRecycleS
     scanEt.setText("");
     UiTool.hideSoftInputMethod(RecycleScanDetailActivity.this, scanEt);
     scanBtn = (ButtonRectangle) findViewById(R.id.input_btn);
+    radioLl = (LinearLayout) findViewById(R.id.radio_ll);
     mListView = (MaterialListView) findViewById(R.id.material_listview);
     mListView.clearAll();
     ((TextView) findViewById(R.id.tv_common_title)).setText(R.string.activity_recycle_scan_title);
+    this.list = null;
+    if (radioGroup != null) {
+      radioGroup.removeAllViews();
+    }
+    if (radioLl != null) {
+      radioLl.removeAllViews();
+    }
     recycleScanDetailPresent = new RecycleScanDetailPresent(this);
+    recycleScanDetailPresent.initRecycleInputRadio();
     recycleScanDetailPresent.initRecycleScanList();
     scanBtn.setOnClickListener(new ScanBtnClick());
     scanEt.setOnKeyListener(onKey);
   }
 
+  @Override
+  public void initRadio(List<SysDicValue> list) {
+    this.list = list;
+    radioGroup = new RadioGroup(this);
+    for (int i = 0; i < list.size(); i++) {
+      SysDicValue sysDicValue = list.get(i);
+      RadioButton radioButton = new RadioButton(this);
+      radioButton.setText(sysDicValue.getMyDisplayValue());
+      radioButton.setTextColor(getResources().getColor(R.color.blue_one));
+      radioGroup.addView(radioButton);
+    }
+    radioGroup.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
+      @Override public void onCheckedChanged(RadioGroup group, int checkedId) {
+        selectRadioBtn();
+      }
+    });
+    radioLl.addView(radioGroup);
+  }
+
+  private void selectRadioBtn() {
+    RadioButton radioButton = (RadioButton) findViewById(radioGroup.getCheckedRadioButtonId());
+    checkRadioName = radioButton.getText().toString();
+  }
+
   View.OnKeyListener onKey = new View.OnKeyListener() {
     @Override public boolean onKey(View v, int keyCode, KeyEvent event) {
       if (keyCode == KeyEvent.KEYCODE_ENTER) {
-        recycleScanDetailPresent.recycleGoods(scanEt.getText().toString());
+        for (int i = 0; i < list.size(); i++) {
+          SysDicValue sysDicValue = list.get(i);
+          if (sysDicValue.getMyDisplayValue().equals(checkRadioName)) {
+            recycleScanDetailPresent.recycleGoods(sysDicValue, scanEt.getText().toString());
+          }
+        }
         return true;
       }
       return false;

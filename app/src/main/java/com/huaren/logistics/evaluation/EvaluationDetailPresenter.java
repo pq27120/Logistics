@@ -32,7 +32,7 @@ public class EvaluationDetailPresenter {
 
     public void initEvaluationDetail(String orderBatchId) {
         OrderBatchDao orderBatchDao = LogisticsApplication.getInstance().getOrderBatchDao();
-        String userName = CommonTool.getSharePreference((Context) evaluationDetailView, "userName");
+        String userName = CommonTool.getSharePreference((Context) evaluationDetailView, "curUserName");
         OrderBatch orderBatch =
                 orderBatchDao.queryBuilder().where(OrderBatchDao.Properties.Id.eq(orderBatchId)
                         , OrderBatchDao.Properties.Status.eq("1"), OrderBatchDao.Properties.UserName.eq(userName)).unique();
@@ -46,13 +46,13 @@ public class EvaluationDetailPresenter {
     private void initEvaluationRadio(boolean flag, String evaluation) {
         SysDicValueDao sysDicValueDao = LogisticsApplication.getInstance().getSysDicValueDao();
         QueryBuilder qb = sysDicValueDao.queryBuilder();
-        List<SysDicValue> list = qb.where(SysDicValueDao.Properties.DicId.eq(20)).list();
+        List<SysDicValue> list = qb.where(SysDicValueDao.Properties.DicId.eq(21)).list();
         evaluationDetailView.initRadio(list, flag, evaluation);
     }
 
     public boolean checkCustomerPass(String orderBatchId, String pass) {
         OrderBatchDao orderBatchDao = LogisticsApplication.getInstance().getOrderBatchDao();
-        String userName = CommonTool.getSharePreference((Context) evaluationDetailView, "userName");
+        String userName = CommonTool.getSharePreference((Context) evaluationDetailView, "curUserName");
         OrderBatch orderBatch = orderBatchDao.queryBuilder()
                 .where(OrderBatchDao.Properties.Id.eq(orderBatchId),
                         OrderBatchDao.Properties.Status.eq("1"), OrderBatchDao.Properties.UserName.eq(userName))
@@ -70,7 +70,7 @@ public class EvaluationDetailPresenter {
 
     public void evaluationOrder(String orderBatchId, SysDicValue sysDicValue) {
         OrderBatchDao orderBatchDao = LogisticsApplication.getInstance().getOrderBatchDao();
-        String userName = CommonTool.getSharePreference((Context) evaluationDetailView, "userName");
+        String userName = CommonTool.getSharePreference((Context) evaluationDetailView, "curUserName");
         OrderBatch orderBatch = orderBatchDao.queryBuilder()
                 .where(OrderBatchDao.Properties.Id.eq(orderBatchId),
                         OrderBatchDao.Properties.Status.eq("1"), OrderBatchDao.Properties.UserName.eq(userName))
@@ -105,6 +105,7 @@ public class EvaluationDetailPresenter {
             operatorLog.setMyType("2");
             operatorLog.setOrderId(evaluationDetail.getOrderId());
             operatorLog.setPingjianeirong(sysDicValue.getMyDisplayValue());
+            operatorLog.setDetailId(evaluationDetail.getDetailId());
             operatorLogDao.insert(operatorLog);
         }
         LogisticsApplication.getInstance().getSoundPoolUtil().playRight();

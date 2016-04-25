@@ -3,7 +3,7 @@ package com.huaren.logistics.cargo;
 import android.content.Context;
 
 import com.dexafree.materialList.card.Card;
-import com.dexafree.materialList.card.provider.SmallImageCardProvider;
+import com.dexafree.materialList.card.provider.CargoOrderCardProvider;
 import com.huaren.logistics.LogisticsApplication;
 import com.huaren.logistics.R;
 import com.huaren.logistics.bean.OperatorLog;
@@ -30,7 +30,7 @@ public class CargoOrderPresenter {
 
     public void initCargoOrder(String customerId) {
         OrderDetailDao orderDetailDao = LogisticsApplication.getInstance().getOrderDetailDao();
-        String userName = CommonTool.getSharePreference((Context) cargoOrderView, "userName");
+        String userName = CommonTool.getSharePreference((Context) cargoOrderView, "curUserName");
         List<OrderDetail> orderDetailList = orderDetailDao.queryBuilder()
                 .where(
                         OrderDetailDao.Properties.CustomerId.eq(customerId)
@@ -44,7 +44,7 @@ public class CargoOrderPresenter {
             int drawable = R.drawable.star_do;
             String desc = CommonTool.getDescByStatus(orderDetail.getDetailStatus());
             Card card = new Card.Builder((Context) cargoOrderView).setTag(orderDetail.getDetailId())
-                    .withProvider(SmallImageCardProvider.class)
+                    .withProvider(CargoOrderCardProvider.class)
                     .setTitle(orderDetail.getLpn() + "(" + orderDetail.getMtype() + ")")
                     .setDescription(desc)
                     .setDrawable(drawable)
@@ -58,7 +58,7 @@ public class CargoOrderPresenter {
         if (StringTool.isNotNull(detailCode)) {
             OrderDetailDao orderDetailDao = LogisticsApplication.getInstance().getOrderDetailDao();
             QueryBuilder qb = orderDetailDao.queryBuilder();
-            String userName = CommonTool.getSharePreference((Context) cargoOrderView, "userName");
+            String userName = CommonTool.getSharePreference((Context) cargoOrderView, "curUserName");
             qb.where(OrderDetailDao.Properties.Lpn.eq(detailCode), OrderDetailDao.Properties.Status.eq("1"), OrderDetailDao.Properties.UserName.eq(userName));
             List<OrderDetail> orderDetailList = qb.list();
             if (orderDetailList != null && !orderDetailList.isEmpty()) {
@@ -91,7 +91,7 @@ public class CargoOrderPresenter {
         OrderDetailDao orderDetailDao =
                 LogisticsApplication.getInstance().getDaoSession().getOrderDetailDao();
         QueryBuilder qb = orderDetailDao.queryBuilder();
-        String userName = CommonTool.getSharePreference((Context) cargoOrderView, "userName");
+        String userName = CommonTool.getSharePreference((Context) cargoOrderView, "curUserName");
         qb.where(OrderDetailDao.Properties.Lpn.eq(lpn), OrderDetailDao.Properties.Status.eq("1"), OrderDetailDao.Properties.UserName.eq(userName));
         List<OrderDetail> orderDetailList = qb.list();
         if (orderDetailList != null && !orderDetailList.isEmpty()) {
@@ -111,6 +111,7 @@ public class CargoOrderPresenter {
             operatorLog.setLPdtgBatch(orderDetail.getLPdtgBatch());
             operatorLog.setMyType("1");
             operatorLog.setOrderId(orderDetail.getOrderId());
+            operatorLog.setDetailId(orderDetail.getDetailId());
             operatorLogDao.insert(operatorLog);
             cargoOrderView.reInit();
         }

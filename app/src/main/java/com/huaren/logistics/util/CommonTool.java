@@ -218,6 +218,21 @@ public class CommonTool {
     }
   }
 
+  public static String getVersionName(Context context) {
+    // 获得一个系统包管理器
+    PackageManager pm = context.getPackageManager();
+    // 获得包管理器
+    try {
+      // 获得功能清单文件
+      PackageInfo packInfo = pm.getPackageInfo(context.getPackageName(), 0);
+      return packInfo.versionName;
+    } catch (Exception e) {
+      e.printStackTrace();
+      // 不可能发生的异常
+      return "";
+    }
+  }
+
   /**
    * 检测网络是否连接
    */
