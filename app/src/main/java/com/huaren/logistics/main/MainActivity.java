@@ -51,7 +51,6 @@ public class MainActivity extends BaseActivity implements MainView, AdapterView.
         setContentView(R.layout.activity_main);
         gridView = (GridView) findViewById(R.id.main_gridview);
         gridView.setStretchMode(GridView.STRETCH_COLUMN_WIDTH);
-        initUserInfo();
         (findViewById(R.id.common_back_btn)).setVisibility(View.GONE);
         ((TextView)findViewById(R.id.tv_common_title)).setText(R.string.app_name);
         presenter = new MainPresenter(this);
@@ -61,6 +60,7 @@ public class MainActivity extends BaseActivity implements MainView, AdapterView.
 
     @Override protected void onResume() {
         super.onResume();
+        initUserInfo();
         presenter.onResume();
     }
 

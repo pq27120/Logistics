@@ -3,10 +3,6 @@ package com.huaren.logistics.downcargo;
 import android.content.res.AssetManager;
 
 public interface IDownCargoView {
-  void showProgress();
-
-  void hideProgress();
-
   void setAdapter(DownCargoAdapter adapter);
 
   void hideUpdateView();
@@ -15,4 +11,5 @@ public interface IDownCargoView {
 
   AssetManager getAssetManager();
 
+  void finishActivity();
 }

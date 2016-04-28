@@ -13,6 +13,7 @@ import com.huaren.logistics.dao.RecycleScanDao;
 import com.huaren.logistics.entity.UploadRecycleInput;
 import com.huaren.logistics.util.CommonTool;
 import com.huaren.logistics.util.DateUtil;
+import com.huaren.logistics.util.http.NetConnect;
 import com.huaren.logistics.util.webservice.WebServiceConnect;
 import com.huaren.logistics.util.webservice.WebServiceHandler;
 import com.huaren.logistics.util.webservice.WebServiceParam;
@@ -41,7 +42,7 @@ public class UploadCargoPresenter {
     public WebServiceHandler inputHandler;
     public WebServiceHandler scanHandler;
     protected WebServiceConnect webServiceConnect = new WebServiceConnect();
-    private StringBuffer buffer = new StringBuffer("上传完成");
+    private StringBuffer buffer = new StringBuffer("");
 
     public UploadCargoPresenter(final IUploadCargoView uploadCargoView) {
         this.uploadCargoView = uploadCargoView;
@@ -55,6 +56,9 @@ public class UploadCargoPresenter {
             @Override
             public void handleMsg(int returnCode, Object detail) {
                 switch (returnCode) {
+                    case NetConnect.NET_ERROR:
+                        uploadCargoView.finishActivity();
+                        break;
                     case 1:
                         parseRecordInfo(detail);
                         break;
@@ -71,6 +75,9 @@ public class UploadCargoPresenter {
             @Override
             public void handleMsg(int returnCode, Object detail) {
                 switch (returnCode) {
+                    case NetConnect.NET_ERROR:
+                        uploadCargoView.finishActivity();
+                        break;
                     case 1:
                         parseEvaRecordInfo(detail);
                         break;
@@ -87,6 +94,9 @@ public class UploadCargoPresenter {
             @Override
             public void handleMsg(int returnCode, Object detail) {
                 switch (returnCode) {
+                    case NetConnect.NET_ERROR:
+                        uploadCargoView.finishActivity();
+                        break;
                     case 1:
                         parseRecycleInputInfo(detail);
                         break;
@@ -103,6 +113,9 @@ public class UploadCargoPresenter {
             @Override
             public void handleMsg(int returnCode, Object detail) {
                 switch (returnCode) {
+                    case NetConnect.NET_ERROR:
+                        uploadCargoView.finishActivity();
+                        break;
                     case 1:
                         parseRecycleScanInfo(detail);
                         break;
@@ -140,12 +153,12 @@ public class UploadCargoPresenter {
                     case XmlPullParser.START_TAG:
                         // 获得当前节点名（标记名）
                         String name = parser.getName();
-                        if ("CommandResult".equals(name)) {
+                        if ("LoginResult".equals(name)) {
                             flag = false;
                         }
                         if ("Code".equals(name)) {
                             String code = parser.nextText();
-                            if ("0".equals(code)) {
+                            if ("1".equals(code)) {
                                 flag = true;
                             }
                         }
@@ -164,8 +177,11 @@ public class UploadCargoPresenter {
             e.printStackTrace();
         }
         if (flag) {
+            buffer.append(",上传" + recycleScanList.size() + "条回收扫描记录");
             RecycleScanDao dao = LogisticsApplication.getInstance().getRecycleScanDao();
             dao.deleteInTx(recycleScanList);
+            String time = DateUtil.parseCurrDateToString("yyyy-MM-dd HH:mm:ss");
+            uploadCargoView.showUpdateView(time, buffer.toString());
         }
     }
 
@@ -198,12 +214,12 @@ public class UploadCargoPresenter {
                     case XmlPullParser.START_TAG:
                         // 获得当前节点名（标记名）
                         String name = parser.getName();
-                        if ("CommandResult".equals(name)) {
+                        if ("LoginResult".equals(name)) {
                             flag = false;
                         }
                         if ("Code".equals(name)) {
                             String code = parser.nextText();
-                            if ("0".equals(code)) {
+                            if ("1".equals(code)) {
                                 flag = true;
                             }
                         }
@@ -222,6 +238,7 @@ public class UploadCargoPresenter {
             e.printStackTrace();
         }
         if (flag) {
+            buffer.append("，上传" + recordOperatorLogList.size() + "条明细");
             OperatorLogDao operatorLogDao = LogisticsApplication.getInstance().getOperatorLogDao();
             operatorLogDao.deleteInTx(recordOperatorLogList);
         }
@@ -248,12 +265,12 @@ public class UploadCargoPresenter {
                     case XmlPullParser.START_TAG:
                         // 获得当前节点名（标记名）
                         String name = parser.getName();
-                        if ("CommandResult".equals(name)) {
+                        if ("LoginResult".equals(name)) {
                             flag = false;
                         }
                         if ("Code".equals(name)) {
                             String code = parser.nextText();
-                            if ("0".equals(code)) {
+                            if ("1".equals(code)) {
                                 flag = true;
                             }
                         }
@@ -272,6 +289,7 @@ public class UploadCargoPresenter {
             e.printStackTrace();
         }
         if (flag) {
+            buffer.append(",上传" + recycleInputList.size() + "条回收记录");
             RecycleInputDao dao = LogisticsApplication.getInstance().getRecycleInputDao();
             dao.deleteInTx(recycleInputList);
         }
@@ -298,12 +316,12 @@ public class UploadCargoPresenter {
                     case XmlPullParser.START_TAG:
                         // 获得当前节点名（标记名）
                         String name = parser.getName();
-                        if ("CommandResult".equals(name)) {
+                        if ("LoginResult".equals(name)) {
                             flag = false;
                         }
                         if ("Code".equals(name)) {
                             String code = parser.nextText();
-                            if ("0".equals(code)) {
+                            if ("1".equals(code)) {
                                 flag = true;
                             }
                         }
@@ -322,6 +340,7 @@ public class UploadCargoPresenter {
             e.printStackTrace();
         }
         if (flag) {
+            buffer.append(",上传" + evaOperatorLogList.size() + "条评价");
             OperatorLogDao operatorLogDao = LogisticsApplication.getInstance().getOperatorLogDao();
             operatorLogDao.deleteInTx(evaOperatorLogList);
         }
@@ -332,21 +351,17 @@ public class UploadCargoPresenter {
         uploadEvaRecordData();
         uploadRecycleInputData();
         uploadRecycleScanData();
-        String time = DateUtil.parseCurrDateToString("yyyy-MM-dd HH:mm:ss");
-        uploadCargoView.showUpdateView(time, buffer.toString());
     }
 
     private void uploadRecycleScanData() {
         StringBuilder sb = assemberRecycleScanDetail();
-        if(sb != null && sb.length() > 0) {
-            Map params = new HashMap();
-            params.put("value", sb.toString());
-            String method = "Upload_kehuhuishouDetail";
-            String action = "http://tempuri.org/Upload_kehuhuishouDetail";
-            WebServiceParam webServiceParam =
-                    new WebServiceParam((Context) uploadCargoView, params, method, action, scanHandler, 1);
-            webServiceConnect.addNet(webServiceParam);
-        }
+        Map params = new HashMap();
+        params.put("value", sb.toString());
+        String method = "Upload_kehuhuishouDetail";
+        String action = "http://tempuri.org/Upload_kehuhuishouDetail";
+        WebServiceParam webServiceParam =
+                new WebServiceParam((Context) uploadCargoView, params, method, action, scanHandler, 1);
+        webServiceConnect.addNet(webServiceParam);
     }
 
     private StringBuilder assemberRecycleScanDetail() {
@@ -358,9 +373,6 @@ public class UploadCargoPresenter {
             RecycleScan recycleScan = recycleScanList.get(i);
             sb.append("DateHappen=").append(DateUtil.parseDateToString(recycleScan.getRecycleScanTime(), DateUtil.DATE_TIME_FORMATE)).append(";")
                     .append("Username=").append(recycleScan.getUserName()).append(";")
-                    .append("DriversId=").append("").append(";")
-                    .append("CooperateID=").append("").append(";")
-                    .append("L_PDTG_BATCH=").append("").append(";")
                     .append("LPN=").append(recycleScan.getScanCode()).append(";")
                     .append("huishouleixing=").append(recycleScan.getRecycleTypeValue()).append("|");
         }
@@ -370,15 +382,13 @@ public class UploadCargoPresenter {
 
     private void uploadRecycleInputData() {
         StringBuilder sb = assemberRecycleInputDetail();
-        if(sb != null && sb.length() > 0) {
-            Map params = new HashMap();
-            params.put("value", sb.toString());
-            String method = "Upload_kehuhuishou ";
-            String action = "http://tempuri.org/Upload_kehuhuishou";
-            WebServiceParam webServiceParam =
-                    new WebServiceParam((Context) uploadCargoView, params, method, action, inputHandler, 1);
-            webServiceConnect.addNet(webServiceParam);
-        }
+        Map params = new HashMap();
+        params.put("value", sb.toString());
+        String method = "Upload_kehuhuishou ";
+        String action = "http://tempuri.org/Upload_kehuhuishou";
+        WebServiceParam webServiceParam =
+                new WebServiceParam((Context) uploadCargoView, params, method, action, inputHandler, 1);
+        webServiceConnect.addNet(webServiceParam);
     }
 
     private StringBuilder assemberRecycleInputDetail() {
@@ -389,8 +399,9 @@ public class UploadCargoPresenter {
         StringBuilder sb = new StringBuilder();
         for (int i = 0; i < recycleInputList.size(); i++) {
             RecycleInput input = recycleInputList.get(i);
-            if (recycleInputMap.get("" + input.getLPdtgBatch()) != null) {
-                UploadRecycleInput uploadRecycleInput = (UploadRecycleInput) recycleInputMap.get("" + input.getLPdtgBatch());
+            String id = "" + input.getLPdtgBatch() + input.getCooperateId() + input.getDriversID();
+            if (recycleInputMap.get(id) != null) {
+                UploadRecycleInput uploadRecycleInput = (UploadRecycleInput) recycleInputMap.get(id);
                 if (input.getRecycleType() == 77) { //退货
                     uploadRecycleInput.setPiece1(input.getRecycleNum());
                 } else if (input.getRecycleType() == 79) { //调剂
@@ -414,7 +425,7 @@ public class UploadCargoPresenter {
                 } else if (input.getRecycleType() == 80) { //周转
                     uploadRecycleInput.setPiece(input.getRecycleNum());
                 }
-                recycleInputMap.put("" + input.getLPdtgBatch(), uploadRecycleInput);
+                recycleInputMap.put(id, uploadRecycleInput);
             }
         }
         for (Map.Entry entry : recycleInputMap.entrySet()) {
@@ -436,28 +447,24 @@ public class UploadCargoPresenter {
 
     private void uploadEvaRecordData() {
         StringBuilder sb = assemberEvaOrderDetail();
-        if(sb != null && sb.length() > 0) {
-            Map params = new HashMap();
-            params.put("value", sb.toString());
-            String method = "Upload_kehupingjia";
-            String action = "http://tempuri.org/Upload_kehupingjia";
-            WebServiceParam webServiceParam =
-                    new WebServiceParam((Context) uploadCargoView, params, method, action, evaHandler, 1);
-            webServiceConnect.addNet(webServiceParam);
-        }
+        Map params = new HashMap();
+        params.put("value", sb.toString());
+        String method = "Upload_kehupingjia";
+        String action = "http://tempuri.org/Upload_kehupingjia";
+        WebServiceParam webServiceParam =
+                new WebServiceParam((Context) uploadCargoView, params, method, action, evaHandler, 1);
+        webServiceConnect.addNet(webServiceParam);
     }
 
     private void uploadRecordData() {
         StringBuilder sb = assemberOrderDetail();
-        if(sb != null && sb.length() > 0) {
-            Map params = new HashMap();
-            params.put("value", sb.toString());
-            String method = "UploadScanRecord";
-            String action = "http://tempuri.org/UploadScanRecord";
-            WebServiceParam webServiceParam =
-                    new WebServiceParam((Context) uploadCargoView, params, method, action, handler, 1);
-            webServiceConnect.addNet(webServiceParam);
-        }
+        Map params = new HashMap();
+        params.put("value", sb.toString());
+        String method = "UploadScanRecord";
+        String action = "http://tempuri.org/UploadScanRecord";
+        WebServiceParam webServiceParam =
+                new WebServiceParam((Context) uploadCargoView, params, method, action, handler, 1);
+        webServiceConnect.addNet(webServiceParam);
     }
 
     private StringBuilder assemberOrderDetail() {

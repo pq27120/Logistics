@@ -169,7 +169,7 @@ public class SplashPresenter {
                     // 联网
                     HttpURLConnection conn = (HttpURLConnection) url.openConnection();
                     conn.setRequestMethod("GET");
-                    conn.setConnectTimeout(3000);
+                    conn.setConnectTimeout(5000);
                     conn.setReadTimeout(30000);
                     int code = conn.getResponseCode();
                     if (code == 200) {

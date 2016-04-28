@@ -13,4 +13,5 @@ public interface IUploadCargoView {
 
   AssetManager getAssetManager();
 
+  void finishActivity();
 }

@@ -23,6 +23,7 @@ import com.huaren.logistics.dao.SysDicDao;
 import com.huaren.logistics.dao.SysDicValueDao;
 import com.huaren.logistics.util.CommonTool;
 import com.huaren.logistics.util.DateUtil;
+import com.huaren.logistics.util.http.NetConnect;
 import com.huaren.logistics.util.webservice.WebServiceConnect;
 import com.huaren.logistics.util.webservice.WebServiceHandler;
 import com.huaren.logistics.util.webservice.WebServiceParam;
@@ -64,6 +65,9 @@ public class DownCargoPresenter {
             @Override
             public void handleMsg(int returnCode, Object detail) {
                 switch (returnCode) {
+                    case NetConnect.NET_ERROR:
+                        downCargoView.finishActivity();
+                        break;
                     case 1:
                         parseOrderInfo(detail);
                         break;
@@ -80,6 +84,9 @@ public class DownCargoPresenter {
             @Override
             public void handleMsg(int returnCode, Object detail) {
                 switch (returnCode) {
+                    case NetConnect.NET_ERROR:
+                        downCargoView.finishActivity();
+                        break;
                     case 1:
                         parseDictInfo(detail);
                         break;
@@ -96,6 +103,9 @@ public class DownCargoPresenter {
             @Override
             public void handleMsg(int returnCode, Object detail) {
                 switch (returnCode) {
+                    case NetConnect.NET_ERROR:
+                        downCargoView.finishActivity();
+                        break;
                     case 1:
                         parseDictValueInfo(detail);
                         break;

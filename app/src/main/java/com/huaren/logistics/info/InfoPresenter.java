@@ -12,8 +12,8 @@ public class InfoPresenter {
 
   public void clearUserInfo() {
     CommonTool.setSharePreference((Context) infoView, "isLogin", "false");
-    CommonTool.setSharePreference((Context) infoView, "name", "");
-    CommonTool.setSharePreference((Context) infoView, "licensePlate", "");
+    CommonTool.setSharePreference((Context) infoView, "curUserName", "");
+    CommonTool.setSharePreference((Context) infoView, "driverId", "");
     infoView.enterLogin();
   }
 }

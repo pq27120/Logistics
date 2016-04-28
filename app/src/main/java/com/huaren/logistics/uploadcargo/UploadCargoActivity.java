@@ -1,6 +1,6 @@
 package com.huaren.logistics.uploadcargo;
 
-import android.app.ProgressDialog;
+import android.app.Dialog;
 import android.content.res.AssetManager;
 import android.os.Bundle;
 import android.os.Handler;
@@ -14,6 +14,7 @@ import com.dexafree.materialList.view.MaterialListView;
 import com.gc.materialdesign.views.ButtonRectangle;
 import com.huaren.logistics.BaseActivity;
 import com.huaren.logistics.R;
+import com.huaren.logistics.customer.CustomProgress;
 
 public class UploadCargoActivity extends BaseActivity implements IUploadCargoView {
 
@@ -23,7 +24,7 @@ public class UploadCargoActivity extends BaseActivity implements IUploadCargoVie
 
   private MaterialListView mListView;
 
-  private ProgressDialog pd;    //进度条对话框
+  private Dialog dialog;    //进度条对话框
 
   @Override protected void onCreate(Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
@@ -32,7 +33,7 @@ public class UploadCargoActivity extends BaseActivity implements IUploadCargoVie
     uploadButton = (ButtonRectangle) findViewById(R.id.btn_upload);
     ((TextView) findViewById(R.id.tv_common_title)).setText(R.string.upload_cargo);
     presenter = new UploadCargoPresenter(this);
-    pd = ProgressDialog.show(UploadCargoActivity.this, "上传...", "请稍候...", true, false);
+    dialog = CustomProgress.show(this, "上传中...", false, null);
     presenter.uploadOrderData();
     uploadButton.setOnClickListener(new UpdateButtonClick());
   }
@@ -44,7 +45,7 @@ public class UploadCargoActivity extends BaseActivity implements IUploadCargoVie
     @Override
     public void handleMessage(Message msg) {
       //关闭ProgressDialog
-      pd.dismiss();
+      dialog.dismiss();
       mListView.setVisibility(View.VISIBLE);
       uploadButton.setVisibility(View.VISIBLE);
     }};
@@ -64,7 +65,7 @@ public class UploadCargoActivity extends BaseActivity implements IUploadCargoVie
     Card card = new Card.Builder(this)
         .withProvider(BasicButtonsCardProvider.class)
         .setTitle("上传成功")
-        .setDescription("上传时间：" + time + "," + info)
+        .setDescription("上传时间：" + time  + info)
         .endConfig().build();
     mListView.add(card);
     handler.sendEmptyMessage(0);
@@ -76,11 +77,17 @@ public class UploadCargoActivity extends BaseActivity implements IUploadCargoVie
     return getAssets();
   }
 
+  @Override
+  public void finishActivity() {
+    dialog.dismiss();
+    finish();
+  }
+
   private class UpdateButtonClick implements View.OnClickListener {
     @Override public void onClick(View v) {
       mListView.setVisibility(View.GONE);
       uploadButton.setVisibility(View.GONE);
-      pd = ProgressDialog.show(UploadCargoActivity.this, "上传...", "请稍候...", true, false);
+      dialog = CustomProgress.show(UploadCargoActivity.this, "上传中...", false, null);
       presenter.uploadOrderData();
     }
   }

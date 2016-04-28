@@ -17,6 +17,7 @@ public class WebServiceNet extends Thread {
   private WebServiceParam webServiceParam;
   private Handler parentHandler;
   private SoapSerializationEnvelope envelope;
+  private int timeOut = 15000;//
 
   private boolean isCancel = false; // 是否取消连接
 
@@ -62,7 +63,7 @@ public class WebServiceNet extends Thread {
     envelope.bodyOut = soapObject;
     envelope.dotNet = true;
     envelope.setOutputSoapObject(soapObject);
-    HttpTransportSE httpTransportSE = new HttpTransportSE(Constant.WEBSERVICE_URL);
+    HttpTransportSE httpTransportSE = new HttpTransportSE(Constant.WEBSERVICE_URL, timeOut);
     try {
       httpTransportSE.call(webServiceParam.action, envelope);
       getFlag = true;
