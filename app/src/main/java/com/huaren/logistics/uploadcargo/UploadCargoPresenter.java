@@ -1,6 +1,8 @@
 package com.huaren.logistics.uploadcargo;
 
 import android.content.Context;
+import android.os.Handler;
+import android.os.Message;
 import android.util.Xml;
 
 import com.huaren.logistics.LogisticsApplication;
@@ -43,6 +45,10 @@ public class UploadCargoPresenter {
     public WebServiceHandler scanHandler;
     protected WebServiceConnect webServiceConnect = new WebServiceConnect();
     private StringBuffer buffer = new StringBuffer("");
+    private boolean isFinishOne = false;
+    private boolean isFinishTwo = false;
+    private boolean isFinishThree = false;
+    private boolean isFinishFour = false;
 
     public UploadCargoPresenter(final IUploadCargoView uploadCargoView) {
         this.uploadCargoView = uploadCargoView;
@@ -124,6 +130,33 @@ public class UploadCargoPresenter {
         };
     }
 
+    /**
+     * 用Handler来更新UI
+     */
+    private Handler finishHandler = new Handler() {
+        @Override
+        public void handleMessage(Message msg) {
+            switch (msg.what) {
+                case 1:
+                    isFinishOne = true;
+                    break;
+                case 2:
+                    isFinishTwo = true;
+                    break;
+                case 3:
+                    isFinishThree = true;
+                    break;
+                case 4:
+                    isFinishFour = true;
+                    break;
+            }
+            if (isFinishOne && isFinishTwo && isFinishThree && isFinishFour) {
+                String time = DateUtil.parseCurrDateToString("yyyy-MM-dd HH:mm:ss");
+                uploadCargoView.showUpdateView(time, buffer.toString());
+            }
+        }
+    };
+
     private void parseRecycleInputInfo(Object detail) {
         parseRecycleInputXml(detail);
     }
@@ -180,8 +213,7 @@ public class UploadCargoPresenter {
             buffer.append(",上传" + recycleScanList.size() + "条回收扫描记录");
             RecycleScanDao dao = LogisticsApplication.getInstance().getRecycleScanDao();
             dao.deleteInTx(recycleScanList);
-            String time = DateUtil.parseCurrDateToString("yyyy-MM-dd HH:mm:ss");
-            uploadCargoView.showUpdateView(time, buffer.toString());
+            finishHandler.sendEmptyMessage(4);
         }
     }
 
@@ -241,6 +273,7 @@ public class UploadCargoPresenter {
             buffer.append("，上传" + recordOperatorLogList.size() + "条明细");
             OperatorLogDao operatorLogDao = LogisticsApplication.getInstance().getOperatorLogDao();
             operatorLogDao.deleteInTx(recordOperatorLogList);
+            finishHandler.sendEmptyMessage(1);
         }
     }
 
@@ -292,6 +325,7 @@ public class UploadCargoPresenter {
             buffer.append(",上传" + recycleInputList.size() + "条回收记录");
             RecycleInputDao dao = LogisticsApplication.getInstance().getRecycleInputDao();
             dao.deleteInTx(recycleInputList);
+            finishHandler.sendEmptyMessage(3);
         }
     }
 
@@ -343,6 +377,7 @@ public class UploadCargoPresenter {
             buffer.append(",上传" + evaOperatorLogList.size() + "条评价");
             OperatorLogDao operatorLogDao = LogisticsApplication.getInstance().getOperatorLogDao();
             operatorLogDao.deleteInTx(evaOperatorLogList);
+            finishHandler.sendEmptyMessage(2);
         }
     }
 
