@@ -62,6 +62,7 @@ public class UploadCargoActivity extends BaseActivity implements IUploadCargoVie
   }
 
   @Override public void showUpdateView(String time, String info) {
+    mListView.clearAll();
     Card card = new Card.Builder(this)
         .withProvider(BasicButtonsCardProvider.class)
         .setTitle("上传成功")

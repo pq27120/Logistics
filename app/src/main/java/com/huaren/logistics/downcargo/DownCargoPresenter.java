@@ -1,6 +1,8 @@
 package com.huaren.logistics.downcargo;
 
 import android.content.Context;
+import android.os.Handler;
+import android.os.Message;
 import android.util.Xml;
 
 import com.huaren.logistics.LogisticsApplication;
@@ -51,7 +53,10 @@ public class DownCargoPresenter {
     public WebServiceHandler dictHandler;
     public WebServiceHandler dictValueHandler;
     protected WebServiceConnect webServiceConnect = new WebServiceConnect();
-    private StringBuffer buffer = new StringBuffer("更新完成，更新了");
+    private String customerStr = "";
+    private String detailStr = "";
+    private boolean isFinishOne = false;
+    private boolean isFinishTwo = false;
 
     public DownCargoPresenter(final IDownCargoView downCargoView) {
         this.downCargoView = downCargoView;
@@ -113,6 +118,27 @@ public class DownCargoPresenter {
             }
         };
     }
+
+    /**
+     * 用Handler来更新UI
+     */
+    private Handler finishHandler = new Handler() {
+        @Override
+        public void handleMessage(Message msg) {
+            switch (msg.what) {
+                case 1:
+                    isFinishOne = true;
+                    break;
+                case 2:
+                    isFinishTwo = true;
+                    break;
+            }
+            if (isFinishOne && isFinishTwo) {
+                String time = DateUtil.parseCurrDateToString("yyyy-MM-dd HH:mm:ss");
+                downCargoView.showUpdateView(time, "更新完成，更新了" + customerStr + "," + detailStr);
+            }
+        }
+    };
 
     private void parseDictValueInfo(Object detail) {
         List<SysDicValue> sysDicValueList = null;
@@ -179,8 +205,6 @@ public class DownCargoPresenter {
 
     private void parseOrderInfo(Object detail) {
         parseOrderXml(detail);
-        String time = DateUtil.parseCurrDateToString("yyyy-MM-dd HH:mm:ss");
-        downCargoView.showUpdateView(time, buffer.toString());
     }
 
     private void parseDictInfo(Object detail) {
@@ -271,7 +295,8 @@ public class DownCargoPresenter {
         }
         customerDao.insertInTx(insertCustomerList);
         insertCustomerList.clear();
-        buffer.append(customerNum).append("条客户信息");
+        CommonTool.showLog(customerNum + "条客户信息");
+        customerStr = customerNum + "条客户信息";
     }
 
     private void insertOrderDetail(List<OrderDetail> orderDetailList) {
@@ -301,7 +326,8 @@ public class DownCargoPresenter {
         }
         orderDetailDao.insertInTx(insertDetailList);
         insertDetailList.clear();
-        buffer.append(",").append(detailCount).append("条明细");
+        CommonTool.showLog(detailCount + "条明细");
+        detailStr = detailCount + "条明细";
     }
 
     private void parseOrderXml(Object detail) {
@@ -499,6 +525,7 @@ public class DownCargoPresenter {
         } catch (XmlPullParserException e) {
             e.printStackTrace();
         }
+        finishHandler.sendEmptyMessage(2);
         return orderDetailList;
     }
 
@@ -802,6 +829,7 @@ public class DownCargoPresenter {
         } catch (XmlPullParserException e) {
             e.printStackTrace();
         }
+        finishHandler.sendEmptyMessage(1);
         return customerList;
     }
 

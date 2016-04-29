@@ -65,6 +65,7 @@ public class DownCargoActivity extends BaseActivity implements IDownCargoView {
 
     @Override
     public void showUpdateView(String time, String info) {
+        mListView.clearAll();
         Card card = new Card.Builder(this)
                 .withProvider(BasicButtonsCardProvider.class)
                 .setTitle("更新成功")
