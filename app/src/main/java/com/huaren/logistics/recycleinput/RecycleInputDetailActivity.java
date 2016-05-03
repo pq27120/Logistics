@@ -82,7 +82,6 @@ public class RecycleInputDetailActivity extends BaseActivity
     initUserInfo();
     inputEt = (MaterialEditText) findViewById(R.id.input_et);
     inputEt.setText("");
-    UiTool.hideSoftInputMethod(RecycleInputDetailActivity.this, inputEt);
     inputBtn = (ButtonRectangle) findViewById(R.id.input_btn);
     radioLl = (LinearLayout) findViewById(R.id.radio_ll);
     mListView = (MaterialListView) findViewById(R.id.material_listview);
@@ -101,6 +100,12 @@ public class RecycleInputDetailActivity extends BaseActivity
     recycleInputDetailPresent.initRecycleInputRadio();
     recycleInputDetailPresent.initRecycleInputList(orderBatchId);
     inputBtn.setOnClickListener(new InputBtnClick());
+  }
+
+  @Override
+  protected void onResume() {
+    UiTool.hideSoftInputMethod(RecycleInputDetailActivity.this, inputEt);
+    super.onResume();
   }
 
   @Override public void initRadio(List<SysDicValue> list) {

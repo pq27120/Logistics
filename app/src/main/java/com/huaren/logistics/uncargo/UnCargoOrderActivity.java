@@ -13,7 +13,6 @@ import com.dexafree.materialList.view.MaterialListView;
 import com.gc.materialdesign.views.ButtonRectangle;
 import com.huaren.logistics.BaseActivity;
 import com.huaren.logistics.R;
-import com.huaren.logistics.util.CommonTool;
 import com.huaren.logistics.util.UiTool;
 import com.rengwuxian.materialedittext.MaterialEditText;
 
@@ -33,7 +32,6 @@ public class UnCargoOrderActivity extends BaseActivity implements IUnCargoOrderV
     initUserInfo();
     unRemoveEt = (MaterialEditText) findViewById(R.id.load_et);
     unRemoveEt.setOnKeyListener(onKey);
-    UiTool.hideSoftInputMethod(UnCargoOrderActivity.this, unRemoveEt);
     unRemoveBtn = (ButtonRectangle) findViewById(R.id.remove_btn);
     mListView = (MaterialListView) findViewById(R.id.material_listview);
     ((TextView) findViewById(R.id.tv_common_title)).setText(R.string.uncargo);
@@ -42,6 +40,12 @@ public class UnCargoOrderActivity extends BaseActivity implements IUnCargoOrderV
     presenter = new UnCargoOrderPresenter(this);
     unRemoveBtn.setOnClickListener(new LoadButtonClick());
     presenter.initCargoOrder(customerId);
+  }
+
+  @Override
+  protected void onResume() {
+    UiTool.hideSoftInputMethod(UnCargoOrderActivity.this, unRemoveEt);
+    super.onResume();
   }
 
   @Override public void addCard(Card card) {

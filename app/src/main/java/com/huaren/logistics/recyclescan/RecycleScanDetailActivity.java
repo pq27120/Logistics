@@ -56,7 +56,6 @@ public class RecycleScanDetailActivity extends BaseActivity implements IRecycleS
     initUserInfo();
     scanEt = (MaterialEditText) findViewById(R.id.input_et);
     scanEt.setText("");
-    UiTool.hideSoftInputMethod(RecycleScanDetailActivity.this, scanEt);
     scanBtn = (ButtonRectangle) findViewById(R.id.input_btn);
     radioLl = (LinearLayout) findViewById(R.id.radio_ll);
     mListView = (MaterialListView) findViewById(R.id.material_listview);
@@ -74,6 +73,12 @@ public class RecycleScanDetailActivity extends BaseActivity implements IRecycleS
     recycleScanDetailPresent.initRecycleScanList();
     scanBtn.setOnClickListener(new ScanBtnClick());
     scanEt.setOnKeyListener(onKey);
+  }
+
+  @Override
+  protected void onResume() {
+    UiTool.hideSoftInputMethod(RecycleScanDetailActivity.this, scanEt);
+    super.onResume();
   }
 
   @Override

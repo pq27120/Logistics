@@ -4,19 +4,17 @@ import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
-import android.util.Log;
 import android.view.KeyEvent;
 import android.view.View;
 import android.widget.TextView;
+
 import com.afollestad.materialdialogs.DialogAction;
 import com.afollestad.materialdialogs.MaterialDialog;
 import com.dexafree.materialList.card.Card;
-import com.dexafree.materialList.listeners.RecyclerItemClickListener;
 import com.dexafree.materialList.view.MaterialListView;
 import com.gc.materialdesign.views.ButtonRectangle;
 import com.huaren.logistics.BaseActivity;
 import com.huaren.logistics.R;
-import com.huaren.logistics.util.CommonTool;
 import com.huaren.logistics.util.UiTool;
 import com.rengwuxian.materialedittext.MaterialEditText;
 
@@ -36,7 +34,6 @@ public class CargoOrderActivity extends BaseActivity implements ICargoOrderView 
     initUserInfo();
     loadEt = (MaterialEditText) findViewById(R.id.load_et);
     loadEt.setOnKeyListener(onKey);
-    UiTool.hideSoftInputMethod(CargoOrderActivity.this, loadEt);
     loadBtn = (ButtonRectangle) findViewById(R.id.load_btn);
     mListView = (MaterialListView) findViewById(R.id.material_listview);
     ((TextView) findViewById(R.id.tv_common_title)).setText(R.string.cargo);
@@ -45,6 +42,12 @@ public class CargoOrderActivity extends BaseActivity implements ICargoOrderView 
     presenter = new CargoOrderPresenter(this);
     loadBtn.setOnClickListener(new LoadButtonClick());
     presenter.initCargoOrder(customerId);
+  }
+
+  @Override
+  protected void onResume() {
+    UiTool.hideSoftInputMethod(CargoOrderActivity.this, loadEt);
+    super.onResume();
   }
 
   public static void actionStart(Context context, String customerId) {

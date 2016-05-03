@@ -46,13 +46,19 @@ public class LoginActivity extends Activity implements LoginView, View.OnClickLi
     username = (MaterialEditText) findViewById(R.id.username);
     UiTool.hideSoftInputMethod(LoginActivity.this, username);
     password = (MaterialEditText) findViewById(R.id.password);
-    UiTool.hideSoftInputMethod(LoginActivity.this, password);
     rememverCb = (CheckBox) findViewById(R.id.remember_cb);
     logisticsTv = (TextView)findViewById(R.id.logistics);
     logisticsTv.setText(getResources().getString(R.string.app_name_desc) + "(V" + CommonTool.getVersionName(this) + ")");
     findViewById(R.id.btn_login).setOnClickListener(this);
     presenter = new LoginPresenter(this);
     presenter.initUsername();
+  }
+
+  @Override
+  protected void onResume() {
+    presenter.initSwitch();
+    UiTool.hideSoftInputMethod(LoginActivity.this, password);
+    super.onResume();
   }
 
   @Override protected void onDestroy() {

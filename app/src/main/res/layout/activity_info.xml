@@ -1,26 +1,58 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:orientation="vertical"
+    xmlns:materialdesign="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/white"
-    >
+    android:orientation="vertical">
 
-  <include
-      android:id="@+id/layout_title"
-      layout="@layout/layout_common_title"
-      />
+    <include
+        android:id="@+id/layout_title"
+        layout="@layout/layout_common_title" />
 
-  <include layout="@layout/layout_comm_user"/>
+    <include layout="@layout/layout_comm_user" />
 
-  <com.gc.materialdesign.views.ButtonRectangle
-      android:id="@+id/btn_quit"
-      android:layout_width="300dp"
-      android:layout_height="wrap_content"
-      android:background="@color/blue_two"
-      android:text="@string/quit"
-      android:layout_gravity="center_horizontal"
-      android:textSize="@dimen/text_size_middle"
-      />
+
+    <LinearLayout
+        android:layout_width="fill_parent"
+        android:layout_height="48dp"
+        android:layout_marginLeft="10dp"
+        android:layout_marginRight="10dp"
+        android:layout_marginTop="10dp"
+        android:orientation="horizontal">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="48dp"
+            android:gravity="center_vertical"
+            android:text="@string/hide_keyboard"
+            android:textColor="@android:color/darker_gray"
+            android:textSize="@dimen/text_size_large"
+            android:layout_weight="1"/>
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="48dp"
+            android:gravity="center"
+            android:orientation="horizontal"
+            android:layout_weight="1">
+
+            <com.kyleduo.switchbutton.SwitchButton
+                android:id="@+id/hide_keyboard_switch"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:gravity="center_horizontal"
+                app:kswTintColor="@color/blue_two"/>
+        </LinearLayout>
+    </LinearLayout>
+
+    <com.gc.materialdesign.views.ButtonRectangle
+        android:id="@+id/btn_quit"
+        android:layout_width="300dp"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_horizontal"
+        android:background="@color/blue_two"
+        android:text="@string/quit"
+        android:textSize="@dimen/text_size_middle" />
 </LinearLayout>

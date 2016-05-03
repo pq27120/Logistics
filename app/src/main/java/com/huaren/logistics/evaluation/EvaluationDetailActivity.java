@@ -43,13 +43,18 @@ public class EvaluationDetailActivity extends BaseActivity implements IEvaluatio
     ((TextView) findViewById(R.id.tv_common_title)).setText(R.string.evaluation);
     radioLl = (LinearLayout) findViewById(R.id.radio_ll);
     passEt = (MaterialEditText) findViewById(R.id.user_pass_et);
-    UiTool.hideSoftInputMethod(EvaluationDetailActivity.this, passEt);
     evBtn = (ButtonRectangle) findViewById(R.id.evaluation_btn);
     Intent intent = getIntent();
     orderBatchId = intent.getStringExtra("orderBatchId");
     presenter = new EvaluationDetailPresenter(this);
     presenter.initEvaluationDetail(orderBatchId);
     evBtn.setOnClickListener(new EvaluationButtonClick());
+  }
+
+  @Override
+  protected void onResume() {
+    UiTool.hideSoftInputMethod(EvaluationDetailActivity.this, passEt);
+    super.onResume();
   }
 
   public static void actionStart(Context context, String orderBatchId) {

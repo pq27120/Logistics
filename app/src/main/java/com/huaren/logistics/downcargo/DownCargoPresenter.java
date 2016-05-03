@@ -629,24 +629,26 @@ public class DownCargoPresenter {
             e.printStackTrace();
         }
 
-        if (downBatchInfoList == null || downBatchInfoList.isEmpty()) {
-            DownBatchInfo downBatchInfo = new DownBatchInfo();
-            downBatchInfo.setLPdtgBatch(lPdtgBatch);
-            downBatchInfo.setAddTime(new Date());
-            downBatchInfo.setUserName(userName);
-            downBatchInfoDao.insert(downBatchInfo);
-        } else {
-            DownBatchInfo downBatchInfo = downBatchInfoList.get(0);
-            if (lPdtgBatch > downBatchInfo.getLPdtgBatch()) {
+        if(lPdtgBatch > 0) {
+            if (downBatchInfoList == null || downBatchInfoList.isEmpty()) {
+                DownBatchInfo downBatchInfo = new DownBatchInfo();
+                downBatchInfo.setLPdtgBatch(lPdtgBatch);
+                downBatchInfo.setAddTime(new Date());
+                downBatchInfo.setUserName(userName);
+                downBatchInfoDao.insert(downBatchInfo);
+            } else {
+                DownBatchInfo downBatchInfo = downBatchInfoList.get(0);
+                if (lPdtgBatch > downBatchInfo.getLPdtgBatch()) {
 //                updateCustomerStatus(downBatchInfo.getLPdtgBatch(), userName);
-                delCustomer(downBatchInfo.getLPdtgBatch(), userName);
+                    delCustomer(downBatchInfo.getLPdtgBatch(), userName);
 //                updateOrderBatchStatus(downBatchInfo.getLPdtgBatch(), userName);
-                delOrderBatch(downBatchInfo.getLPdtgBatch(), userName);
+                    delOrderBatch(downBatchInfo.getLPdtgBatch(), userName);
 //                updateOrderDetailStatus(downBatchInfo.getLPdtgBatch(), userName);
-                delOrderDetail(downBatchInfo.getLPdtgBatch(), userName);
-                updateRecycleInputStatus(downBatchInfo.getLPdtgBatch(), userName);
-                updateRecycleScanStatus(downBatchInfo.getLPdtgBatch(), userName);
-                updateDownBatchInfo(lPdtgBatch, userName);
+                    delOrderDetail(downBatchInfo.getLPdtgBatch(), userName);
+                    updateRecycleInputStatus(downBatchInfo.getLPdtgBatch(), userName);
+                    updateRecycleScanStatus(downBatchInfo.getLPdtgBatch(), userName);
+                    updateDownBatchInfo(lPdtgBatch, userName);
+                }
             }
         }
     }

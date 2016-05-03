@@ -86,4 +86,11 @@ public class LoginPresenter {
             loginView.setRememberCheck(false);
         }
     }
+
+    public void initSwitch() {
+        String hideFlag = CommonTool.getSharePreference((Context)loginView, "hideKeyBoard");
+        if (!"0".equals(hideFlag)) {
+            CommonTool.setSharePreference((Context)loginView, "hideKeyBoard","1");
+        }
+    }
 }

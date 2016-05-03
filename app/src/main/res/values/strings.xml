@@ -49,4 +49,5 @@
     <string name="activity_upload_cargo_title">上传</string>
     <string name="progress_dialog">进度</string>
     <string name="please_wait">加载中...</string>
+    <string name="hide_keyboard">隐藏虚拟键盘</string>
 </resources>
