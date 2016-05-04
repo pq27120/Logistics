@@ -107,14 +107,18 @@ public class RecycleScanDetailActivity extends BaseActivity implements IRecycleS
 
   View.OnKeyListener onKey = new View.OnKeyListener() {
     @Override public boolean onKey(View v, int keyCode, KeyEvent event) {
-      if (keyCode == KeyEvent.KEYCODE_ENTER) {
-        for (int i = 0; i < list.size(); i++) {
-          SysDicValue sysDicValue = list.get(i);
-          if (sysDicValue.getMyDisplayValue().equals(checkRadioName)) {
-            recycleScanDetailPresent.recycleGoods(sysDicValue, scanEt.getText().toString());
+      switch (event.getAction()) {
+        case KeyEvent.ACTION_UP:             //键盘松开
+          if (keyCode == KeyEvent.KEYCODE_ENTER) {
+            for (int i = 0; i < list.size(); i++) {
+              SysDicValue sysDicValue = list.get(i);
+              if (sysDicValue.getMyDisplayValue().equals(checkRadioName)) {
+                recycleScanDetailPresent.recycleGoods(sysDicValue, scanEt.getText().toString());
+              }
+            }
           }
-        }
-        return true;
+        case KeyEvent.ACTION_DOWN:          //键盘按下
+          break;
       }
       return false;
     }

@@ -93,9 +93,13 @@ public class UnCargoOrderActivity extends BaseActivity implements IUnCargoOrderV
 
   View.OnKeyListener onKey = new View.OnKeyListener() {
     @Override public boolean onKey(View v, int keyCode, KeyEvent event) {
-      if (keyCode == KeyEvent.KEYCODE_ENTER) {
-        presenter.loadDetailCargo(customerId, unRemoveEt.getText().toString());
-        return true;
+      switch (event.getAction()) {
+        case KeyEvent.ACTION_UP:             //键盘松开
+          if (keyCode == KeyEvent.KEYCODE_ENTER) {
+            presenter.loadDetailCargo(customerId, unRemoveEt.getText().toString());
+          }
+        case KeyEvent.ACTION_DOWN:          //键盘按下
+          break;
       }
       return false;
     }
