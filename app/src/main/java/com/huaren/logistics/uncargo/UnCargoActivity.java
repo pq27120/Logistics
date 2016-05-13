@@ -1,5 +1,6 @@
 package com.huaren.logistics.uncargo;
 
+import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
@@ -36,6 +37,11 @@ public class UnCargoActivity extends BaseActivity implements IUnCargoView {
     ((TextView) findViewById(R.id.tv_common_title)).setText(R.string.uncargo);
     presenter = new UnCargoPresenter(this);
     presenter.initCargoList();
+  }
+
+  public static void actionStart(Context context) {
+    Intent intent = new Intent(context, UnCargoActivity.class);
+    context.startActivity(intent);
   }
 
   @Override public void addCard(Card card) {

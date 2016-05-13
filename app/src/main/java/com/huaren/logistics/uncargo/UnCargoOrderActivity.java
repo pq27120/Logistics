@@ -48,6 +48,12 @@ public class UnCargoOrderActivity extends BaseActivity implements IUnCargoOrderV
     super.onResume();
   }
 
+  @Override
+  public void backClick(View view) {
+    UnCargoActivity.actionStart(UnCargoOrderActivity.this);
+    super.backClick(view);
+  }
+
   @Override public void addCard(Card card) {
     mListView.add(card);
   }
@@ -93,13 +99,16 @@ public class UnCargoOrderActivity extends BaseActivity implements IUnCargoOrderV
 
   View.OnKeyListener onKey = new View.OnKeyListener() {
     @Override public boolean onKey(View v, int keyCode, KeyEvent event) {
-      switch (event.getAction()) {
-        case KeyEvent.ACTION_UP:             //键盘松开
-          if (keyCode == KeyEvent.KEYCODE_ENTER) {
+      if (keyCode == KeyEvent.KEYCODE_ENTER) {
+        switch (event.getAction()) {
+          case KeyEvent.ACTION_UP:             //键盘松开
             presenter.loadDetailCargo(customerId, unRemoveEt.getText().toString());
-          }
-        case KeyEvent.ACTION_DOWN:          //键盘按下
-          break;
+            unRemoveEt.requestFocus();
+            break;
+          case KeyEvent.ACTION_DOWN:          //键盘按下
+            break;
+        }
+        return true;
       }
       return false;
     }

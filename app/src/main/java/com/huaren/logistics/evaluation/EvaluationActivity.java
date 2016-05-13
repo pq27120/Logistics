@@ -1,5 +1,6 @@
 package com.huaren.logistics.evaluation;
 
+import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
@@ -26,6 +27,7 @@ public class EvaluationActivity extends BaseActivity implements  IEvaluationView
         Intent intent = new Intent(EvaluationActivity.this, EvaluationDetailActivity.class);
         intent.putExtra("orderBatchId", card.getTag().toString());
         startActivity(intent);
+        finish();
       }
 
       @Override public void onItemLongClick(Card card, int position) {
@@ -35,6 +37,11 @@ public class EvaluationActivity extends BaseActivity implements  IEvaluationView
     ((TextView) findViewById(R.id.tv_common_title)).setText(R.string.evaluation);
     presenter = new EvaluationPresenter(this);
     presenter.initCargoList();
+  }
+
+  public static void actionStart(Context context) {
+    Intent intent = new Intent(context, EvaluationActivity.class);
+    context.startActivity(intent);
   }
 
   @Override public void addCard(Card card) {

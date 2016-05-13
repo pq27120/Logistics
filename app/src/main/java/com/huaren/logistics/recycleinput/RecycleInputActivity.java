@@ -1,5 +1,6 @@
 package com.huaren.logistics.recycleinput;
 
+import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
@@ -9,7 +10,6 @@ import com.dexafree.materialList.listeners.RecyclerItemClickListener;
 import com.dexafree.materialList.view.MaterialListView;
 import com.huaren.logistics.BaseActivity;
 import com.huaren.logistics.R;
-import com.huaren.logistics.evaluation.EvaluationDetailActivity;
 
 public class RecycleInputActivity extends BaseActivity implements IRecycleInputView {
   private MaterialListView mListView;
@@ -37,6 +37,11 @@ public class RecycleInputActivity extends BaseActivity implements IRecycleInputV
     ((TextView) findViewById(R.id.tv_common_title)).setText(R.string.activity_recycle_input_title);
     presenter = new RecycleInputPresenter(this);
     presenter.initCargoList();
+  }
+
+  public static void actionStart(Context context) {
+    Intent intent = new Intent(context, RecycleInputActivity.class);
+    context.startActivity(intent);
   }
 
   @Override public void addCard(Card card) {

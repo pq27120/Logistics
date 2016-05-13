@@ -3,11 +3,13 @@ package com.huaren.logistics;
 import android.app.Application;
 import android.content.Context;
 import android.database.sqlite.SQLiteDatabase;
+import android.device.ScanManager;
 
 import com.huaren.logistics.dao.CustomerDao;
 import com.huaren.logistics.dao.DaoMaster;
 import com.huaren.logistics.dao.DaoSession;
 import com.huaren.logistics.dao.DownBatchInfoDao;
+import com.huaren.logistics.dao.ErrOperatorLogDao;
 import com.huaren.logistics.dao.LogisticsUserDao;
 import com.huaren.logistics.dao.OperatorLogDao;
 import com.huaren.logistics.dao.OrderBatchDao;
@@ -16,6 +18,7 @@ import com.huaren.logistics.dao.RecycleInputDao;
 import com.huaren.logistics.dao.RecycleScanDao;
 import com.huaren.logistics.dao.SysDicDao;
 import com.huaren.logistics.dao.SysDicValueDao;
+import com.huaren.logistics.util.CommonTool;
 import com.huaren.logistics.util.SoundPoolUtil;
 
 public class LogisticsApplication extends Application {
@@ -33,6 +36,7 @@ public class LogisticsApplication extends Application {
   private DownBatchInfoDao downBatchInfoDao;
   private OrderBatchDao orderBatchDao;
   private OperatorLogDao operatorLogDao;
+  private ErrOperatorLogDao errOperatorLogDao;
   private static LogisticsApplication INSTANCE;
   private static Context context;
   private SoundPoolUtil soundPoolUtil;
@@ -49,6 +53,15 @@ public class LogisticsApplication extends Application {
     crashHandler.init(getApplicationContext());
     setupDatabase();
     soundPoolUtil = new SoundPoolUtil(context);
+
+    try {
+      ScanManager scan = new ScanManager();
+      scan.openScanner();
+      scan.switchOutputMode(1);
+    } catch (Exception e) {
+      e.printStackTrace();
+      CommonTool.showLog("初始化扫描设备异常！");
+    }
   }
 
   /**
@@ -79,6 +92,7 @@ public class LogisticsApplication extends Application {
     downBatchInfoDao = daoSession.getDownBatchInfoDao();
     orderBatchDao = daoSession.getOrderBatchDao();
     operatorLogDao = daoSession.getOperatorLogDao();
+    errOperatorLogDao = daoSession.getErrOperatorLogDao();
   }
 
   public DaoSession getDaoSession() {
@@ -131,5 +145,9 @@ public class LogisticsApplication extends Application {
 
   public OperatorLogDao getOperatorLogDao() {
     return operatorLogDao;
+  }
+
+  public ErrOperatorLogDao getErrOperatorLogDao() {
+    return errOperatorLogDao;
   }
 }

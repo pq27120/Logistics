@@ -48,6 +48,12 @@ public class RecycleInputDetailActivity extends BaseActivity
     context.startActivity(intent);
   }
 
+  @Override
+  public void backClick(View view) {
+    RecycleInputActivity.actionStart(RecycleInputDetailActivity.this);
+    super.backClick(view);
+  }
+
   @Override public void showDialog(String title, String message, final RecycleInput recycleInput) {
     MaterialDialog.Builder dialog = new MaterialDialog.Builder(this).title(title)
         .content(message)

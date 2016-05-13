@@ -6,9 +6,11 @@ import android.os.Message;
 import android.util.Xml;
 
 import com.huaren.logistics.LogisticsApplication;
+import com.huaren.logistics.bean.ErrOperatorLog;
 import com.huaren.logistics.bean.OperatorLog;
 import com.huaren.logistics.bean.RecycleInput;
 import com.huaren.logistics.bean.RecycleScan;
+import com.huaren.logistics.dao.ErrOperatorLogDao;
 import com.huaren.logistics.dao.OperatorLogDao;
 import com.huaren.logistics.dao.RecycleInputDao;
 import com.huaren.logistics.dao.RecycleScanDao;
@@ -38,17 +40,20 @@ public class UploadCargoPresenter {
     private List<OperatorLog> evaOperatorLogList;
     private List<RecycleInput> recycleInputList;
     private List<RecycleScan> recycleScanList;
+    private List<ErrOperatorLog> errOperatorLogList;
 
     public WebServiceHandler handler;
     public WebServiceHandler evaHandler;
     public WebServiceHandler inputHandler;
     public WebServiceHandler scanHandler;
+    public WebServiceHandler errorHandler;
     protected WebServiceConnect webServiceConnect = new WebServiceConnect();
     private StringBuffer buffer = new StringBuffer("");
     private boolean isFinishOne = false;
     private boolean isFinishTwo = false;
     private boolean isFinishThree = false;
     private boolean isFinishFour = false;
+    private boolean isFinishFive = false;
 
     public UploadCargoPresenter(final IUploadCargoView uploadCargoView) {
         this.uploadCargoView = uploadCargoView;
@@ -128,6 +133,25 @@ public class UploadCargoPresenter {
                 }
             }
         };
+
+        errorHandler = new WebServiceHandler((Context) uploadCargoView) {
+            @Override
+            public void handleFirst() {
+
+            }
+
+            @Override
+            public void handleMsg(int returnCode, Object detail) {
+                switch (returnCode) {
+                    case NetConnect.NET_ERROR:
+                        uploadCargoView.finishActivity();
+                        break;
+                    case 1:
+                        parseErrorRecordInfo(detail);
+                        break;
+                }
+            }
+        };
     }
 
     /**
@@ -149,8 +173,11 @@ public class UploadCargoPresenter {
                 case 4:
                     isFinishFour = true;
                     break;
+                case 5:
+                    isFinishFive = true;
+                    break;
             }
-            if (isFinishOne && isFinishTwo && isFinishThree && isFinishFour) {
+            if (isFinishOne && isFinishTwo && isFinishThree && isFinishFour && isFinishFive) {
                 String time = DateUtil.parseCurrDateToString("yyyy-MM-dd HH:mm:ss");
                 uploadCargoView.showUpdateView(time, buffer.toString());
             }
@@ -214,6 +241,58 @@ public class UploadCargoPresenter {
             RecycleScanDao dao = LogisticsApplication.getInstance().getRecycleScanDao();
             dao.deleteInTx(recycleScanList);
             finishHandler.sendEmptyMessage(4);
+        }
+    }
+
+    private void parseErrorRecordInfo(Object detail) {
+        //批量信息
+        SoapObject soapObject = (SoapObject) detail;
+        String xml = soapObject.getPropertyAsString("Upload_yunshuyichangResult");
+        boolean flag = false;
+        try {
+            XmlPullParser parser = Xml.newPullParser();
+            parser.setInput(new StringReader(xml));
+            //  产生第一个事件
+            int eventType = parser.getEventType();
+            //  当文档结束事件时退出循环
+            while (eventType != XmlPullParser.END_DOCUMENT) {
+                switch (eventType) {
+                    // 开始文档
+                    case XmlPullParser.START_DOCUMENT:
+                        // new 集合，方便于添加元素
+                        break;
+                    // 开始标记
+                    case XmlPullParser.START_TAG:
+                        // 获得当前节点名（标记名）
+                        String name = parser.getName();
+                        if ("LoginResult".equals(name)) {
+                            flag = false;
+                        }
+                        if ("Code".equals(name)) {
+                            String code = parser.nextText();
+                            if ("1".equals(code)) {
+                                flag = true;
+                            }
+                        }
+
+                        break;
+                    // 结束标记
+                    case XmlPullParser.END_TAG:
+                        break;
+                }
+                // 获得解析器中的下一个事件
+                eventType = parser.next();
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        } catch (XmlPullParserException e) {
+            e.printStackTrace();
+        }
+        if (flag) {
+            buffer.append(",上传" + errOperatorLogList.size() + "条异常记录");
+            ErrOperatorLogDao dao = LogisticsApplication.getInstance().getErrOperatorLogDao();
+            dao.deleteInTx(errOperatorLogList);
+            finishHandler.sendEmptyMessage(5);
         }
     }
 
@@ -386,6 +465,39 @@ public class UploadCargoPresenter {
         uploadEvaRecordData();
         uploadRecycleInputData();
         uploadRecycleScanData();
+        uploadErrorRecordData();
+    }
+
+    /**
+     * 上传异常扫描信息
+     */
+    private void uploadErrorRecordData() {
+        StringBuilder sb = assemberErrorRecordData();
+        Map params = new HashMap();
+        params.put("value", sb.toString());
+        String method = "Upload_yunshuyichang";
+        String action = "http://tempuri.org/Upload_yunshuyichang";
+        WebServiceParam webServiceParam =
+                new WebServiceParam((Context) uploadCargoView, params, method, action, errorHandler, 1);
+        webServiceConnect.addNet(webServiceParam);
+    }
+
+    private StringBuilder assemberErrorRecordData() {
+        ErrOperatorLogDao dao = LogisticsApplication.getInstance().getErrOperatorLogDao();
+        String userName = CommonTool.getSharePreference((Context) uploadCargoView, "curUserName");
+        errOperatorLogList = dao.queryBuilder().where(ErrOperatorLogDao.Properties.UserName.eq(userName)).list();
+        StringBuilder sb = new StringBuilder();
+        for (int i = 0; i < errOperatorLogList.size(); i++) {
+            ErrOperatorLog errOperatorLog = errOperatorLogList.get(i);
+            sb.append("DateHappen=").append(DateUtil.parseDateToString(errOperatorLog.getAddTime(), DateUtil.DATE_TIME_FORMATE)).append(";")
+                    .append("Username=").append(errOperatorLog.getCustomerId()).append(";")
+                    .append("LPN=").append(errOperatorLog.getLpn()).append(";")
+                    .append("DriversID=").append(errOperatorLog.getDriverId()).append(";")
+                    .append("CooperateID=").append(errOperatorLog.getCooperateID()).append(";")
+                    .append("L_PDTG_BATCH=").append(errOperatorLog.getLPdtgBatch()).append("|");
+        }
+        CommonTool.showLog("异常扫描====" + sb.toString());
+        return sb;
     }
 
     private void uploadRecycleScanData() {

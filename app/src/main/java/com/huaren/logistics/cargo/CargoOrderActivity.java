@@ -45,6 +45,11 @@ public class CargoOrderActivity extends BaseActivity implements ICargoOrderView 
         presenter.initCargoOrder(customerId);
     }
 
+    public void backClick(View view) {
+        CargoActivity.actionStart(CargoOrderActivity.this);
+        super.finish();
+    }
+
     @Override
     protected void onResume() {
         UiTool.hideSoftInputMethod(CargoOrderActivity.this, loadEt);
@@ -104,13 +109,16 @@ public class CargoOrderActivity extends BaseActivity implements ICargoOrderView 
     View.OnKeyListener onKey = new View.OnKeyListener() {
         @Override
         public boolean onKey(View v, int keyCode, KeyEvent event) {
-            switch (event.getAction()) {
-                case KeyEvent.ACTION_UP:             //键盘松开
-                    if (keyCode == KeyEvent.KEYCODE_ENTER) {
+            if (keyCode == KeyEvent.KEYCODE_ENTER) {
+                switch (event.getAction()) {
+                    case KeyEvent.ACTION_UP:             //键盘松开
                         presenter.loadDetailCargo(customerId, loadEt.getText().toString());
-                    }
-                case KeyEvent.ACTION_DOWN:          //键盘按下
-                    break;
+                        loadEt.requestFocus();
+                        break;
+                    case KeyEvent.ACTION_DOWN:          //键盘按下
+                        break;
+                }
+                return true;
             }
             return false;
         }

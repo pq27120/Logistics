@@ -25,6 +25,7 @@ import com.huaren.logistics.dao.SysDicDao;
 import com.huaren.logistics.dao.SysDicValueDao;
 import com.huaren.logistics.util.CommonTool;
 import com.huaren.logistics.util.DateUtil;
+import com.huaren.logistics.util.UiTool;
 import com.huaren.logistics.util.http.NetConnect;
 import com.huaren.logistics.util.webservice.WebServiceConnect;
 import com.huaren.logistics.util.webservice.WebServiceHandler;
@@ -52,11 +53,13 @@ public class DownCargoPresenter {
     public WebServiceHandler handler;
     public WebServiceHandler dictHandler;
     public WebServiceHandler dictValueHandler;
+    public WebServiceHandler delHandler;
     protected WebServiceConnect webServiceConnect = new WebServiceConnect();
     private String customerStr = "";
     private String detailStr = "";
     private boolean isFinishOne = false;
     private boolean isFinishTwo = false;
+    private boolean isFinishThree = false;
 
     public DownCargoPresenter(final IDownCargoView downCargoView) {
         this.downCargoView = downCargoView;
@@ -117,6 +120,25 @@ public class DownCargoPresenter {
                 }
             }
         };
+
+        delHandler = new WebServiceHandler((Context) downCargoView) {
+            @Override
+            public void handleFirst() {
+
+            }
+
+            @Override
+            public void handleMsg(int returnCode, Object detail) {
+                switch (returnCode) {
+                    case NetConnect.NET_ERROR:
+                        downCargoView.finishActivity();
+                        break;
+                    case 1:
+                        parseDelOrderInfo(detail);
+                        break;
+                }
+            }
+        };
     }
 
     /**
@@ -131,9 +153,13 @@ public class DownCargoPresenter {
                     break;
                 case 2:
                     isFinishTwo = true;
+                    downloadDelOrderData();
+                    break;
+                case 3:
+                    isFinishThree = true;
                     break;
             }
-            if (isFinishOne && isFinishTwo) {
+            if (isFinishOne && isFinishTwo && isFinishThree) {
                 String time = DateUtil.parseCurrDateToString("yyyy-MM-dd HH:mm:ss");
                 downCargoView.showUpdateView(time, "更新完成，更新了" + customerStr + "," + detailStr);
             }
@@ -204,7 +230,17 @@ public class DownCargoPresenter {
     }
 
     private void parseOrderInfo(Object detail) {
-        parseOrderXml(detail);
+        try {
+            parseOrderXml(detail);
+        } catch (Exception e) {
+            e.printStackTrace();
+            UiTool.showToast((Context) downCargoView, "程序异常，请稍后再试！");
+            downCargoView.finishActivity();
+        }
+    }
+
+    private void parseDelOrderInfo(Object detail) {
+        parseDelOrderXml(detail);
     }
 
     private void parseDictInfo(Object detail) {
@@ -341,6 +377,14 @@ public class DownCargoPresenter {
         insertCustomer(customerList);
         insertOrderBatch(orderBatchList);
         insertOrderDetail(orderDetailList);
+    }
+
+    private void parseDelOrderXml(Object detail) {
+        //批量信息
+        SoapObject soapObject = (SoapObject) detail;
+        String xml = soapObject.getPropertyAsString("GetDeleteDataResult");
+        List<OrderDetail> orderDetailList = parseDelOrderDetail(xml);
+        delOrderDetail(orderDetailList);
     }
 
     /**
@@ -530,6 +574,59 @@ public class DownCargoPresenter {
     }
 
     /**
+     * 解析删除明细
+     */
+    private List<OrderDetail> parseDelOrderDetail(String xml) {
+        List<OrderDetail> orderDetailList = null;
+        OrderDetail orderDetail = null;
+        try {
+            XmlPullParser parser = Xml.newPullParser();
+            parser.setInput(new StringReader(xml));
+            //  产生第一个事件
+            int eventType = parser.getEventType();
+            //  当文档结束事件时退出循环
+            while (eventType != XmlPullParser.END_DOCUMENT) {
+                switch (eventType) {
+                    // 开始文档
+                    case XmlPullParser.START_DOCUMENT:
+                        // new 集合，方便于添加元素
+                        break;
+                    // 开始标记
+                    case XmlPullParser.START_TAG:
+                        // 获得当前节点名（标记名）
+                        String name = parser.getName();
+                        if ("Data".equals(name)) {
+                            orderDetailList = new ArrayList<>();
+                        }
+                        if ("Item".equals(name)) {
+                            orderDetail = new OrderDetail();
+                        }
+                        if ("DetailID".equals(name)) {
+                            orderDetail.setDetailId(parser.nextText());
+                        }
+                        break;
+                    // 结束标记
+                    case XmlPullParser.END_TAG:
+                        String endName = parser.getName();
+                        if ("Item".equals(endName)) {
+                            orderDetailList.add(orderDetail);
+                            orderDetail = null;
+                        }
+                        break;
+                }
+                // 获得解析器中的下一个事件
+                eventType = parser.next();
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        } catch (XmlPullParserException e) {
+            e.printStackTrace();
+        }
+        finishHandler.sendEmptyMessage(3);
+        return orderDetailList;
+    }
+
+    /**
      * 解析批次、司机、客户
      */
     private List<OrderBatch> parseOrderBatch(String xml) {
@@ -629,7 +726,7 @@ public class DownCargoPresenter {
             e.printStackTrace();
         }
 
-        if(lPdtgBatch > 0) {
+        if (lPdtgBatch > 0) {
             if (downBatchInfoList == null || downBatchInfoList.isEmpty()) {
                 DownBatchInfo downBatchInfo = new DownBatchInfo();
                 downBatchInfo.setLPdtgBatch(lPdtgBatch);
@@ -719,6 +816,27 @@ public class DownCargoPresenter {
         QueryBuilder<OrderDetail> qb = dao.queryBuilder();
         DeleteQuery<OrderDetail> bd = qb.where(OrderDetailDao.Properties.LPdtgBatch.eq(lPdtgBatch), OrderDetailDao.Properties.UserName.eq(userName)).buildDelete();
         bd.executeDeleteWithoutDetachingEntities();
+    }
+
+    /**
+     * 根据批次号删除订单详情
+     */
+    private void delOrderDetail(List<OrderDetail> orderDetailList) {
+        //TODO
+//        OrderDetail delO = new OrderDetail();
+//        delO.setDetailId("94348");
+//        orderDetailList.add(delO);
+//
+//        delO = new OrderDetail();
+//        delO.setDetailId("94680");
+//        orderDetailList.add(delO);
+        OrderDetailDao dao = LogisticsApplication.getInstance().getOrderDetailDao();
+        for (int i = 0; i < orderDetailList.size(); i++) {
+            OrderDetail orderDetail = orderDetailList.get(i);
+            QueryBuilder<OrderDetail> qb = dao.queryBuilder();
+            DeleteQuery<OrderDetail> bd = qb.where(OrderDetailDao.Properties.DetailId.eq(orderDetail.getDetailId())).buildDelete();
+            bd.executeDeleteWithoutDetachingEntities();
+        }
     }
 
     /**
@@ -861,6 +979,17 @@ public class DownCargoPresenter {
         String action = "http://tempuri.org/GetDictionaryValue";
         WebServiceParam webServiceParam =
                 new WebServiceParam((Context) downCargoView, params, method, action, dictValueHandler, 1);
+        webServiceConnect.addNet(webServiceParam);
+    }
+
+    public void downloadDelOrderData() {
+        Map params = new HashMap();
+        String method = "GetDeleteData ";
+        String action = "http://tempuri.org/GetDeleteData ";
+        String driverId = CommonTool.getSharePreference((Context) downCargoView, "driverId");
+        params.put("parDriversID", driverId);
+        WebServiceParam webServiceParam =
+                new WebServiceParam((Context) downCargoView, params, method, action, delHandler, 1);
         webServiceConnect.addNet(webServiceParam);
     }
 }

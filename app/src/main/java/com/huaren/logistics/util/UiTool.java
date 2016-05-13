@@ -151,6 +151,8 @@ public class UiTool {
     //用这个方法关闭系统键盘就不会出现光标消失的问题了
     public static void hideSoftInputMethod(Activity activity, EditText ed) {
         String hideKeyBoardFlag = CommonTool.getSharePreference(activity, "hideKeyBoard");
+        //TODO
+//        hideKeyBoardFlag = "0";
         if ("1".equals(hideKeyBoardFlag)) {
             activity.getWindow()
                     .setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN);

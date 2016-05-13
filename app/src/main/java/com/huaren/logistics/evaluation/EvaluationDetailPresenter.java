@@ -110,7 +110,7 @@ public class EvaluationDetailPresenter {
         }
         LogisticsApplication.getInstance().getSoundPoolUtil().playRight();
         UiTool.showToast((Context) evaluationDetailView, "评价完成！");
-        EvaluationDetailActivity.actionStart((Context) evaluationDetailView, orderBatchId);
+        EvaluationActivity.actionStart((Context) evaluationDetailView);
         evaluationDetailView.finishActivity();
     }
 }

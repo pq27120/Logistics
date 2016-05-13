@@ -1,8 +1,11 @@
 package com.huaren.logistics.cargo;
 
+import android.content.Context;
+import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 import android.widget.TextView;
+
 import com.dexafree.materialList.card.Card;
 import com.dexafree.materialList.listeners.RecyclerItemClickListener;
 import com.dexafree.materialList.view.MaterialListView;
@@ -35,6 +38,11 @@ public class CargoActivity extends BaseActivity implements ICargoView {
     presenter = new CargoPresenter(this);
     initUserInfo();
     presenter.initCargoList();
+  }
+
+  public static void actionStart(Context context) {
+    Intent intent = new Intent(context, CargoActivity.class);
+    context.startActivity(intent);
   }
 
   @Override public void addCard(Card card) {

@@ -52,6 +52,12 @@ public class EvaluationDetailActivity extends BaseActivity implements IEvaluatio
   }
 
   @Override
+  public void backClick(View view) {
+    EvaluationActivity.actionStart(EvaluationDetailActivity.this);
+    super.backClick(view);
+  }
+
+  @Override
   protected void onResume() {
     UiTool.hideSoftInputMethod(EvaluationDetailActivity.this, passEt);
     super.onResume();

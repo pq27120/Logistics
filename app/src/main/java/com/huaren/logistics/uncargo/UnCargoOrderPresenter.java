@@ -4,13 +4,16 @@ import android.content.Context;
 
 import com.dexafree.materialList.card.Card;
 import com.dexafree.materialList.card.provider.CargoOrderCardProvider;
-import com.dexafree.materialList.card.provider.SmallImageCardProvider;
 import com.huaren.logistics.LogisticsApplication;
 import com.huaren.logistics.R;
+import com.huaren.logistics.bean.Customer;
+import com.huaren.logistics.bean.ErrOperatorLog;
 import com.huaren.logistics.bean.OperatorLog;
 import com.huaren.logistics.bean.OrderBatch;
 import com.huaren.logistics.bean.OrderDetail;
 import com.huaren.logistics.common.OrderStatusEnum;
+import com.huaren.logistics.dao.CustomerDao;
+import com.huaren.logistics.dao.ErrOperatorLogDao;
 import com.huaren.logistics.dao.OperatorLogDao;
 import com.huaren.logistics.dao.OrderBatchDao;
 import com.huaren.logistics.dao.OrderDetailDao;
@@ -78,7 +81,22 @@ public class UnCargoOrderPresenter {
                     updateOrderCargo(detailCode);
                 } else {
                     LogisticsApplication.getInstance().getSoundPoolUtil().playWrong();
-                    UiTool.showToast((Context) cargoOrderView, "不是当前客户" + customerId + "的货物，请不要卸车！");
+
+                    CustomerDao customerDao = LogisticsApplication.getInstance().getCustomerDao();
+                    Customer customer = customerDao.queryBuilder().where(CustomerDao.Properties.Id.eq(customerId)).unique();
+                    UiTool.showToast((Context) cargoOrderView, "不是当前客户" + customer.getSPdtgCustfullname() + "的货物，请不要卸车！");
+
+                    ErrOperatorLog errOperatorLog = new ErrOperatorLog();
+                    errOperatorLog.setAddTime(new Date());
+                    errOperatorLog.setUserName(userName);
+                    errOperatorLog.setCustomerId(customer.getCooperateId());
+                    String driverId = CommonTool.getSharePreference((Context) cargoOrderView, "driverId");
+                    errOperatorLog.setDriverId(driverId);
+                    errOperatorLog.setLPdtgBatch(orderDetail.getLPdtgBatch());
+                    errOperatorLog.setCooperateID(orderDetail.getCooperateId());
+                    errOperatorLog.setLpn(detailCode);
+                    ErrOperatorLogDao dao = LogisticsApplication.getInstance().getErrOperatorLogDao();
+                    dao.insert(errOperatorLog);
                 }
             } else {
                 LogisticsApplication.getInstance().getSoundPoolUtil().playWrong();

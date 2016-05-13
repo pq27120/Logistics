@@ -91,6 +91,10 @@ public class RecycleScanDetailActivity extends BaseActivity implements IRecycleS
       radioButton.setText(sysDicValue.getMyDisplayValue());
       radioButton.setTextColor(getResources().getColor(R.color.blue_one));
       radioGroup.addView(radioButton);
+      if(sysDicValue.getMyDisplayValue().equals("周转箱")){
+        radioGroup.check(radioButton.getId());
+        checkRadioName = radioButton.getText().toString();
+      }
     }
     radioGroup.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
       @Override public void onCheckedChanged(RadioGroup group, int checkedId) {
@@ -107,18 +111,21 @@ public class RecycleScanDetailActivity extends BaseActivity implements IRecycleS
 
   View.OnKeyListener onKey = new View.OnKeyListener() {
     @Override public boolean onKey(View v, int keyCode, KeyEvent event) {
-      switch (event.getAction()) {
-        case KeyEvent.ACTION_UP:             //键盘松开
-          if (keyCode == KeyEvent.KEYCODE_ENTER) {
+      if (keyCode == KeyEvent.KEYCODE_ENTER) {
+        switch (event.getAction()) {
+          case KeyEvent.ACTION_UP:             //键盘松开
             for (int i = 0; i < list.size(); i++) {
               SysDicValue sysDicValue = list.get(i);
               if (sysDicValue.getMyDisplayValue().equals(checkRadioName)) {
                 recycleScanDetailPresent.recycleGoods(sysDicValue, scanEt.getText().toString());
               }
             }
-          }
-        case KeyEvent.ACTION_DOWN:          //键盘按下
-          break;
+            scanEt.requestFocus();
+            break;
+          case KeyEvent.ACTION_DOWN:          //键盘按下
+            break;
+        }
+        return true;
       }
       return false;
     }

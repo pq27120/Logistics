@@ -154,5 +154,15 @@ public class GreenDaoGenerator {
     OperatorLog.addStringProperty("operType").notNull(); // 1 操作 2 评价
     OperatorLog.addStringProperty("pingjianeirong"); // 评价内容
     OperatorLog.addStringProperty("detailId"); // 明细ID
+
+    Entity ErrOperatorLog = schema.addEntity("ErrOperatorLog"); //操作日志信息
+    ErrOperatorLog.addIdProperty();
+    ErrOperatorLog.addStringProperty("customerId").notNull();//当前客户ID
+    ErrOperatorLog.addStringProperty("userName").notNull();//用户名
+    ErrOperatorLog.addIntProperty("lPdtgBatch").notNull();//批次
+    ErrOperatorLog.addStringProperty("driverId").notNull(); //司机ID
+    ErrOperatorLog.addStringProperty("cooperateID").notNull(); //正确客户ID
+    ErrOperatorLog.addStringProperty("lpn"); // 条码
+    ErrOperatorLog.addDateProperty("addTime");//新增时间
   }
 }
