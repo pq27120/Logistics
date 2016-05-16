@@ -123,4 +123,14 @@ public class CargoOrderActivity extends BaseActivity implements ICargoOrderView 
             return false;
         }
     };
+
+    @Override
+    public boolean onKeyDown(int keyCode, KeyEvent event) {
+        if (keyCode == KeyEvent.KEYCODE_BACK) {
+            CargoActivity.actionStart(CargoOrderActivity.this);
+            finish();
+            return false;
+        }
+        return super.onKeyDown(keyCode, event);
+    }
 }
