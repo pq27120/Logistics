@@ -77,6 +77,7 @@ public class DownCargoPresenter {
                         downCargoView.finishActivity();
                         break;
                     case 1:
+                        CommonTool.showLog("获取订单" + DateUtil.parseDateToString(new Date(), DateUtil.DATE_TIME_FORMATE));
                         parseOrderInfo(detail);
                         break;
                 }
@@ -954,8 +955,10 @@ public class DownCargoPresenter {
     }
 
     public void downloadOrderData() {
+        CommonTool.showLog("获取订单开始 " + DateUtil.parseDateToString(new Date(), DateUtil.DATE_TIME_FORMATE));
         Map params = new HashMap();
         String driverId = CommonTool.getSharePreference((Context) downCargoView, "driverId");
+        CommonTool.showLog("司机ID " + driverId);
         params.put("parDriversID", driverId);
         String method = "Getdingdan";
         String action = "http://tempuri.org/Getdingdan";

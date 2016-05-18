@@ -38,7 +38,7 @@ public class DownCargoActivity extends BaseActivity implements IDownCargoView {
         ((TextView) findViewById(R.id.tv_common_title)).setText(R.string.down_cargo);
         presenter = new DownCargoPresenter(this);
         updateButton.setOnClickListener(new UpdateButtonClick());
-        dialog = CustomProgress.show(this, "下载中...", false, null);
+        dialog = CustomProgress.show(this, "下载中...", true, null);
         downData();
     }
 
@@ -93,7 +93,7 @@ public class DownCargoActivity extends BaseActivity implements IDownCargoView {
         public void onClick(View v) {
             mListView.setVisibility(View.GONE);
             updateButton.setVisibility(View.GONE);
-            dialog = CustomProgress.show(DownCargoActivity.this, "下载中...", false, null);
+            dialog = CustomProgress.show(DownCargoActivity.this, "下载中...", true, null);
             downData();
         }
     }
