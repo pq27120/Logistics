@@ -52,6 +52,7 @@ public class LoginPresenter {
                 .list();
         if (list != null && !list.isEmpty()) {
             LogisticsUser logisticsUser = list.get(0);
+            CommonTool.setSharePreference((Context) loginView, "isLogin", "" + true);
             CommonTool.setSharePreference((Context) loginView, "curUserName", username);
             CommonTool.setSharePreference((Context) loginView, "driverId", logisticsUser.getDriverId());
             loginView.navigateToHome();

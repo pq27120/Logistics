@@ -23,9 +23,10 @@ public class DownBatchInfoDao extends AbstractDao<DownBatchInfo, Long> {
      * Can be used for QueryBuilder and for referencing column names.
     */
     public static class Properties {
-        public final static Property LPdtgBatch = new Property(0, Long.class, "lPdtgBatch", true, "L_PDTG_BATCH");
-        public final static Property AddTime = new Property(1, java.util.Date.class, "addTime", false, "ADD_TIME");
-        public final static Property UserName = new Property(2, String.class, "userName", false, "USER_NAME");
+        public final static Property Id = new Property(0, Long.class, "id", true, "_id");
+        public final static Property LPdtgBatch = new Property(1, long.class, "lPdtgBatch", false, "L_PDTG_BATCH");
+        public final static Property AddTime = new Property(2, java.util.Date.class, "addTime", false, "ADD_TIME");
+        public final static Property UserName = new Property(3, String.class, "userName", false, "USER_NAME");
     };
 
 
@@ -41,9 +42,10 @@ public class DownBatchInfoDao extends AbstractDao<DownBatchInfo, Long> {
     public static void createTable(SQLiteDatabase db, boolean ifNotExists) {
         String constraint = ifNotExists? "IF NOT EXISTS ": "";
         db.execSQL("CREATE TABLE " + constraint + "'DOWN_BATCH_INFO' (" + //
-                "'L_PDTG_BATCH' INTEGER PRIMARY KEY ," + // 0: lPdtgBatch
-                "'ADD_TIME' INTEGER NOT NULL ," + // 1: addTime
-                "'USER_NAME' TEXT NOT NULL );"); // 2: userName
+                "'_id' INTEGER PRIMARY KEY ," + // 0: id
+                "'L_PDTG_BATCH' INTEGER NOT NULL ," + // 1: lPdtgBatch
+                "'ADD_TIME' INTEGER NOT NULL ," + // 2: addTime
+                "'USER_NAME' TEXT NOT NULL );"); // 3: userName
     }
 
     /** Drops the underlying database table. */
@@ -57,12 +59,13 @@ public class DownBatchInfoDao extends AbstractDao<DownBatchInfo, Long> {
     protected void bindValues(SQLiteStatement stmt, DownBatchInfo entity) {
         stmt.clearBindings();
  
-        Long lPdtgBatch = entity.getLPdtgBatch();
-        if (lPdtgBatch != null) {
-            stmt.bindLong(1, lPdtgBatch);
+        Long id = entity.getId();
+        if (id != null) {
+            stmt.bindLong(1, id);
         }
-        stmt.bindLong(2, entity.getAddTime().getTime());
-        stmt.bindString(3, entity.getUserName());
+        stmt.bindLong(2, entity.getLPdtgBatch());
+        stmt.bindLong(3, entity.getAddTime().getTime());
+        stmt.bindString(4, entity.getUserName());
     }
 
     /** @inheritdoc */
@@ -75,9 +78,10 @@ public class DownBatchInfoDao extends AbstractDao<DownBatchInfo, Long> {
     @Override
     public DownBatchInfo readEntity(Cursor cursor, int offset) {
         DownBatchInfo entity = new DownBatchInfo( //
-            cursor.isNull(offset + 0) ? null : cursor.getLong(offset + 0), // lPdtgBatch
-            new java.util.Date(cursor.getLong(offset + 1)), // addTime
-            cursor.getString(offset + 2) // userName
+            cursor.isNull(offset + 0) ? null : cursor.getLong(offset + 0), // id
+            cursor.getLong(offset + 1), // lPdtgBatch
+            new java.util.Date(cursor.getLong(offset + 2)), // addTime
+            cursor.getString(offset + 3) // userName
         );
         return entity;
     }
@@ -85,15 +89,16 @@ public class DownBatchInfoDao extends AbstractDao<DownBatchInfo, Long> {
     /** @inheritdoc */
     @Override
     public void readEntity(Cursor cursor, DownBatchInfo entity, int offset) {
-        entity.setLPdtgBatch(cursor.isNull(offset + 0) ? null : cursor.getLong(offset + 0));
-        entity.setAddTime(new java.util.Date(cursor.getLong(offset + 1)));
-        entity.setUserName(cursor.getString(offset + 2));
+        entity.setId(cursor.isNull(offset + 0) ? null : cursor.getLong(offset + 0));
+        entity.setLPdtgBatch(cursor.getLong(offset + 1));
+        entity.setAddTime(new java.util.Date(cursor.getLong(offset + 2)));
+        entity.setUserName(cursor.getString(offset + 3));
      }
     
     /** @inheritdoc */
     @Override
     protected Long updateKeyAfterInsert(DownBatchInfo entity, long rowId) {
-        entity.setLPdtgBatch(rowId);
+        entity.setId(rowId);
         return rowId;
     }
     
@@ -101,7 +106,7 @@ public class DownBatchInfoDao extends AbstractDao<DownBatchInfo, Long> {
     @Override
     public Long getKey(DownBatchInfo entity) {
         if(entity != null) {
-            return entity.getLPdtgBatch();
+            return entity.getId();
         } else {
             return null;
         }

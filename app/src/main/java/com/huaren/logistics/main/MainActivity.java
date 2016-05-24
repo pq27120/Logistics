@@ -27,16 +27,20 @@ import android.widget.AdapterView;
 import android.widget.GridView;
 import android.widget.TextView;
 import android.widget.Toast;
+
 import com.huaren.logistics.BaseActivity;
 import com.huaren.logistics.R;
 import com.huaren.logistics.cargo.CargoActivity;
 import com.huaren.logistics.downcargo.DownCargoActivity;
 import com.huaren.logistics.evaluation.EvaluationActivity;
 import com.huaren.logistics.info.InfoActivity;
+import com.huaren.logistics.login.LoginActivity;
 import com.huaren.logistics.recycleinput.RecycleInputActivity;
 import com.huaren.logistics.recyclescan.RecycleScanDetailActivity;
 import com.huaren.logistics.uncargo.UnCargoActivity;
 import com.huaren.logistics.uploadcargo.UploadCargoActivity;
+import com.huaren.logistics.util.CommonTool;
+import com.huaren.logistics.util.StringTool;
 
 import java.util.List;
 
@@ -52,13 +56,20 @@ public class MainActivity extends BaseActivity implements MainView, AdapterView.
         gridView = (GridView) findViewById(R.id.main_gridview);
         gridView.setStretchMode(GridView.STRETCH_COLUMN_WIDTH);
         (findViewById(R.id.common_back_btn)).setVisibility(View.GONE);
-        ((TextView)findViewById(R.id.tv_common_title)).setText(R.string.app_name);
+        ((TextView) findViewById(R.id.tv_common_title)).setText(R.string.app_name);
+        String isLogin = CommonTool.getSharePreference(MainActivity.this, "isLogin");
         presenter = new MainPresenter(this);
-        presenter.initGridView();
-        gridView.setOnItemClickListener(new GridViewItemClick());
+        if (StringTool.isNotNull(isLogin) && Boolean.valueOf(isLogin)) {
+            presenter.initGridView();
+            gridView.setOnItemClickListener(new GridViewItemClick());
+        } else {
+            startActivity(new Intent(this, LoginActivity.class));
+            finish();
+        }
     }
 
-    @Override protected void onResume() {
+    @Override
+    protected void onResume() {
         super.onResume();
         initUserInfo();
         presenter.onResume();
@@ -80,53 +91,66 @@ public class MainActivity extends BaseActivity implements MainView, AdapterView.
         }
     }
 
-    @Override protected void onDestroy() {
+    @Override
+    protected void onDestroy() {
         presenter.onDestroy();
         super.onDestroy();
     }
 
-    @Override public void showProgress() {
+    @Override
+    public void showProgress() {
     }
 
-    @Override public void hideProgress() {
+    @Override
+    public void hideProgress() {
     }
 
-    @Override public void setItems(List<String> items) {
+    @Override
+    public void setItems(List<String> items) {
     }
 
-    @Override public void showMessage(String message) {
+    @Override
+    public void showMessage(String message) {
         Toast.makeText(this, message, Toast.LENGTH_LONG).show();
     }
 
-    @Override public void setGridViewAdapter(MainGridViewAdapter adapter) {
+    @Override
+    public void setGridViewAdapter(MainGridViewAdapter adapter) {
         gridView.setAdapter(adapter);
     }
 
-    @Override public void enterDownCargo() {
+    @Override
+    public void enterDownCargo() {
         startActivity(new Intent(this, DownCargoActivity.class));
     }
 
-    @Override public void enterCargo() {
+    @Override
+    public void enterCargo() {
         startActivity(new Intent(this, CargoActivity.class));
     }
 
-    @Override public void enterUnCargo() {
+    @Override
+    public void enterUnCargo() {
         startActivity(new Intent(this, UnCargoActivity.class));
     }
 
-    @Override public void enterEvaluaton() {
+    @Override
+    public void enterEvaluaton() {
         startActivity(new Intent(this, EvaluationActivity.class));
     }
 
-    @Override public void enterInfo() {
+    @Override
+    public void enterInfo() {
         startActivity(new Intent(this, InfoActivity.class));
     }
 
-    @Override public void enterRecycle() {
+    @Override
+    public void enterRecycle() {
         startActivity(new Intent(this, RecycleInputActivity.class));
     }
 
-    @Override public void enterRecycleScan() {
+    @Override
+    public void enterRecycleScan() {
         startActivity(new Intent(this, RecycleScanDetailActivity.class));
     }
 
@@ -135,12 +159,14 @@ public class MainActivity extends BaseActivity implements MainView, AdapterView.
         startActivity(new Intent(this, UploadCargoActivity.class));
     }
 
-    @Override public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+    @Override
+    public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
         presenter.onItemClicked(position);
     }
 
     private class GridViewItemClick implements AdapterView.OnItemClickListener {
-        @Override public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+        @Override
+        public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
             presenter.mainMenuItemClick(position);
         }
     }

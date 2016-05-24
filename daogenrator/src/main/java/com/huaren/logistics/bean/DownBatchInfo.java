@@ -6,7 +6,8 @@ package com.huaren.logistics.bean;
  */
 public class DownBatchInfo implements java.io.Serializable {
 
-    private Long lPdtgBatch;
+    private Long id;
+    private long lPdtgBatch;
     /** Not-null value. */
     private java.util.Date addTime;
     /** Not-null value. */
@@ -15,21 +16,30 @@ public class DownBatchInfo implements java.io.Serializable {
     public DownBatchInfo() {
     }
 
-    public DownBatchInfo(Long lPdtgBatch) {
-        this.lPdtgBatch = lPdtgBatch;
+    public DownBatchInfo(Long id) {
+        this.id = id;
     }
 
-    public DownBatchInfo(Long lPdtgBatch, java.util.Date addTime, String userName) {
+    public DownBatchInfo(Long id, long lPdtgBatch, java.util.Date addTime, String userName) {
+        this.id = id;
         this.lPdtgBatch = lPdtgBatch;
         this.addTime = addTime;
         this.userName = userName;
     }
 
-    public Long getLPdtgBatch() {
+    public Long getId() {
+        return id;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
+    }
+
+    public long getLPdtgBatch() {
         return lPdtgBatch;
     }
 
-    public void setLPdtgBatch(Long lPdtgBatch) {
+    public void setLPdtgBatch(long lPdtgBatch) {
         this.lPdtgBatch = lPdtgBatch;
     }
 

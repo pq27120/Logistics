@@ -66,7 +66,8 @@ public class GreenDaoGenerator {
 
     Entity downBatchInfo = schema.addEntity("DownBatchInfo");
     downBatchInfo.implementsSerializable();
-    downBatchInfo.addLongProperty("lPdtgBatch").primaryKey();//当前批次
+    downBatchInfo.addIdProperty();
+    downBatchInfo.addLongProperty("lPdtgBatch").notNull();//当前批次
     downBatchInfo.addDateProperty("addTime").notNull();
     downBatchInfo.addStringProperty("userName").notNull();
 

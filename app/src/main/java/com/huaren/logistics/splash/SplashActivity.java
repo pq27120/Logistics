@@ -70,6 +70,7 @@ public class SplashActivity extends Activity implements ISplashView {
     } else {
       builder.setNegativeButton("稍后升级", new DialogInterface.OnClickListener() {
         @Override public void onClick(DialogInterface dialog, int which) {
+          presenter.fetchUserData();
           enterMain();
         }
       });
