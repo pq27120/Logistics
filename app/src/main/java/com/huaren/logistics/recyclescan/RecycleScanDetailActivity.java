@@ -23,6 +23,7 @@ public class RecycleScanDetailActivity extends BaseActivity implements IRecycleS
 
   private MaterialEditText scanEt;
   private ButtonRectangle scanBtn;
+  private TextView recycleScanTv;
   private RecycleScanDetailPresent recycleScanDetailPresent;
   private MaterialListView mListView;
 
@@ -57,6 +58,7 @@ public class RecycleScanDetailActivity extends BaseActivity implements IRecycleS
     scanEt = (MaterialEditText) findViewById(R.id.input_et);
     scanEt.setText("");
     scanBtn = (ButtonRectangle) findViewById(R.id.input_btn);
+    recycleScanTv = (TextView) findViewById(R.id.recycle_scan_tv);
     radioLl = (LinearLayout) findViewById(R.id.radio_ll);
     mListView = (MaterialListView) findViewById(R.id.material_listview);
     mListView.clearAll();
@@ -87,11 +89,11 @@ public class RecycleScanDetailActivity extends BaseActivity implements IRecycleS
     radioGroup = new RadioGroup(this);
     for (int i = 0; i < list.size(); i++) {
       SysDicValue sysDicValue = list.get(i);
-      RadioButton radioButton = new RadioButton(this);
-      radioButton.setText(sysDicValue.getMyDisplayValue());
-      radioButton.setTextColor(getResources().getColor(R.color.blue_one));
-      radioGroup.addView(radioButton);
       if(sysDicValue.getMyDisplayValue().equals("周转箱")){
+        RadioButton radioButton = new RadioButton(this);
+        radioButton.setText(sysDicValue.getMyDisplayValue());
+        radioButton.setTextColor(getResources().getColor(R.color.blue_one));
+        radioGroup.addView(radioButton);
         radioGroup.check(radioButton.getId());
         checkRadioName = radioButton.getText().toString();
       }
@@ -102,6 +104,11 @@ public class RecycleScanDetailActivity extends BaseActivity implements IRecycleS
       }
     });
     radioLl.addView(radioGroup);
+  }
+
+  @Override
+  public void setRecycleNum(int size) {
+    recycleScanTv.setText("" + size);
   }
 
   private void selectRadioBtn() {

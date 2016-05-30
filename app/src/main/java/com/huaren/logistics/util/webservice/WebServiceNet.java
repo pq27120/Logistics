@@ -2,18 +2,21 @@ package com.huaren.logistics.util.webservice;
 
 import android.os.Handler;
 import android.os.Message;
+
 import com.huaren.logistics.common.Constant;
 import com.huaren.logistics.util.CommonTool;
 import com.huaren.logistics.util.http.NetConnect;
-import java.util.Map;
+
 import org.ksoap2.SoapEnvelope;
 import org.ksoap2.SoapFault;
 import org.ksoap2.serialization.SoapObject;
 import org.ksoap2.serialization.SoapSerializationEnvelope;
 import org.ksoap2.transport.HttpTransportSE;
 
+import java.util.Map;
+
 public class WebServiceNet extends Thread {
-  private SoapObject content;
+  private Object content;
   private WebServiceParam webServiceParam;
   private Handler parentHandler;
   private SoapSerializationEnvelope envelope;
@@ -44,6 +47,9 @@ public class WebServiceNet extends Thread {
         if (isCancel) return;
         // 取得数据
         notifyUI(webServiceParam.getResult(), content);
+        return;
+      }else{
+        notifyUI(NetConnect.DATA_ERROR, content);
         return;
       }
     }
@@ -79,11 +85,13 @@ public class WebServiceNet extends Thread {
     try {
       if (envelope.bodyIn instanceof SoapFault) {
         CommonTool.showLog(envelope.bodyIn.toString());
+        SoapFault fault = (SoapFault)envelope.bodyIn;
+        content = fault;
       } else {
         SoapObject soapObject = (SoapObject) envelope.bodyIn;
         content = soapObject;
+        getNetDataFlag = true;
       }
-      getNetDataFlag = true;
     } catch (Exception e) {
       CommonTool.showLog(e.getMessage());
       e.printStackTrace();
@@ -92,7 +100,7 @@ public class WebServiceNet extends Thread {
   }
 
   /** 通知 响应界面UI与连接集合 */
-  public void notifyUI(int resultState, SoapObject dataMsg) {
+  public void notifyUI(int resultState, Object dataMsg) {
     CommonTool.showLog("dataMsg=" + dataMsg);
     if (isCancel) return;
     Message msg = new Message();

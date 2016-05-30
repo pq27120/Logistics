@@ -4,7 +4,6 @@ import android.content.Context;
 
 import com.dexafree.materialList.card.Card;
 import com.dexafree.materialList.card.provider.CargoOrderCardProvider;
-import com.dexafree.materialList.card.provider.SmallImageCardProvider;
 import com.huaren.logistics.LogisticsApplication;
 import com.huaren.logistics.bean.OrderBatch;
 import com.huaren.logistics.bean.RecycleInput;
@@ -45,7 +44,7 @@ public class RecycleInputPresenter {
       desc += num + "件";
       Card card = new Card.Builder((Context) evaluationView).setTag(orderBatch.getId())
           .withProvider(CargoOrderCardProvider.class)
-          .setTitle(orderBatch.getSPdtgCustfullname() + "(" + orderBatch.getCooperateId() + ")")
+          .setTitle(orderBatch.getSPdtgCustfullname())
           .setDescription(desc)
           .endConfig()
           .build();

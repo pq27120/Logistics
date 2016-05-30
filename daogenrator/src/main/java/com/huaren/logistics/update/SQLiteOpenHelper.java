@@ -2,6 +2,7 @@ package com.huaren.logistics.update;
 
 import android.content.Context;
 import android.database.sqlite.SQLiteDatabase;
+import android.util.Log;
 
 import com.huaren.logistics.dao.DaoMaster;
 
@@ -10,7 +11,7 @@ import java.util.SortedMap;
 import java.util.TreeMap;
 
 public class SQLiteOpenHelper extends DaoMaster.OpenHelper {
-  private static final String DB_NAME = "logistics-db.db";
+  private static final String DB_NAME = "logistics-db";
 
   private static final SortedMap<Integer, Migration> ALL_MIGRATIONS = new TreeMap<>();
 
@@ -25,13 +26,13 @@ public class SQLiteOpenHelper extends DaoMaster.OpenHelper {
   }
 
   @Override public void onCreate(SQLiteDatabase db) {
-    //super.onCreate(db);
+    super.onCreate(db);
     executeMigrations(db, ALL_MIGRATIONS.keySet());
   }
 
   @Override public void onUpgrade(SQLiteDatabase sqLiteDatabase, int oldVersion, int newVersion) {
-    //LogUtil.w(SQLiteOpenHelper.class.getSimpleName(),
-    //    "Upgrade from" + oldVersion + "to" + newVersion);
+    Log.i(SQLiteOpenHelper.class.getSimpleName(),
+            "Upgrade from" + oldVersion + "to" + newVersion);
     SortedMap<Integer, Migration> migrations = ALL_MIGRATIONS.subMap(oldVersion, newVersion);
     executeMigrations(sqLiteDatabase, migrations.keySet());
   }

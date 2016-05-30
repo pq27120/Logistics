@@ -50,4 +50,5 @@
     <string name="progress_dialog">进度</string>
     <string name="please_wait">加载中...</string>
     <string name="hide_keyboard">隐藏虚拟键盘</string>
+    <string name="recycle_scan_tip">当前回收数量：</string>
 </resources>

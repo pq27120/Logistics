@@ -24,6 +24,10 @@ public abstract class WebServiceHandler extends Handler {
           UiTool.showToast(context, "网络连接错误！");
           handleMsg(msg.what, "");
           break;
+        case NetConnect.DATA_ERROR: // 接口调用错误
+          UiTool.showToast(context, msg.obj.toString());
+          handleMsg(msg.what, msg.obj);
+          break;
         default: // 有返回
           //JSONObject jsonObject = new JSONObject(msg.obj.toString());
           //if (msg.obj.toString().contains("results")) {

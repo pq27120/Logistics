@@ -14,4 +14,10 @@ public interface IRecycleScanDetailView {
   void init();
 
   void initRadio(List<SysDicValue> list);
+
+  /**
+   * 当前回收扫描的数目
+   * @param size
+   */
+  void setRecycleNum(int size);
 }

@@ -4,9 +4,7 @@ import android.content.Context;
 import android.text.TextUtils;
 
 import com.dexafree.materialList.card.Card;
-import com.dexafree.materialList.card.provider.CargoOrderCardProvider;
 import com.dexafree.materialList.card.provider.CargoSingleCardProvider;
-import com.dexafree.materialList.card.provider.SmallImageCardProvider;
 import com.huaren.logistics.LogisticsApplication;
 import com.huaren.logistics.bean.RecycleScan;
 import com.huaren.logistics.bean.SysDicValue;
@@ -76,6 +74,7 @@ public class RecycleScanDetailPresent {
         RecycleScanDao recycleScanDao = LogisticsApplication.getInstance().getRecycleScanDao();
         String userName = CommonTool.getSharePreference((Context) recycleScanDetailView, "curUserName");
         List<RecycleScan> recycleScanList = recycleScanDao.queryBuilder().where(RecycleScanDao.Properties.UserName.eq(userName)).orderDesc(RecycleScanDao.Properties.RecycleScanTime).list();
+        recycleScanDetailView.setRecycleNum(recycleScanList.size());
         for (int i = 0; i < recycleScanList.size(); i++) {
             RecycleScan recycleScan = recycleScanList.get(i);
             Card card =

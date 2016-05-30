@@ -461,6 +461,7 @@ public class UploadCargoPresenter {
     }
 
     public void uploadOrderData() {
+        buffer = new StringBuffer("");
         uploadRecordData();
         uploadEvaRecordData();
         uploadRecycleInputData();

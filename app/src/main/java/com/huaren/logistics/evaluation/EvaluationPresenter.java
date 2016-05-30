@@ -4,7 +4,6 @@ import android.content.Context;
 import android.text.TextUtils;
 import com.dexafree.materialList.card.Card;
 import com.dexafree.materialList.card.provider.CargoOrderCardProvider;
-import com.dexafree.materialList.card.provider.SmallImageCardProvider;
 import com.huaren.logistics.LogisticsApplication;
 import com.huaren.logistics.R;
 import com.huaren.logistics.bean.OrderBatch;
@@ -36,7 +35,7 @@ public class EvaluationPresenter {
       }
       Card card = new Card.Builder((Context) evaluationView).setTag(orderBatch.getId())
           .withProvider(CargoOrderCardProvider.class)
-          .setTitle(orderBatch.getSPdtgCustfullname() + "(" + orderBatch.getCooperateId() + ")")
+          .setTitle(orderBatch.getSPdtgCustfullname())
           .setDescription(desc)
           .setDrawable(drawable)
           .endConfig()

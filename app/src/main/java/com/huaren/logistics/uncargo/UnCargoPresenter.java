@@ -3,7 +3,6 @@ package com.huaren.logistics.uncargo;
 import android.content.Context;
 import com.dexafree.materialList.card.Card;
 import com.dexafree.materialList.card.provider.CargoOrderCardProvider;
-import com.dexafree.materialList.card.provider.SmallImageCardProvider;
 import com.huaren.logistics.LogisticsApplication;
 import com.huaren.logistics.R;
 import com.huaren.logistics.bean.Customer;
@@ -45,7 +44,7 @@ public class UnCargoPresenter {
       }
       Card card = new Card.Builder((Context) unCargoView).setTag(customer.getId())
           .withProvider(CargoOrderCardProvider.class)
-          .setTitle(customer.getSPdtgCustfullname() + "(" + customer.getCooperateId() + ")")
+          .setTitle(customer.getSPdtgCustfullname())
           .setDescription(desc)
           .setDrawable(drawable)
           .endConfig()

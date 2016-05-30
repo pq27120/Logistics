@@ -231,11 +231,13 @@ public class DownCargoPresenter {
     }
 
     private void parseOrderInfo(Object detail) {
+//        SoapObject soapObject = (SoapObject) detail;
+//        UiTool.showToast((Context) downCargoView, "报文返回" + soapObject.toString());
         try {
             parseOrderXml(detail);
         } catch (Exception e) {
             e.printStackTrace();
-            UiTool.showToast((Context) downCargoView, "程序异常，请稍后再试！");
+//            UiTool.showToast((Context) downCargoView, CommonTool.sbCrashInfo2Str((Context)downCargoView, e).toString());
             downCargoView.finishActivity();
         }
     }

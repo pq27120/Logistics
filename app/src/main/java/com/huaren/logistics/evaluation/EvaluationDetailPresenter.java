@@ -15,6 +15,7 @@ import com.huaren.logistics.dao.OperatorLogDao;
 import com.huaren.logistics.dao.OrderBatchDao;
 import com.huaren.logistics.dao.OrderDetailDao;
 import com.huaren.logistics.dao.SysDicValueDao;
+import com.huaren.logistics.recycleinput.RecycleInputDetailActivity;
 import com.huaren.logistics.util.CommonTool;
 import com.huaren.logistics.util.UiTool;
 
@@ -110,7 +111,7 @@ public class EvaluationDetailPresenter {
         }
         LogisticsApplication.getInstance().getSoundPoolUtil().playRight();
         UiTool.showToast((Context) evaluationDetailView, "评价完成！");
-        EvaluationActivity.actionStart((Context) evaluationDetailView);
+        RecycleInputDetailActivity.actionStart((Context) evaluationDetailView, orderBatchId);
         evaluationDetailView.finishActivity();
     }
 }

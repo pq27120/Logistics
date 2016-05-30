@@ -13,6 +13,7 @@ import java.util.Set;
 public class NetConnect {
 	/** 网络连接错误,或返回错误 */
 	public final static int NET_ERROR = 999;
+	public final static int DATA_ERROR = 998;
 	/** 最大网络连接数 */
 	public final static int NET_MAX_COUNT = 10;
 	/** 连接超时:15秒 */

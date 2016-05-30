@@ -13,6 +13,38 @@
     <include layout="@layout/layout_comm_user" />
 
     <LinearLayout
+        android:layout_width="fill_parent"
+        android:layout_height="54dp"
+        android:background="@color/blue_two"
+        android:paddingBottom="20dp"
+        android:paddingLeft="10dp"
+        android:orientation="vertical"
+        >
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:layout_marginTop="10dp"
+            >
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/recycle_scan_tip"
+                android:textSize="@dimen/text_size_large"
+                android:textColor="@android:color/white"
+                />
+            <TextView
+                android:id="@+id/recycle_scan_tv"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textSize="@dimen/text_size_large"
+                android:textColor="@android:color/white"
+                />
+        </LinearLayout>
+    </LinearLayout>
+
+    <LinearLayout
         android:id="@+id/radio_ll"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"

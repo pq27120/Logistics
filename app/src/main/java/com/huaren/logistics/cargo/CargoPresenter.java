@@ -46,7 +46,7 @@ public class CargoPresenter {
             }
             Card card = new Card.Builder((Context) cargoView).setTag(customer.getId())
                     .withProvider(CargoOrderCardProvider.class)
-                    .setTitle(customer.getSPdtgCustfullname() + "(" + customer.getCooperateId() + ")")
+                    .setTitle(customer.getSPdtgCustfullname())
                     .setDescription(desc)
                     .setDrawable(drawable)
                     .endConfig()

@@ -71,10 +71,34 @@ public class UnCargoOrderPresenter {
                 if (OrderStatusEnum.UNCARGO.getStatus().equals(orderDetail.getDetailStatus())) {
                     LogisticsApplication.getInstance().getSoundPoolUtil().playWrong();
                     UiTool.showToast((Context) cargoOrderView, "货物已卸车！");
+
+                    ErrOperatorLog errOperatorLog = new ErrOperatorLog();
+                    errOperatorLog.setAddTime(new Date());
+                    errOperatorLog.setUserName(userName);
+                    errOperatorLog.setCustomerId(orderDetail.getCooperateId());
+                    String driverId = CommonTool.getSharePreference((Context) cargoOrderView, "driverId");
+                    errOperatorLog.setDriverId(driverId);
+                    errOperatorLog.setLPdtgBatch(orderDetail.getLPdtgBatch());
+                    errOperatorLog.setCooperateID(orderDetail.getCooperateId());
+                    errOperatorLog.setLpn(detailCode);
+                    ErrOperatorLogDao dao = LogisticsApplication.getInstance().getErrOperatorLogDao();
+                    dao.insert(errOperatorLog);
                     return;
                 } else if (!OrderStatusEnum.CARGO.getStatus().equals(orderDetail.getDetailStatus())) {
                     LogisticsApplication.getInstance().getSoundPoolUtil().playWrong();
                     UiTool.showToast((Context) cargoOrderView, "该货物无法卸车！");
+
+                    ErrOperatorLog errOperatorLog = new ErrOperatorLog();
+                    errOperatorLog.setAddTime(new Date());
+                    errOperatorLog.setUserName(userName);
+                    errOperatorLog.setCustomerId(orderDetail.getCooperateId());
+                    String driverId = CommonTool.getSharePreference((Context) cargoOrderView, "driverId");
+                    errOperatorLog.setDriverId(driverId);
+                    errOperatorLog.setLPdtgBatch(orderDetail.getLPdtgBatch());
+                    errOperatorLog.setCooperateID(orderDetail.getCooperateId());
+                    errOperatorLog.setLpn(detailCode);
+                    ErrOperatorLogDao dao = LogisticsApplication.getInstance().getErrOperatorLogDao();
+                    dao.insert(errOperatorLog);
                     return;
                 }
                 if (orderDetail.getCustomerId().equals(customerId)) {
@@ -101,6 +125,18 @@ public class UnCargoOrderPresenter {
             } else {
                 LogisticsApplication.getInstance().getSoundPoolUtil().playWrong();
                 UiTool.showToast((Context) cargoOrderView, "货物信息不存在！");
+
+                ErrOperatorLog errOperatorLog = new ErrOperatorLog();
+                errOperatorLog.setAddTime(new Date());
+                errOperatorLog.setUserName(userName);
+                errOperatorLog.setCustomerId("");
+                String driverId = CommonTool.getSharePreference((Context) cargoOrderView, "driverId");
+                errOperatorLog.setDriverId(driverId);
+                errOperatorLog.setLPdtgBatch(0);
+                errOperatorLog.setCooperateID("");
+                errOperatorLog.setLpn(detailCode);
+                ErrOperatorLogDao dao = LogisticsApplication.getInstance().getErrOperatorLogDao();
+                dao.insert(errOperatorLog);
             }
         } else {
             LogisticsApplication.getInstance().getSoundPoolUtil().playWrong();
