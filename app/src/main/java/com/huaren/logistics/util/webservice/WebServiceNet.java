@@ -20,7 +20,7 @@ public class WebServiceNet extends Thread {
   private WebServiceParam webServiceParam;
   private Handler parentHandler;
   private SoapSerializationEnvelope envelope;
-  private int timeOut = 15000;//
+  private int timeOut = 20000;//
 
   private boolean isCancel = false; // 是否取消连接
 

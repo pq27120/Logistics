@@ -7,8 +7,10 @@ import com.dexafree.materialList.card.Card;
 import com.dexafree.materialList.card.provider.CargoSingleCardProvider;
 import com.huaren.logistics.LogisticsApplication;
 import com.huaren.logistics.bean.RecycleScan;
+import com.huaren.logistics.bean.SysDic;
 import com.huaren.logistics.bean.SysDicValue;
 import com.huaren.logistics.dao.RecycleScanDao;
+import com.huaren.logistics.dao.SysDicDao;
 import com.huaren.logistics.dao.SysDicValueDao;
 import com.huaren.logistics.util.CommonTool;
 import com.huaren.logistics.util.UiTool;
@@ -91,7 +93,9 @@ public class RecycleScanDetailPresent {
     public void initRecycleInputRadio() {
         SysDicValueDao sysDicValueDao = LogisticsApplication.getInstance().getSysDicValueDao();
         QueryBuilder qb = sysDicValueDao.queryBuilder();
-        List<SysDicValue> list = qb.where(SysDicValueDao.Properties.DicId.eq(23)).list();
+        SysDicDao sysDicDao = LogisticsApplication.getInstance().getSysDicDao();
+        SysDic sysDic = sysDicDao.queryBuilder().where(SysDicDao.Properties.MyName.eq("回收类型")).unique();
+        List<SysDicValue> list = qb.where(SysDicValueDao.Properties.DicId.eq(sysDic.getId())).list();
         recycleScanDetailView.initRadio(list);
     }
 }

@@ -72,18 +72,6 @@ public class UnCargoOrderPresenter {
                     LogisticsApplication.getInstance().getSoundPoolUtil().playWrong();
                     UiTool.showToast((Context) cargoOrderView, "货物已卸车！");
                     cargoOrderView.clearRemoveText();
-
-                    ErrOperatorLog errOperatorLog = new ErrOperatorLog();
-                    errOperatorLog.setAddTime(new Date());
-                    errOperatorLog.setUserName(userName);
-                    errOperatorLog.setCustomerId(orderDetail.getCooperateId());
-                    String driverId = CommonTool.getSharePreference((Context) cargoOrderView, "driverId");
-                    errOperatorLog.setDriverId(driverId);
-                    errOperatorLog.setLPdtgBatch(orderDetail.getLPdtgBatch());
-                    errOperatorLog.setCooperateID(orderDetail.getCooperateId());
-                    errOperatorLog.setLpn(detailCode);
-                    ErrOperatorLogDao dao = LogisticsApplication.getInstance().getErrOperatorLogDao();
-                    dao.insert(errOperatorLog);
                     return;
                 } else if (!OrderStatusEnum.CARGO.getStatus().equals(orderDetail.getDetailStatus())) {
                     LogisticsApplication.getInstance().getSoundPoolUtil().playWrong();

@@ -6,9 +6,13 @@ import com.dexafree.materialList.card.Card;
 import com.dexafree.materialList.card.provider.CargoOrderCardProvider;
 import com.huaren.logistics.LogisticsApplication;
 import com.huaren.logistics.R;
+import com.huaren.logistics.bean.Customer;
+import com.huaren.logistics.bean.ErrOperatorLog;
 import com.huaren.logistics.bean.OperatorLog;
 import com.huaren.logistics.bean.OrderDetail;
 import com.huaren.logistics.common.OrderStatusEnum;
+import com.huaren.logistics.dao.CustomerDao;
+import com.huaren.logistics.dao.ErrOperatorLogDao;
 import com.huaren.logistics.dao.OperatorLogDao;
 import com.huaren.logistics.dao.OrderDetailDao;
 import com.huaren.logistics.util.CommonTool;
@@ -78,11 +82,41 @@ public class CargoOrderPresenter {
                     cargoOrderView.clearLoadText();
                     //cargoOrderView.showLoadDialog("装车",
                     //    "当前客户" + customerId + "，是否切换到客户" + orderDetail.getCustomerId());
+
+                    CustomerDao customerDao = LogisticsApplication.getInstance().getCustomerDao();
+                    Customer customer = customerDao.queryBuilder().where(CustomerDao.Properties.Id.eq(customerId)).unique();
+
+                    ErrOperatorLog errOperatorLog = new ErrOperatorLog();
+                    errOperatorLog.setAddTime(new Date());
+                    errOperatorLog.setUserName(userName);
+                    errOperatorLog.setCustomerId(customer.getCooperateId());
+                    String driverId = CommonTool.getSharePreference((Context) cargoOrderView, "driverId");
+                    errOperatorLog.setDriverId(driverId);
+                    errOperatorLog.setLPdtgBatch(orderDetail.getLPdtgBatch());
+                    errOperatorLog.setCooperateID(orderDetail.getCooperateId());
+                    errOperatorLog.setLpn(detailCode);
+                    ErrOperatorLogDao dao = LogisticsApplication.getInstance().getErrOperatorLogDao();
+                    dao.insert(errOperatorLog);
                 }
             } else {
                 LogisticsApplication.getInstance().getSoundPoolUtil().playWrong();
                 UiTool.showToast((Context) cargoOrderView, "货物信息不存在！");
                 cargoOrderView.clearLoadText();
+
+                CustomerDao customerDao = LogisticsApplication.getInstance().getCustomerDao();
+                Customer customer = customerDao.queryBuilder().where(CustomerDao.Properties.Id.eq(customerId)).unique();
+
+                ErrOperatorLog errOperatorLog = new ErrOperatorLog();
+                errOperatorLog.setAddTime(new Date());
+                errOperatorLog.setUserName(userName);
+                errOperatorLog.setCustomerId("");
+                String driverId = CommonTool.getSharePreference((Context) cargoOrderView, "driverId");
+                errOperatorLog.setDriverId(driverId);
+                errOperatorLog.setLPdtgBatch(customer.getLPdtgBatch());
+                errOperatorLog.setCooperateID(customer.getCooperateId());
+                errOperatorLog.setLpn(detailCode);
+                ErrOperatorLogDao dao = LogisticsApplication.getInstance().getErrOperatorLogDao();
+                dao.insert(errOperatorLog);
             }
         } else {
             LogisticsApplication.getInstance().getSoundPoolUtil().playWrong();

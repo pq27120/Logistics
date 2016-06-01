@@ -59,6 +59,9 @@ public class LogisticsApplication extends Application {
       ScanManager scan = new ScanManager();
       scan.openScanner();
       scan.switchOutputMode(1);
+      scan.setAppend();
+      scan.setBeep();
+      scan.setVibrate();
     } catch (Exception e) {
       e.printStackTrace();
       CommonTool.showLog("初始化扫描设备异常！");
