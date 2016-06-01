@@ -71,6 +71,7 @@ public class UnCargoOrderPresenter {
                 if (OrderStatusEnum.UNCARGO.getStatus().equals(orderDetail.getDetailStatus())) {
                     LogisticsApplication.getInstance().getSoundPoolUtil().playWrong();
                     UiTool.showToast((Context) cargoOrderView, "货物已卸车！");
+                    cargoOrderView.clearRemoveText();
 
                     ErrOperatorLog errOperatorLog = new ErrOperatorLog();
                     errOperatorLog.setAddTime(new Date());
@@ -87,6 +88,7 @@ public class UnCargoOrderPresenter {
                 } else if (!OrderStatusEnum.CARGO.getStatus().equals(orderDetail.getDetailStatus())) {
                     LogisticsApplication.getInstance().getSoundPoolUtil().playWrong();
                     UiTool.showToast((Context) cargoOrderView, "该货物无法卸车！");
+                    cargoOrderView.clearRemoveText();
 
                     ErrOperatorLog errOperatorLog = new ErrOperatorLog();
                     errOperatorLog.setAddTime(new Date());
@@ -109,6 +111,7 @@ public class UnCargoOrderPresenter {
                     CustomerDao customerDao = LogisticsApplication.getInstance().getCustomerDao();
                     Customer customer = customerDao.queryBuilder().where(CustomerDao.Properties.Id.eq(customerId)).unique();
                     UiTool.showToast((Context) cargoOrderView, "不是当前客户" + customer.getSPdtgCustfullname() + "的货物，请不要卸车！");
+                    cargoOrderView.clearRemoveText();
 
                     ErrOperatorLog errOperatorLog = new ErrOperatorLog();
                     errOperatorLog.setAddTime(new Date());
@@ -125,6 +128,10 @@ public class UnCargoOrderPresenter {
             } else {
                 LogisticsApplication.getInstance().getSoundPoolUtil().playWrong();
                 UiTool.showToast((Context) cargoOrderView, "货物信息不存在！");
+                cargoOrderView.clearRemoveText();
+
+                CustomerDao customerDao = LogisticsApplication.getInstance().getCustomerDao();
+                Customer customer = customerDao.queryBuilder().where(CustomerDao.Properties.Id.eq(customerId)).unique();
 
                 ErrOperatorLog errOperatorLog = new ErrOperatorLog();
                 errOperatorLog.setAddTime(new Date());
@@ -132,8 +139,8 @@ public class UnCargoOrderPresenter {
                 errOperatorLog.setCustomerId("");
                 String driverId = CommonTool.getSharePreference((Context) cargoOrderView, "driverId");
                 errOperatorLog.setDriverId(driverId);
-                errOperatorLog.setLPdtgBatch(0);
-                errOperatorLog.setCooperateID("");
+                errOperatorLog.setLPdtgBatch(customer.getLPdtgBatch());
+                errOperatorLog.setCooperateID(customer.getCooperateId());
                 errOperatorLog.setLpn(detailCode);
                 ErrOperatorLogDao dao = LogisticsApplication.getInstance().getErrOperatorLogDao();
                 dao.insert(errOperatorLog);

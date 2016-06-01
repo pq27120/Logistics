@@ -99,6 +99,11 @@ public class CargoOrderActivity extends BaseActivity implements ICargoOrderView 
         presenter.initCargoOrder(customerId);
     }
 
+    @Override
+    public void clearLoadText() {
+        loadEt.setText("");
+    }
+
     private class LoadButtonClick implements View.OnClickListener {
         @Override
         public void onClick(View v) {

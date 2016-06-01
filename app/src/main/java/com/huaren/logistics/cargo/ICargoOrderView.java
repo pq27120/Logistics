@@ -8,4 +8,9 @@ public interface ICargoOrderView {
   void showLoadDialog(String title, String message);
 
   void reInit();
+
+  /**
+   * 清空输入框
+   */
+  void clearLoadText();
 }

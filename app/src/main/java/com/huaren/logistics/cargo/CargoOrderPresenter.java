@@ -66,6 +66,7 @@ public class CargoOrderPresenter {
                 if (!OrderStatusEnum.READEY_CARGO.getStatus().equals(orderDetail.getDetailStatus())) {
                     LogisticsApplication.getInstance().getSoundPoolUtil().playWrong();
                     UiTool.showToast((Context) cargoOrderView, "货物已装车！");
+                    cargoOrderView.clearLoadText();
                     return;
                 }
                 if (orderDetail.getCustomerId().equals(customerId)) {
@@ -74,12 +75,14 @@ public class CargoOrderPresenter {
                 } else {
                     LogisticsApplication.getInstance().getSoundPoolUtil().playWrong();
                     UiTool.showToast((Context) cargoOrderView, "该货物不属于当前客户！");
+                    cargoOrderView.clearLoadText();
                     //cargoOrderView.showLoadDialog("装车",
                     //    "当前客户" + customerId + "，是否切换到客户" + orderDetail.getCustomerId());
                 }
             } else {
                 LogisticsApplication.getInstance().getSoundPoolUtil().playWrong();
                 UiTool.showToast((Context) cargoOrderView, "货物信息不存在！");
+                cargoOrderView.clearLoadText();
             }
         } else {
             LogisticsApplication.getInstance().getSoundPoolUtil().playWrong();

@@ -97,6 +97,11 @@ public class UnCargoOrderActivity extends BaseActivity implements IUnCargoOrderV
         finish();
     }
 
+    @Override
+    public void clearRemoveText() {
+        unRemoveEt.setText("");
+    }
+
     private class LoadButtonClick implements View.OnClickListener {
         @Override
         public void onClick(View v) {

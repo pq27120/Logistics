@@ -13,4 +13,9 @@ public interface IUnCargoOrderView {
    * 销毁Activity
    */
   void finishActivity();
+
+  /**
+   * 清空输入框
+   */
+  void clearRemoveText();
 }
