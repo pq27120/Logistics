@@ -95,7 +95,9 @@ public class RecycleScanDetailPresent {
         QueryBuilder qb = sysDicValueDao.queryBuilder();
         SysDicDao sysDicDao = LogisticsApplication.getInstance().getSysDicDao();
         SysDic sysDic = sysDicDao.queryBuilder().where(SysDicDao.Properties.MyName.eq("回收类型")).unique();
-        List<SysDicValue> list = qb.where(SysDicValueDao.Properties.DicId.eq(sysDic.getId())).list();
-        recycleScanDetailView.initRadio(list);
+        if(sysDic != null) {
+            List<SysDicValue> list = qb.where(SysDicValueDao.Properties.DicId.eq(sysDic.getId())).list();
+            recycleScanDetailView.initRadio(list);
+        }
     }
 }

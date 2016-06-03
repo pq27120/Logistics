@@ -4,6 +4,7 @@ import android.app.Application;
 import android.content.Context;
 import android.database.sqlite.SQLiteDatabase;
 import android.device.ScanManager;
+import android.device.scanner.configuration.PropertyID;
 
 import com.huaren.logistics.dao.CustomerDao;
 import com.huaren.logistics.dao.DaoMaster;
@@ -59,9 +60,7 @@ public class LogisticsApplication extends Application {
       ScanManager scan = new ScanManager();
       scan.openScanner();
       scan.switchOutputMode(1);
-      scan.setAppend();
-      scan.setBeep();
-      scan.setVibrate();
+      scan.setParameterInts(new int[]{PropertyID.LABEL_APPEND_ENTER}, new int[]{1});
     } catch (Exception e) {
       e.printStackTrace();
       CommonTool.showLog("初始化扫描设备异常！");

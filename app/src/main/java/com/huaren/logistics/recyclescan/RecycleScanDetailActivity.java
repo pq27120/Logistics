@@ -40,10 +40,12 @@ public class RecycleScanDetailActivity extends BaseActivity implements IRecycleS
 
   private class ScanBtnClick implements View.OnClickListener {
     @Override public void onClick(View v) {
-      for (int i = 0; i < list.size(); i++) {
-        SysDicValue sysDicValue = list.get(i);
-        if (sysDicValue.getMyDisplayValue().equals(checkRadioName)) {
-          recycleScanDetailPresent.recycleGoods(sysDicValue, scanEt.getText().toString());
+      if(list != null) {
+        for (int i = 0; i < list.size(); i++) {
+          SysDicValue sysDicValue = list.get(i);
+          if (sysDicValue.getMyDisplayValue().equals(checkRadioName)) {
+            recycleScanDetailPresent.recycleGoods(sysDicValue, scanEt.getText().toString());
+          }
         }
       }
     }
@@ -121,10 +123,12 @@ public class RecycleScanDetailActivity extends BaseActivity implements IRecycleS
       if (keyCode == KeyEvent.KEYCODE_ENTER) {
         switch (event.getAction()) {
           case KeyEvent.ACTION_UP:             //键盘松开
-            for (int i = 0; i < list.size(); i++) {
-              SysDicValue sysDicValue = list.get(i);
-              if (sysDicValue.getMyDisplayValue().equals(checkRadioName)) {
-                recycleScanDetailPresent.recycleGoods(sysDicValue, scanEt.getText().toString());
+            if(list != null) {
+              for (int i = 0; i < list.size(); i++) {
+                SysDicValue sysDicValue = list.get(i);
+                if (sysDicValue.getMyDisplayValue().equals(checkRadioName)) {
+                  recycleScanDetailPresent.recycleGoods(sysDicValue, scanEt.getText().toString());
+                }
               }
             }
             scanEt.requestFocus();

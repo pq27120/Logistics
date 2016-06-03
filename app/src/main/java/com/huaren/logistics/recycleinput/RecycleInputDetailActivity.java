@@ -66,11 +66,13 @@ public class RecycleInputDetailActivity extends BaseActivity
                 .onPositive(new MaterialDialog.SingleButtonCallback() {
                     @Override
                     public void onClick(@NonNull MaterialDialog dialog, @NonNull DialogAction which) {
-                        for (int i = 0; i < list.size(); i++) {
-                            SysDicValue sysDicValue = list.get(i);
-                            if (sysDicValue.getMyDisplayValue().equals(checkRadioName)) {
-                                recycleInputDetailPresent.updateRecycleInput(sysDicValue,
-                                        inputEt.getText().toString(), recycleInput);
+                        if(list != null) {
+                            for (int i = 0; i < list.size(); i++) {
+                                SysDicValue sysDicValue = list.get(i);
+                                if (sysDicValue.getMyDisplayValue().equals(checkRadioName)) {
+                                    recycleInputDetailPresent.updateRecycleInput(sysDicValue,
+                                            inputEt.getText().toString(), recycleInput);
+                                }
                             }
                         }
                     }
@@ -149,11 +151,13 @@ public class RecycleInputDetailActivity extends BaseActivity
     private class InputBtnClick implements View.OnClickListener {
         @Override
         public void onClick(View v) {
-            for (int i = 0; i < list.size(); i++) {
-                SysDicValue sysDicValue = list.get(i);
-                if (sysDicValue.getMyDisplayValue().equals(checkRadioName)) {
-                    recycleInputDetailPresent.recycleGoods(orderBatchId, sysDicValue,
-                            inputEt.getText().toString());
+            if(list != null) {
+                for (int i = 0; i < list.size(); i++) {
+                    SysDicValue sysDicValue = list.get(i);
+                    if (sysDicValue.getMyDisplayValue().equals(checkRadioName)) {
+                        recycleInputDetailPresent.recycleGoods(orderBatchId, sysDicValue,
+                                inputEt.getText().toString());
+                    }
                 }
             }
         }

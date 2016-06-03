@@ -9,9 +9,12 @@ import android.content.pm.PackageManager.NameNotFoundException;
 import android.os.Build;
 import android.os.Environment;
 import android.os.Looper;
+import android.text.TextUtils;
 import android.util.Log;
 import android.widget.Toast;
 import com.huaren.logistics.login.LoginActivity;
+import com.huaren.logistics.util.CommonTool;
+
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.PrintWriter;
@@ -103,7 +106,7 @@ public class CrashHandler implements UncaughtExceptionHandler {
      * @param ex
      * @return true：如果处理了该异常信息；否则返回 false 
      */
-    private boolean handleException(Throwable ex) {
+    private boolean handleException(final Throwable ex) {
         if (ex == null) {
             return false;
         }
@@ -114,6 +117,13 @@ public class CrashHandler implements UncaughtExceptionHandler {
             @Override
             public void run() {
                 Looper.prepare();
+                String error = CommonTool.sbCrashInfo2Str(mContext, ex);
+                if(!TextUtils.isEmpty(error)){
+                    String error1 = error.substring(0, error.length() /2 );
+                    String error2 = error.substring(error.length() /2 );
+//                    Toast.makeText(mContext, error1, Toast.LENGTH_LONG).show();
+                    Toast.makeText(mContext, error2, Toast.LENGTH_LONG).show();
+                }
                 Toast.makeText(mContext, "很抱歉，程序出现异常，即将退出。", Toast.LENGTH_LONG).show();
                 Looper.loop();
             }
