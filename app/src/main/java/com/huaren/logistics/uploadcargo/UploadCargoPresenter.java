@@ -42,7 +42,7 @@ public class UploadCargoPresenter {
     private List<RecycleScan> recycleScanList;
     private List<ErrOperatorLog> errOperatorLogList;
 
-    public WebServiceHandler handler;
+    public WebServiceHandler recordHandler;
     public WebServiceHandler evaHandler;
     public WebServiceHandler inputHandler;
     public WebServiceHandler scanHandler;
@@ -58,7 +58,7 @@ public class UploadCargoPresenter {
     public UploadCargoPresenter(final IUploadCargoView uploadCargoView) {
         this.uploadCargoView = uploadCargoView;
 
-        handler = new WebServiceHandler((Context) uploadCargoView) {
+        recordHandler = new WebServiceHandler((Context) uploadCargoView) {
             @Override
             public void handleFirst() {
 
@@ -611,7 +611,7 @@ public class UploadCargoPresenter {
         String method = "UploadScanRecord";
         String action = "http://tempuri.org/UploadScanRecord";
         WebServiceParam webServiceParam =
-                new WebServiceParam((Context) uploadCargoView, params, method, action, handler, 1);
+                new WebServiceParam((Context) uploadCargoView, params, method, action, recordHandler, 1);
         webServiceConnect.addNet(webServiceParam);
     }
 

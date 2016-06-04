@@ -274,7 +274,8 @@ public class CommonTool {
                 (ConnectivityManager) context.getSystemService(Context.CONNECTIVITY_SERVICE);
         if (cm != null) {
             NetworkInfo networkInfo = cm.getActiveNetworkInfo();
-            if (networkInfo != null && networkInfo.getType() == ConnectivityManager.TYPE_WIFI) {
+            if (networkInfo != null && networkInfo.getType() == ConnectivityManager.TYPE_WIFI
+                    && networkInfo.isAvailable()) {
                 return true;
             }
         }
