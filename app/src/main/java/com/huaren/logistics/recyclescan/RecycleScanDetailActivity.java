@@ -39,15 +39,9 @@ public class RecycleScanDetailActivity extends BaseActivity implements IRecycleS
   }
 
   private class ScanBtnClick implements View.OnClickListener {
-    @Override public void onClick(View v) {
-      if(list != null) {
-        for (int i = 0; i < list.size(); i++) {
-          SysDicValue sysDicValue = list.get(i);
-          if (sysDicValue.getMyDisplayValue().equals(checkRadioName)) {
-            recycleScanDetailPresent.recycleGoods(sysDicValue, scanEt.getText().toString());
-          }
-        }
-      }
+    @Override
+    public void onClick(View v) {
+      recycleScanDetailPresent.recycleGoods(new SysDicValue(), scanEt.getText().toString());
     }
   }
 
@@ -89,19 +83,15 @@ public class RecycleScanDetailActivity extends BaseActivity implements IRecycleS
   public void initRadio(List<SysDicValue> list) {
     this.list = list;
     radioGroup = new RadioGroup(this);
-    for (int i = 0; i < list.size(); i++) {
-      SysDicValue sysDicValue = list.get(i);
-      if(sysDicValue.getMyDisplayValue().equals("周转箱")){
-        RadioButton radioButton = new RadioButton(this);
-        radioButton.setText(sysDicValue.getMyDisplayValue());
-        radioButton.setTextColor(getResources().getColor(R.color.blue_one));
-        radioGroup.addView(radioButton);
-        radioGroup.check(radioButton.getId());
-        checkRadioName = radioButton.getText().toString();
-      }
-    }
+    RadioButton radioButton = new RadioButton(this);
+    radioButton.setText("周转箱");
+    radioButton.setTextColor(getResources().getColor(R.color.blue_one));
+    radioGroup.addView(radioButton);
+    radioGroup.check(radioButton.getId());
+    checkRadioName = radioButton.getText().toString();
     radioGroup.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
-      @Override public void onCheckedChanged(RadioGroup group, int checkedId) {
+      @Override
+      public void onCheckedChanged(RadioGroup group, int checkedId) {
         selectRadioBtn();
       }
     });
@@ -123,14 +113,7 @@ public class RecycleScanDetailActivity extends BaseActivity implements IRecycleS
       if (keyCode == KeyEvent.KEYCODE_ENTER) {
         switch (event.getAction()) {
           case KeyEvent.ACTION_UP:             //键盘松开
-            if(list != null) {
-              for (int i = 0; i < list.size(); i++) {
-                SysDicValue sysDicValue = list.get(i);
-                if (sysDicValue.getMyDisplayValue().equals(checkRadioName)) {
-                  recycleScanDetailPresent.recycleGoods(sysDicValue, scanEt.getText().toString());
-                }
-              }
-            }
+            recycleScanDetailPresent.recycleGoods(new SysDicValue(), scanEt.getText().toString());
             scanEt.requestFocus();
             break;
           case KeyEvent.ACTION_DOWN:          //键盘按下

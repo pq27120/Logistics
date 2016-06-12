@@ -227,7 +227,8 @@ public class DownCargoPresenter {
             e.printStackTrace();
         }
         SysDicValueDao sysDicValueDao = LogisticsApplication.getInstance().getSysDicValueDao();
-        sysDicValueDao.insertOrReplaceInTx(sysDicValueList);
+        sysDicValueDao.deleteAll();
+        sysDicValueDao.insertInTx(sysDicValueList);
     }
 
     private void parseOrderInfo(Object detail) {
@@ -304,7 +305,8 @@ public class DownCargoPresenter {
             e.printStackTrace();
         }
         SysDicDao sysDicDao = LogisticsApplication.getInstance().getSysDicDao();
-        sysDicDao.insertOrReplaceInTx(sysDicList);
+        sysDicDao.deleteAll();
+        sysDicDao.insertInTx(sysDicList);
     }
 
     private void insertCustomer(List<Customer> customerList) {

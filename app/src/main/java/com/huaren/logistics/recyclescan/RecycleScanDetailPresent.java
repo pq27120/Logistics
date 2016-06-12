@@ -17,6 +17,7 @@ import com.huaren.logistics.util.UiTool;
 
 import de.greenrobot.dao.query.QueryBuilder;
 
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
@@ -65,8 +66,8 @@ public class RecycleScanDetailPresent {
         recycleScan.setUserName(userName);
         recycleScan.setScanCode(scanCode);
         recycleScan.setRecycleScanTime(new Date());
-        recycleScan.setRecycleType(sysDicValue.getId());
-        recycleScan.setRecycleTypeValue(sysDicValue.getMyDisplayValue());
+        recycleScan.setRecycleType(1);
+        recycleScan.setRecycleTypeValue("周转箱");
         recycleScanDao.insert(recycleScan);
         LogisticsApplication.getInstance().getSoundPoolUtil().playRight();
         UiTool.showToast((Context) recycleScanDetailView, "回收录入扫描完成！");
@@ -91,13 +92,6 @@ public class RecycleScanDetailPresent {
     }
 
     public void initRecycleInputRadio() {
-        SysDicValueDao sysDicValueDao = LogisticsApplication.getInstance().getSysDicValueDao();
-        QueryBuilder qb = sysDicValueDao.queryBuilder();
-        SysDicDao sysDicDao = LogisticsApplication.getInstance().getSysDicDao();
-        SysDic sysDic = sysDicDao.queryBuilder().where(SysDicDao.Properties.MyName.eq("回收类型")).unique();
-        if(sysDic != null) {
-            List<SysDicValue> list = qb.where(SysDicValueDao.Properties.DicId.eq(sysDic.getId())).list();
-            recycleScanDetailView.initRadio(list);
-        }
+        recycleScanDetailView.initRadio(new ArrayList<SysDicValue>());
     }
 }

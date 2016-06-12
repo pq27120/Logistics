@@ -118,8 +118,9 @@ public class RecycleInputDetailPresent {
     SysDicValueDao sysDicValueDao = LogisticsApplication.getInstance().getSysDicValueDao();
     QueryBuilder qb = sysDicValueDao.queryBuilder();
     SysDicDao sysDicDao = LogisticsApplication.getInstance().getSysDicDao();
-    SysDic sysDic = sysDicDao.queryBuilder().where(SysDicDao.Properties.MyName.eq("回收类型")).unique();
-    if(sysDic != null) {
+    List<SysDic> sysDicList = sysDicDao.queryBuilder().where(SysDicDao.Properties.MyName.eq("回收类型")).list();
+    if(sysDicList != null && !sysDicList.isEmpty()) {
+      SysDic sysDic = sysDicList.get(0);
       List<SysDicValue> list = qb.where(SysDicValueDao.Properties.DicId.eq(sysDic.getId())).list();
       recycleInputDetailInputView.initRadio(list);
     }

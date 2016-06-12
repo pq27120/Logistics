@@ -32,6 +32,8 @@ public class UploadRecycleInput implements Serializable{
 
     private int piece2;//调剂箱
 
+    private int piece3;//冷藏箱
+
     public String getOrderBatchId() {
         return orderBatchId;
     }
@@ -142,5 +144,13 @@ public class UploadRecycleInput implements Serializable{
 
     public void setPiece2(int piece2) {
         this.piece2 = piece2;
+    }
+
+    public int getPiece3() {
+        return piece3;
+    }
+
+    public void setPiece3(int piece3) {
+        this.piece3 = piece3;
     }
 }

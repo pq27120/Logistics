@@ -550,12 +550,14 @@ public class UploadCargoPresenter {
             String id = "" + input.getLPdtgBatch() + input.getCooperateId() + input.getDriversID();
             if (recycleInputMap.get(id) != null) {
                 UploadRecycleInput uploadRecycleInput = (UploadRecycleInput) recycleInputMap.get(id);
-                if (input.getRecycleTypeValue().equals("")) { //退货
+                if (input.getRecycleTypeValue().equals("退货")) { //退货
                     uploadRecycleInput.setPiece1(input.getRecycleNum());
                 } else if (input.getRecycleTypeValue().equals("调剂")) { //调剂
                     uploadRecycleInput.setPiece2(input.getRecycleNum());
                 } else if (input.getRecycleTypeValue().equals("周转箱")) { //周转
                     uploadRecycleInput.setPiece(input.getRecycleNum());
+                } else if(input.getRecycleTypeValue().equals("冷藏箱")){
+                    uploadRecycleInput.setPiece3(input.getRecycleNum());
                 }
             } else {
                 UploadRecycleInput uploadRecycleInput = new UploadRecycleInput();
@@ -566,12 +568,14 @@ public class UploadCargoPresenter {
                 uploadRecycleInput.setlPdtgBatch(input.getLPdtgBatch());
                 uploadRecycleInput.setRecycleTime(input.getRecycleTime());
                 uploadRecycleInput.setUserName(input.getUserName());
-                if (input.getRecycleTypeValue().equals("")) { //退货
+                if (input.getRecycleTypeValue().equals("退货")) { //退货
                     uploadRecycleInput.setPiece1(input.getRecycleNum());
                 } else if (input.getRecycleTypeValue().equals("调剂")) { //调剂
                     uploadRecycleInput.setPiece2(input.getRecycleNum());
                 } else if (input.getRecycleTypeValue().equals("周转箱")) { //周转
                     uploadRecycleInput.setPiece(input.getRecycleNum());
+                } else if(input.getRecycleTypeValue().equals("冷藏箱")){
+                    uploadRecycleInput.setPiece3(input.getRecycleNum());
                 }
                 recycleInputMap.put(id, uploadRecycleInput);
             }
@@ -587,7 +591,8 @@ public class UploadCargoPresenter {
                     .append("L_PDTG_BATCH=").append(uploadRecycleInput.getlPdtgBatch()).append(";")
                     .append("Piece=").append(uploadRecycleInput.getPiece()).append(";")
                     .append("Piece1=").append(uploadRecycleInput.getPiece1()).append(";")
-                    .append("Piece2=").append(uploadRecycleInput.getPiece2()).append("|");
+                    .append("Piece2=").append(uploadRecycleInput.getPiece2()).append(";")
+                    .append("Piece3=").append(uploadRecycleInput.getPiece3()).append("|");
         }
         CommonTool.showLog("回收录入====" + sb.toString());
         return sb;
