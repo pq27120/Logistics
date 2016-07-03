@@ -741,12 +741,9 @@ public class DownCargoPresenter {
             } else {
                 DownBatchInfo downBatchInfo = downBatchInfoList.get(0);
                 if (lPdtgBatch > downBatchInfo.getLPdtgBatch()) {
-//                updateCustomerStatus(downBatchInfo.getLPdtgBatch(), userName);
-                    delCustomer(downBatchInfo.getLPdtgBatch(), userName);
-//                updateOrderBatchStatus(downBatchInfo.getLPdtgBatch(), userName);
-                    delOrderBatch(downBatchInfo.getLPdtgBatch(), userName);
-//                updateOrderDetailStatus(downBatchInfo.getLPdtgBatch(), userName);
-                    delOrderDetail(downBatchInfo.getLPdtgBatch(), userName);
+                    delCustomer(lPdtgBatch, userName);
+                    delOrderBatch(lPdtgBatch, userName);
+                    delOrderDetail(lPdtgBatch, userName);
                     updateRecycleInputStatus(downBatchInfo.getLPdtgBatch(), userName);
                     updateRecycleScanStatus(downBatchInfo.getLPdtgBatch(), userName);
                     updateDownBatchInfo(lPdtgBatch, userName);
@@ -819,7 +816,7 @@ public class DownCargoPresenter {
     private void delOrderDetail(long lPdtgBatch, String userName) {
         OrderDetailDao dao = LogisticsApplication.getInstance().getOrderDetailDao();
         QueryBuilder<OrderDetail> qb = dao.queryBuilder();
-        DeleteQuery<OrderDetail> bd = qb.where(OrderDetailDao.Properties.LPdtgBatch.eq(lPdtgBatch), OrderDetailDao.Properties.UserName.eq(userName)).buildDelete();
+        DeleteQuery<OrderDetail> bd = qb.where(OrderDetailDao.Properties.LPdtgBatch.notEq(lPdtgBatch), OrderDetailDao.Properties.UserName.eq(userName)).buildDelete();
         bd.executeDeleteWithoutDetachingEntities();
     }
 
@@ -864,7 +861,7 @@ public class DownCargoPresenter {
     private void delOrderBatch(long lPdtgBatch, String userName) {
         OrderBatchDao dao = LogisticsApplication.getInstance().getOrderBatchDao();
         QueryBuilder<OrderBatch> qb = dao.queryBuilder();
-        DeleteQuery<OrderBatch> bd = qb.where(OrderBatchDao.Properties.LPdtgBatch.eq(lPdtgBatch), OrderBatchDao.Properties.UserName.eq(userName)).buildDelete();
+        DeleteQuery<OrderBatch> bd = qb.where(OrderBatchDao.Properties.LPdtgBatch.notEq(lPdtgBatch), OrderBatchDao.Properties.UserName.eq(userName)).buildDelete();
         bd.executeDeleteWithoutDetachingEntities();
 
     }
@@ -889,7 +886,7 @@ public class DownCargoPresenter {
     private void delCustomer(long lPdtgBatch, String userName) {
         CustomerDao dao = LogisticsApplication.getInstance().getCustomerDao();
         QueryBuilder<Customer> qb = dao.queryBuilder();
-        DeleteQuery<Customer> bd = qb.where(CustomerDao.Properties.LPdtgBatch.eq(lPdtgBatch), CustomerDao.Properties.UserName.eq(userName)).buildDelete();
+        DeleteQuery<Customer> bd = qb.where(CustomerDao.Properties.LPdtgBatch.notEq(lPdtgBatch), CustomerDao.Properties.UserName.eq(userName)).buildDelete();
         bd.executeDeleteWithoutDetachingEntities();
     }
 
