@@ -63,7 +63,8 @@ public class CargoOrderPresenter {
             OrderDetailDao orderDetailDao = LogisticsApplication.getInstance().getOrderDetailDao();
             QueryBuilder qb = orderDetailDao.queryBuilder();
             String userName = CommonTool.getSharePreference((Context) cargoOrderView, "curUserName");
-            qb.where(OrderDetailDao.Properties.Lpn.eq(detailCode), OrderDetailDao.Properties.Status.eq("1"), OrderDetailDao.Properties.UserName.eq(userName));
+            qb.where(OrderDetailDao.Properties.Lpn.eq(detailCode), OrderDetailDao.Properties.Status.eq("1"), OrderDetailDao.Properties.UserName.eq(userName))
+                    .orderDesc(OrderDetailDao.Properties.LPdtgBatch);
             List<OrderDetail> orderDetailList = qb.list();
             if (orderDetailList != null && !orderDetailList.isEmpty()) {
                 OrderDetail orderDetail = orderDetailList.get(0);

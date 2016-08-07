@@ -741,14 +741,14 @@ public class DownCargoPresenter {
             } else {
                 DownBatchInfo downBatchInfo = downBatchInfoList.get(0);
                 if (lPdtgBatch > downBatchInfo.getLPdtgBatch()) {
-                    delCustomer(lPdtgBatch, userName);
-                    delOrderBatch(lPdtgBatch, userName);
-                    delOrderDetail(lPdtgBatch, userName);
                     updateRecycleInputStatus(downBatchInfo.getLPdtgBatch(), userName);
                     updateRecycleScanStatus(downBatchInfo.getLPdtgBatch(), userName);
                     updateDownBatchInfo(lPdtgBatch, userName);
                 }
             }
+            delCustomer(lPdtgBatch, userName);
+            delOrderBatch(lPdtgBatch, userName);
+            delOrderDetail(lPdtgBatch, userName);
         }
     }
 
