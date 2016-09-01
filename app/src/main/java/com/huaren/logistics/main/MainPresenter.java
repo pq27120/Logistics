@@ -90,6 +90,12 @@ public class MainPresenter implements OnFinishedListener {
     mainMenuItem.setName("我的");
     mainMenuItemList.add(mainMenuItem);
 
+    mainMenuItem = new MainMenuItem();
+    mainMenuItem.setId(9);
+    mainMenuItem.setImageId("myshangchuan");
+    mainMenuItem.setName("回收录入列表");
+    mainMenuItemList.add(mainMenuItem);
+
     MainGridViewAdapter adapter = new MainGridViewAdapter((Context) mainView, mainMenuItemList);
     mainView.setGridViewAdapter(adapter);
   }
@@ -121,6 +127,9 @@ public class MainPresenter implements OnFinishedListener {
         break;
       case 8:
         mainView.enterInfo();
+        break;
+      case 9:
+        mainView.enterMyRecycle();
         break;
       default:
         break;

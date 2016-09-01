@@ -21,6 +21,8 @@ public class RecycleInput {
     /** Not-null value. */
     private String status;
     /** Not-null value. */
+    private String upStatus;
+    /** Not-null value. */
     private java.util.Date recycleTime;
     private java.util.Date editTime;
     /** Not-null value. */
@@ -33,7 +35,7 @@ public class RecycleInput {
         this.id = id;
     }
 
-    public RecycleInput(Long id, String orderBatchId, String cooperateId, int lPdtgBatch, String driversID, int recycleNum, long recycleType, String recycleTypeValue, String status, java.util.Date recycleTime, java.util.Date editTime, String userName) {
+    public RecycleInput(Long id, String orderBatchId, String cooperateId, int lPdtgBatch, String driversID, int recycleNum, long recycleType, String recycleTypeValue, String status, String upStatus, java.util.Date recycleTime, java.util.Date editTime, String userName) {
         this.id = id;
         this.orderBatchId = orderBatchId;
         this.cooperateId = cooperateId;
@@ -43,6 +45,7 @@ public class RecycleInput {
         this.recycleType = recycleType;
         this.recycleTypeValue = recycleTypeValue;
         this.status = status;
+        this.upStatus = upStatus;
         this.recycleTime = recycleTime;
         this.editTime = editTime;
         this.userName = userName;
@@ -128,6 +131,16 @@ public class RecycleInput {
     /** Not-null value; ensure this value is available before it is saved to the database. */
     public void setStatus(String status) {
         this.status = status;
+    }
+
+    /** Not-null value. */
+    public String getUpStatus() {
+        return upStatus;
+    }
+
+    /** Not-null value; ensure this value is available before it is saved to the database. */
+    public void setUpStatus(String upStatus) {
+        this.upStatus = upStatus;
     }
 
     /** Not-null value. */

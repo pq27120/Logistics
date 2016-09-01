@@ -51,4 +51,5 @@
     <string name="please_wait">加载中...</string>
     <string name="hide_keyboard">隐藏虚拟键盘</string>
     <string name="recycle_scan_tip">当前回收数量：</string>
+    <string name="activity_myrecycle_input_title">回收录入历史</string>
 </resources>

@@ -66,6 +66,7 @@ public class RecycleInputDetailPresent {
     recycleInput.setRecycleNum(Integer.valueOf(inputNum));
     recycleInput.setRecycleTime(new Date());
     recycleInput.setStatus("1");
+    recycleInput.setUpStatus("0");
     recycleInput.setUserName(userName);
     recycleInput.setOrderBatchId(orderBatchId);
     recycleInput.setRecycleType(sysDicValue.getId());
@@ -88,6 +89,7 @@ public class RecycleInputDetailPresent {
     recycleInput.setRecycleTime(new Date());
     recycleInput.setRecycleType(sysDicValue.getId());
     recycleInput.setRecycleTypeValue(sysDicValue.getMyDisplayValue());
+    recycleInput.setUpStatus("0");
     recycleInputDao.update(recycleInput);
     LogisticsApplication.getInstance().getSoundPoolUtil().playRight();
     UiTool.showToast((Context) recycleInputDetailInputView, "回收录入修改完成！");

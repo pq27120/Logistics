@@ -134,5 +134,21 @@
         android:label="@string/title_activity_info"
         >
     </activity>
+      <activity
+        android:name=".myrecycleinput.MyRecycleInputActivity"
+        android:configChanges="orientation|keyboardHidden|navigation"
+        android:launchMode="singleTask"
+        android:screenOrientation="portrait"
+        android:label="@string/activity_myrecycle_input_title"
+        >
+    </activity>
+      <activity
+        android:name=".myrecycleinput.MyRecycleInputDetailActivity"
+        android:configChanges="orientation|keyboardHidden|navigation"
+        android:launchMode="singleTask"
+        android:screenOrientation="portrait"
+        android:label="@string/activity_myrecycle_input_title"
+        >
+    </activity>
   </application>
 </manifest>

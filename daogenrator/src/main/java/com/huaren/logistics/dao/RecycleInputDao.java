@@ -32,9 +32,10 @@ public class RecycleInputDao extends AbstractDao<RecycleInput, Long> {
         public final static Property RecycleType = new Property(6, long.class, "recycleType", false, "RECYCLE_TYPE");
         public final static Property RecycleTypeValue = new Property(7, String.class, "recycleTypeValue", false, "RECYCLE_TYPE_VALUE");
         public final static Property Status = new Property(8, String.class, "status", false, "STATUS");
-        public final static Property RecycleTime = new Property(9, java.util.Date.class, "recycleTime", false, "RECYCLE_TIME");
-        public final static Property EditTime = new Property(10, java.util.Date.class, "editTime", false, "EDIT_TIME");
-        public final static Property UserName = new Property(11, String.class, "userName", false, "USER_NAME");
+        public final static Property UpStatus = new Property(9, String.class, "upStatus", false, "UP_STATUS");
+        public final static Property RecycleTime = new Property(10, java.util.Date.class, "recycleTime", false, "RECYCLE_TIME");
+        public final static Property EditTime = new Property(11, java.util.Date.class, "editTime", false, "EDIT_TIME");
+        public final static Property UserName = new Property(12, String.class, "userName", false, "USER_NAME");
     };
 
 
@@ -59,9 +60,10 @@ public class RecycleInputDao extends AbstractDao<RecycleInput, Long> {
                 "'RECYCLE_TYPE' INTEGER NOT NULL ," + // 6: recycleType
                 "'RECYCLE_TYPE_VALUE' TEXT NOT NULL ," + // 7: recycleTypeValue
                 "'STATUS' TEXT NOT NULL ," + // 8: status
-                "'RECYCLE_TIME' INTEGER NOT NULL ," + // 9: recycleTime
-                "'EDIT_TIME' INTEGER," + // 10: editTime
-                "'USER_NAME' TEXT NOT NULL );"); // 11: userName
+                "'UP_STATUS' TEXT NOT NULL ," + // 9: upStatus
+                "'RECYCLE_TIME' INTEGER NOT NULL ," + // 10: recycleTime
+                "'EDIT_TIME' INTEGER," + // 11: editTime
+                "'USER_NAME' TEXT NOT NULL );"); // 12: userName
     }
 
     /** Drops the underlying database table. */
@@ -87,13 +89,14 @@ public class RecycleInputDao extends AbstractDao<RecycleInput, Long> {
         stmt.bindLong(7, entity.getRecycleType());
         stmt.bindString(8, entity.getRecycleTypeValue());
         stmt.bindString(9, entity.getStatus());
-        stmt.bindLong(10, entity.getRecycleTime().getTime());
+        stmt.bindString(10, entity.getUpStatus());
+        stmt.bindLong(11, entity.getRecycleTime().getTime());
  
         java.util.Date editTime = entity.getEditTime();
         if (editTime != null) {
-            stmt.bindLong(11, editTime.getTime());
+            stmt.bindLong(12, editTime.getTime());
         }
-        stmt.bindString(12, entity.getUserName());
+        stmt.bindString(13, entity.getUserName());
     }
 
     /** @inheritdoc */
@@ -115,9 +118,10 @@ public class RecycleInputDao extends AbstractDao<RecycleInput, Long> {
             cursor.getLong(offset + 6), // recycleType
             cursor.getString(offset + 7), // recycleTypeValue
             cursor.getString(offset + 8), // status
-            new java.util.Date(cursor.getLong(offset + 9)), // recycleTime
-            cursor.isNull(offset + 10) ? null : new java.util.Date(cursor.getLong(offset + 10)), // editTime
-            cursor.getString(offset + 11) // userName
+            cursor.getString(offset + 9), // upStatus
+            new java.util.Date(cursor.getLong(offset + 10)), // recycleTime
+            cursor.isNull(offset + 11) ? null : new java.util.Date(cursor.getLong(offset + 11)), // editTime
+            cursor.getString(offset + 12) // userName
         );
         return entity;
     }
@@ -134,9 +138,10 @@ public class RecycleInputDao extends AbstractDao<RecycleInput, Long> {
         entity.setRecycleType(cursor.getLong(offset + 6));
         entity.setRecycleTypeValue(cursor.getString(offset + 7));
         entity.setStatus(cursor.getString(offset + 8));
-        entity.setRecycleTime(new java.util.Date(cursor.getLong(offset + 9)));
-        entity.setEditTime(cursor.isNull(offset + 10) ? null : new java.util.Date(cursor.getLong(offset + 10)));
-        entity.setUserName(cursor.getString(offset + 11));
+        entity.setUpStatus(cursor.getString(offset + 9));
+        entity.setRecycleTime(new java.util.Date(cursor.getLong(offset + 10)));
+        entity.setEditTime(cursor.isNull(offset + 11) ? null : new java.util.Date(cursor.getLong(offset + 11)));
+        entity.setUserName(cursor.getString(offset + 12));
      }
     
     /** @inheritdoc */

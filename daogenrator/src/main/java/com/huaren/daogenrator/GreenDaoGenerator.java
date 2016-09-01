@@ -126,6 +126,7 @@ public class GreenDaoGenerator {
     recycleInput.addLongProperty("recycleType").notNull();//回收类型
     recycleInput.addStringProperty("recycleTypeValue").notNull();//回收类型名称
     recycleInput.addStringProperty("status").notNull();//0 停用 1 启用
+    recycleInput.addStringProperty("upStatus").notNull();//0 未上传 1 已上传
     recycleInput.addDateProperty("recycleTime").notNull();//回收录入时间
     recycleInput.addDateProperty("editTime");
     recycleInput.addStringProperty("userName").notNull();

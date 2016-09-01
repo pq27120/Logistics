@@ -35,6 +35,7 @@ import com.huaren.logistics.downcargo.DownCargoActivity;
 import com.huaren.logistics.evaluation.EvaluationActivity;
 import com.huaren.logistics.info.InfoActivity;
 import com.huaren.logistics.login.LoginActivity;
+import com.huaren.logistics.myrecycleinput.MyRecycleInputActivity;
 import com.huaren.logistics.recycleinput.RecycleInputActivity;
 import com.huaren.logistics.recyclescan.RecycleScanDetailActivity;
 import com.huaren.logistics.uncargo.UnCargoActivity;
@@ -157,6 +158,11 @@ public class MainActivity extends BaseActivity implements MainView, AdapterView.
     @Override
     public void enterUploadRecord() {
         startActivity(new Intent(this, UploadCargoActivity.class));
+    }
+
+    @Override
+    public void enterMyRecycle() {
+        startActivity(new Intent(this, MyRecycleInputActivity.class));
     }
 
     @Override

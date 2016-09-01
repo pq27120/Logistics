@@ -28,9 +28,13 @@ import org.xmlpull.v1.XmlPullParserException;
 
 import java.io.IOException;
 import java.io.StringReader;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+
+import de.greenrobot.dao.query.DeleteQuery;
+import de.greenrobot.dao.query.QueryBuilder;
 
 public class UploadCargoPresenter {
 
@@ -403,7 +407,12 @@ public class UploadCargoPresenter {
         if (flag) {
             buffer.append(",上传" + recycleInputList.size() + "条回收记录");
             RecycleInputDao dao = LogisticsApplication.getInstance().getRecycleInputDao();
-            dao.deleteInTx(recycleInputList);
+            for (int i = 0; i < recycleInputList.size(); i++) {
+                RecycleInput recycleInput = recycleInputList.get(i);
+                recycleInput.setUpStatus("1");
+            }
+            dao.updateInTx(recycleInputList);
+//            dao.deleteInTx(recycleInputList);
             finishHandler.sendEmptyMessage(3);
         }
     }
@@ -542,7 +551,11 @@ public class UploadCargoPresenter {
     private StringBuilder assemberRecycleInputDetail() {
         RecycleInputDao dao = LogisticsApplication.getInstance().getRecycleInputDao();
         String userName = CommonTool.getSharePreference((Context) uploadCargoView, "curUserName");
-        recycleInputList = dao.queryBuilder().where(RecycleInputDao.Properties.UserName.eq(userName)).list();
+        QueryBuilder<RecycleInput> qb = dao.queryBuilder();
+        Date setDate = DateUtil.getDateBeforeOrAfter(new Date(), -7);
+        DeleteQuery<RecycleInput> bd = qb.where(RecycleInputDao.Properties.RecycleTime.le(setDate), RecycleInputDao.Properties.UserName.eq(userName)).buildDelete();
+        bd.executeDeleteWithoutDetachingEntities();
+        recycleInputList = dao.queryBuilder().where(RecycleInputDao.Properties.UserName.eq(userName), RecycleInputDao.Properties.UpStatus.eq("0")).list();
         Map<String, Object> recycleInputMap = new HashMap<>();
         StringBuilder sb = new StringBuilder();
         for (int i = 0; i < recycleInputList.size(); i++) {
