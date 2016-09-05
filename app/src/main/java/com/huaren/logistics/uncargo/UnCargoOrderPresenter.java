@@ -7,12 +7,14 @@ import com.dexafree.materialList.card.provider.CargoOrderCardProvider;
 import com.huaren.logistics.LogisticsApplication;
 import com.huaren.logistics.R;
 import com.huaren.logistics.bean.Customer;
+import com.huaren.logistics.bean.DownBatchInfo;
 import com.huaren.logistics.bean.ErrOperatorLog;
 import com.huaren.logistics.bean.OperatorLog;
 import com.huaren.logistics.bean.OrderBatch;
 import com.huaren.logistics.bean.OrderDetail;
 import com.huaren.logistics.common.OrderStatusEnum;
 import com.huaren.logistics.dao.CustomerDao;
+import com.huaren.logistics.dao.DownBatchInfoDao;
 import com.huaren.logistics.dao.ErrOperatorLogDao;
 import com.huaren.logistics.dao.OperatorLogDao;
 import com.huaren.logistics.dao.OrderBatchDao;
@@ -60,11 +62,20 @@ public class UnCargoOrderPresenter {
 
     public void loadDetailCargo(String customerId, String detailCode) {
         if (StringTool.isNotNull(detailCode)) {
+            String userName = CommonTool.getSharePreference((Context) cargoOrderView, "curUserName");
+
+            DownBatchInfoDao downBatchInfoDao = LogisticsApplication.getInstance().getDownBatchInfoDao();
+            List<DownBatchInfo> downBatchInfoList = downBatchInfoDao.queryBuilder().where(DownBatchInfoDao.Properties.UserName.eq(userName)).list();
+            DownBatchInfo downBatchInfo = new DownBatchInfo();
+            if(downBatchInfoList != null) {
+                downBatchInfo = downBatchInfoList.get(0);
+            }
+
             OrderDetailDao orderDetailDao = LogisticsApplication.getInstance().getOrderDetailDao();
             QueryBuilder qb = orderDetailDao.queryBuilder();
-            String userName = CommonTool.getSharePreference((Context) cargoOrderView, "curUserName");
             qb.where(OrderDetailDao.Properties.Lpn.eq(detailCode),
-                    OrderDetailDao.Properties.Status.eq("1"), OrderDetailDao.Properties.UserName.eq(userName));
+                    OrderDetailDao.Properties.Status.eq("1"), OrderDetailDao.Properties.UserName.eq(userName)
+                    , OrderDetailDao.Properties.LPdtgBatch.eq(downBatchInfo.getLPdtgBatch()));
             List<OrderDetail> orderDetailList = qb.list();
             if (orderDetailList != null && !orderDetailList.isEmpty()) {
                 OrderDetail orderDetail = orderDetailList.get(0);
@@ -98,7 +109,7 @@ public class UnCargoOrderPresenter {
 
                     CustomerDao customerDao = LogisticsApplication.getInstance().getCustomerDao();
                     Customer customer = customerDao.queryBuilder().where(CustomerDao.Properties.Id.eq(customerId)).unique();
-                    UiTool.showToast((Context) cargoOrderView, "不是当前客户" + customer.getSPdtgCustfullname() + "的货物，请不要卸车！");
+                    UiTool.showToast((Context) cargoOrderView, "货物明细"+ orderDetail.getDetailId()+ ",不是当前客户" + customer.getSPdtgCustfullname() + "的货物，请不要卸车！");
                     cargoOrderView.clearRemoveText();
 
                     ErrOperatorLog errOperatorLog = new ErrOperatorLog();
