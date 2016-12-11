@@ -4,6 +4,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
+import android.text.TextUtils;
 import android.view.KeyEvent;
 import android.view.View;
 import android.widget.TextView;
@@ -114,14 +115,16 @@ public class CargoOrderActivity extends BaseActivity implements ICargoOrderView 
     View.OnKeyListener onKey = new View.OnKeyListener() {
         @Override
         public boolean onKey(View v, int keyCode, KeyEvent event) {
-            if (keyCode == KeyEvent.KEYCODE_ENTER) {
-                switch (event.getAction()) {
-                    case KeyEvent.ACTION_UP:             //键盘松开
-                        presenter.loadDetailCargo(customerId, loadEt.getText().toString());
-                        loadEt.requestFocus();
-                        break;
-                    case KeyEvent.ACTION_DOWN:          //键盘按下
-                        break;
+            if (keyCode == KeyEvent.KEYCODE_ENTER || keyCode == KeyEvent.KEYCODE_SYSRQ) {
+                if(loadEt != null && !TextUtils.isEmpty(loadEt.getText().toString())) {
+                    switch (event.getAction()) {
+                        case KeyEvent.ACTION_UP:             //键盘松开
+                            presenter.loadDetailCargo(customerId, loadEt.getText().toString());
+                            loadEt.requestFocus();
+                            break;
+                        case KeyEvent.ACTION_DOWN:          //键盘按下
+                            break;
+                    }
                 }
                 return true;
             }

@@ -1,6 +1,7 @@
 package com.huaren.logistics.recyclescan;
 
 import android.os.Bundle;
+import android.text.TextUtils;
 import android.view.KeyEvent;
 import android.view.View;
 import android.widget.LinearLayout;
@@ -110,14 +111,16 @@ public class RecycleScanDetailActivity extends BaseActivity implements IRecycleS
 
   View.OnKeyListener onKey = new View.OnKeyListener() {
     @Override public boolean onKey(View v, int keyCode, KeyEvent event) {
-      if (keyCode == KeyEvent.KEYCODE_ENTER) {
-        switch (event.getAction()) {
-          case KeyEvent.ACTION_UP:             //键盘松开
-            recycleScanDetailPresent.recycleGoods(new SysDicValue(), scanEt.getText().toString());
-            scanEt.requestFocus();
-            break;
-          case KeyEvent.ACTION_DOWN:          //键盘按下
-            break;
+      if (keyCode == KeyEvent.KEYCODE_ENTER || keyCode == KeyEvent.KEYCODE_SYSRQ) {
+        if(scanEt != null && !TextUtils.isEmpty(scanEt.getText().toString())) {
+          switch (event.getAction()) {
+            case KeyEvent.ACTION_UP:             //键盘松开
+              recycleScanDetailPresent.recycleGoods(new SysDicValue(), scanEt.getText().toString());
+              scanEt.requestFocus();
+              break;
+            case KeyEvent.ACTION_DOWN:          //键盘按下
+              break;
+          }
         }
         return true;
       }

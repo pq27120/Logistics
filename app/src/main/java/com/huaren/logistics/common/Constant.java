@@ -3,8 +3,8 @@ package com.huaren.logistics.common;
 public class Constant {
   public static final String HTTP_URL = "http://192.168.1.252:8086/magus";
 
-  public static final String UPDATE_URL = "http://10.254.0.96:8080/LBX_TMS_APP/update.html";
-//  public static final String UPDATE_URL = "http://222.128.50.124:8098/LBX_TMS_APP/update.html";
+  public static final String UPDATE_URL = "http://10.254.0.96:8080/LBX_TMS_APP/update403.html";
+//  public static final String UPDATE_URL = "http://222.128.50.124:8098/LBX_TMS_APP/update403.html";
 
   public static final boolean LOG_FLAG = true;
 
