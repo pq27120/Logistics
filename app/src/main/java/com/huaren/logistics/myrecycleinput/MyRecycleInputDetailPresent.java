@@ -4,7 +4,6 @@ import android.content.Context;
 
 import com.dexafree.materialList.card.Card;
 import com.dexafree.materialList.card.provider.CargoOrderCardProvider;
-import com.dexafree.materialList.card.provider.CargoSingleCardProvider;
 import com.huaren.logistics.LogisticsApplication;
 import com.huaren.logistics.bean.RecycleInput;
 import com.huaren.logistics.dao.RecycleInputDao;
@@ -53,9 +52,9 @@ public class MyRecycleInputDetailPresent {
                 String desc = recycleInput.getUpStatus().equals("1") ? "已上传" : "未上传";
                 Card card =
                         new Card.Builder((Context) recycleInputDetailView).setTag("" + recycleInput.getId())
-                                .withProvider(CargoSingleCardProvider.class)
-                                .setTitle(recycleInput.getLPdtgBatch() + " " + recycleInput.getRecycleTypeValue() + "(" + recycleInput.getRecycleNum() + "件  " + desc + ")")
-                                .setDescription("")
+                                .withProvider(CargoOrderCardProvider.class)
+                                .setTitle(recycleInput.getLPdtgBatch() + "(" + desc + ")")
+                                .setDescription(recycleInput.getRecycleTypeValue() + "(" + recycleInput.getRecycleNum() + "件) " + DateUtil.parseDateToString(recycleInput.getRecycleTime(), DateUtil.DATE_TIME_FORMATE))
                                 .endConfig()
                                 .build();
                 recycleInputDetailView.addCard(card);
