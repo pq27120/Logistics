@@ -552,7 +552,7 @@ public class UploadCargoPresenter {
         RecycleInputDao dao = LogisticsApplication.getInstance().getRecycleInputDao();
         String userName = CommonTool.getSharePreference((Context) uploadCargoView, "curUserName");
         QueryBuilder<RecycleInput> qb = dao.queryBuilder();
-        Date setDate = DateUtil.getDateBeforeOrAfter(new Date(), -7);
+        Date setDate = DateUtil.getDateBeforeOrAfter(new Date(), -30);
         DeleteQuery<RecycleInput> bd = qb.where(RecycleInputDao.Properties.RecycleTime.le(setDate), RecycleInputDao.Properties.UserName.eq(userName)).buildDelete();
         bd.executeDeleteWithoutDetachingEntities();
         recycleInputList = dao.queryBuilder().where(RecycleInputDao.Properties.UserName.eq(userName), RecycleInputDao.Properties.UpStatus.eq("0")).list();
