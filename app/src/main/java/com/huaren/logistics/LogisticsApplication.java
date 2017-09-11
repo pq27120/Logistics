@@ -22,6 +22,7 @@ import com.huaren.logistics.dao.SysDicValueDao;
 import com.huaren.logistics.update.SQLiteOpenHelper;
 import com.huaren.logistics.util.CommonTool;
 import com.huaren.logistics.util.SoundPoolUtil;
+import com.tencent.bugly.crashreport.CrashReport;
 
 public class LogisticsApplication extends Application {
 
@@ -53,6 +54,7 @@ public class LogisticsApplication extends Application {
     context = getApplicationContext();
     CrashHandler crashHandler = CrashHandler.getInstance();
     crashHandler.init(getApplicationContext());
+    CrashReport.initCrashReport(getApplicationContext(), "384facaf0b", false);
     setupDatabase();
     soundPoolUtil = new SoundPoolUtil(context);
 

@@ -15,12 +15,15 @@ import com.huaren.logistics.dao.OperatorLogDao;
 import com.huaren.logistics.dao.RecycleInputDao;
 import com.huaren.logistics.dao.RecycleScanDao;
 import com.huaren.logistics.entity.UploadRecycleInput;
+import com.huaren.logistics.entity.xml.Root;
 import com.huaren.logistics.util.CommonTool;
 import com.huaren.logistics.util.DateUtil;
 import com.huaren.logistics.util.http.NetConnect;
 import com.huaren.logistics.util.webservice.WebServiceConnect;
 import com.huaren.logistics.util.webservice.WebServiceHandler;
 import com.huaren.logistics.util.webservice.WebServiceParam;
+import com.tencent.bugly.crashreport.BuglyLog;
+import com.thoughtworks.xstream.XStream;
 
 import org.ksoap2.serialization.SoapObject;
 import org.xmlpull.v1.XmlPullParser;
@@ -312,8 +315,32 @@ public class UploadCargoPresenter {
         //批量信息
         SoapObject soapObject = (SoapObject) detail;
         String xml = soapObject.getPropertyAsString("UploadScanRecordResult");
+        BuglyLog.d("ScanRecordInfo ", recordOperatorLogList.size() + " " + recordOperatorLogList.toString());
+        BuglyLog.d("ScanRecordResult ", xml);
         boolean flag = false;
-        try {
+        XStream xStream = new XStream();
+        xStream.alias("Root", Root.class);
+        xStream.autodetectAnnotations(true);
+        Root root = (Root) xStream.fromXML(xml);
+        String msg = "";
+        if (root != null && root.getLoginResult() != null) {
+            if("1".equals(root.getLoginResult().getCode())) {
+                flag = true;
+            } else {
+                flag = false;
+            }
+            if (root.getCommandResult() != null && root.getCommandResult().getMsg() != null) {
+                msg = root.getCommandResult().getMsg();
+            }
+        }
+        if (flag) {
+            OperatorLogDao operatorLogDao = LogisticsApplication.getInstance().getOperatorLogDao();
+            operatorLogDao.deleteInTx(recordOperatorLogList);
+        }
+        buffer.append("，上传" + recordOperatorLogList.size() + "条明细,服务器返回信息为" + msg);
+        finishHandler.sendEmptyMessage(1);
+        /*try {
+            String msg = "";
             XmlPullParser parser = Xml.newPullParser();
             parser.setInput(new StringReader(xml));
             //  产生第一个事件
@@ -353,11 +380,11 @@ public class UploadCargoPresenter {
             e.printStackTrace();
         }
         if (flag) {
-            buffer.append("，上传" + recordOperatorLogList.size() + "条明细");
+            buffer.append("，上传" + recordOperatorLogList.size() + "条明细,服务器返回信息为");
             OperatorLogDao operatorLogDao = LogisticsApplication.getInstance().getOperatorLogDao();
             operatorLogDao.deleteInTx(recordOperatorLogList);
             finishHandler.sendEmptyMessage(1);
-        }
+        }*/
     }
 
     private void parseRecycleInputXml(Object detail) {

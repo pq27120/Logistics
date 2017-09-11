@@ -162,4 +162,22 @@ public class OperatorLog {
         this.detailId = detailId;
     }
 
+    @Override
+    public String toString() {
+        return "OperatorLog{" +
+                "id=" + id +
+                ", userName='" + userName + '\'' +
+                ", myType='" + myType + '\'' +
+                ", longitude=" + longitude +
+                ", latitude=" + latitude +
+                ", lPdtgBatch=" + lPdtgBatch +
+                ", myNote='" + myNote + '\'' +
+                ", dispatchNumber='" + dispatchNumber + '\'' +
+                ", orderId='" + orderId + '\'' +
+                ", editTime=" + editTime +
+                ", operType='" + operType + '\'' +
+                ", pingjianeirong='" + pingjianeirong + '\'' +
+                ", detailId='" + detailId + '\'' +
+                '}';
+    }
 }
