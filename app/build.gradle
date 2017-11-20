@@ -8,8 +8,8 @@ android {
         applicationId "com.huaren.logistics"
         minSdkVersion 11
         targetSdkVersion 23
-        versionCode 15
-        versionName "1.1.5"
+        versionCode 16
+        versionName "1.1.6"
     }
     buildTypes {
         release {
@@ -40,7 +40,7 @@ dependencies {
         transitive = true
     }
     compile 'com.kyleduo.switchbutton:library:1.4.0'
-    compile 'com.tencent.bugly:crashreport:latest.release'
+//    compile 'com.tencent.bugly:crashreport:2.6.6'
     compile ('com.thoughtworks.xstream:xstream:1.4.7') {
         transitive = false
         exclude group: 'xmlpull', module: 'xmlpull'

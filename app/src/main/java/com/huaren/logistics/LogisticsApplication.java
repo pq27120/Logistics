@@ -22,6 +22,9 @@ import com.huaren.logistics.dao.SysDicValueDao;
 import com.huaren.logistics.update.SQLiteOpenHelper;
 import com.huaren.logistics.util.CommonTool;
 import com.huaren.logistics.util.SoundPoolUtil;
+import com.huaren.logistics.util.StringTool;
+import com.seuic.misc.Misc;
+
 import com.tencent.bugly.crashreport.CrashReport;
 
 public class LogisticsApplication extends Application {
@@ -58,14 +61,20 @@ public class LogisticsApplication extends Application {
     setupDatabase();
     soundPoolUtil = new SoundPoolUtil(context);
 
-    try {
-      ScanManager scan = new ScanManager();
-      scan.openScanner();
-      scan.switchOutputMode(1);
-      scan.setParameterInts(new int[]{PropertyID.LABEL_APPEND_ENTER}, new int[]{1});
-    } catch (Exception e) {
-      e.printStackTrace();
-      CommonTool.showLog("初始化扫描设备异常！");
+    Misc misc = new Misc();
+    String sn = misc.getSN();
+    if (StringTool.isNotNull(sn)) {
+      CommonTool.setSharePreference(context, "sn", sn);
+    } else {
+      try {
+        ScanManager scan = new ScanManager();
+        scan.openScanner();
+        scan.switchOutputMode(1);
+        scan.setParameterInts(new int[]{PropertyID.LABEL_APPEND_ENTER}, new int[]{1});
+      } catch (Exception e) {
+        e.printStackTrace();
+        CommonTool.showLog("初始化扫描设备异常！");
+      }
     }
   }
 

@@ -20,6 +20,12 @@ public class SplashActivity extends Activity implements ISplashView {
   @Override protected void onCreate(Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
     setContentView(R.layout.activity_splash);
+
+    Intent intent = new Intent("com.android.scanner.service_settings");
+    intent.putExtra("endchar", "ENTER");
+    sendBroadcast(intent);
+
+
     presenter = new SplashPresenter(this);
     presenter.checkUpdate();
   }
